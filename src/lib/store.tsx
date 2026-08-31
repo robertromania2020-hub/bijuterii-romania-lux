@@ -110,14 +110,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const cartLines = cart
       .map((line) => {
         const product = catalog.find((p) => p.id === line.productId);
-        return product ? { ...line, product } : null;
+        if (!product) return null;
+        return { ...line, product, unitPrice: variantPrice(product, line.variant) };
       })
-      .filter((l): l is CartLine & { product: Product } => l !== null);
+      .filter((l): l is CartLine & { product: Product; unitPrice: number } => l !== null);
 
-    const subtotal = cartLines.reduce((sum, l) => sum + l.product.price * l.quantity, 0);
+    const subtotal = cartLines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
     const discount = cartLines.reduce(
-      (sum, l) =>
-        sum + (l.product.oldPrice ? (l.product.oldPrice - l.product.price) * l.quantity : 0),
+      (sum, l) => sum + (l.product.oldPrice ? (l.product.oldPrice - l.unitPrice) * l.quantity : 0),
       0,
     );
     const shipping =
