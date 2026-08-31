@@ -56,7 +56,12 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="px-1 pb-1">
-        <h3 className="mt-2.5 text-sm font-semibold leading-tight">
+        {getBrand(product.brandSlug) && (
+          <p className="mt-2.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            {getBrand(product.brandSlug)!.name}
+          </p>
+        )}
+        <h3 className="mt-1 text-sm font-semibold leading-tight">
           <Link to="/produs/$slug" params={{ slug: product.slug }}>
             {product.name}
           </Link>
