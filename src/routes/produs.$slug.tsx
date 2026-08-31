@@ -84,14 +84,24 @@ function ProductPage() {
   const { product } = Route.useLoaderData();
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [imageIndex, setImageIndex] = useState(0);
-  const [variant, setVariant] = useState<string | null>(product.variants[0] ?? null);
+  const activeVariants = product.variants.filter((v) => v.active);
+  const [variantId, setVariantId] = useState<string | null>(activeVariants[0]?.id ?? null);
   const [quantity, setQuantity] = useState(1);
 
-  const status = stockStatus(product);
+  const selected = activeVariants.find((v) => v.id === variantId) ?? null;
+  const price = selected?.price ?? product.price;
+  const stoc = selected ? selected.stock : product.stock;
+  const status = stockStatus({ stock: stoc, minStock: product.minStock });
   const outOfStock = status === "stoc_epuizat";
-  const percent = discountPercent(product.price, product.oldPrice);
+  const percent = discountPercent(price, product.oldPrice);
   const favorite = isInWishlist(product.id);
-  const similare = products
+  const brand = getBrand(product.brandSlug);
+  const department = getDepartment(product.departmentSlug);
+  const category = getCategory(product.categorySlug);
+  const specs = attributesFor(product.departmentSlug, product.categorySlug).filter(
+    (def) => def.showOnProduct && product.attributes[def.key] !== undefined,
+  );
+  const similare = activeProducts()
     .filter((p) => p.id !== product.id && p.categorySlug === product.categorySlug)
     .slice(0, 4);
 
@@ -102,9 +112,15 @@ function ProductPage() {
           Acasă
         </Link>
         <span aria-hidden="true"> / </span>
-        <Link to="/bijuterii" className="hover:underline">
-          Bijuterii
-        </Link>
+        {product.departmentSlug === "machiaj" ? (
+          <Link to="/machiaj" className="hover:underline">
+            Machiaj
+          </Link>
+        ) : (
+          <Link to="/bijuterii" className="hover:underline">
+            Bijuterii
+          </Link>
+        )}
         <span aria-hidden="true"> / </span>
         <span className="text-foreground">{product.name}</span>
       </nav>
