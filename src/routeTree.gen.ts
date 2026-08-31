@@ -23,6 +23,7 @@ import { Route as MachiajRouteImport } from './routes/machiaj'
 import { Route as NoutatiRouteImport } from './routes/noutati'
 import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
+import { Route as ProduseRouteImport } from './routes/produse'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -108,6 +109,11 @@ const PoliticaDeConfidentialitateRoute =
 const PoliticaDeReturRoute = PoliticaDeReturRouteImport.update({
   id: '/politica-de-retur',
   path: '/politica-de-retur',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduseRoute = ProduseRouteImport.update({
+  id: '/produse',
+  path: '/produse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReduceriRoute = ReduceriRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/categorii': typeof AdminCategoriiRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/categorii': typeof AdminCategoriiRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/categorii': typeof AdminCategoriiRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
     | '/admin/categorii'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
     | '/admin/categorii'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
     | '/admin/categorii'
@@ -389,6 +401,7 @@ export interface RootRouteChildren {
   NoutatiRoute: typeof NoutatiRoute
   PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
+  ProduseRoute: typeof ProduseRoute
   ReduceriRoute: typeof ReduceriRoute
   TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
@@ -494,6 +507,13 @@ declare module '@tanstack/react-router' {
       path: '/politica-de-retur'
       fullPath: '/politica-de-retur'
       preLoaderRoute: typeof PoliticaDeReturRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produse': {
+      id: '/produse'
+      path: '/produse'
+      fullPath: '/produse'
+      preLoaderRoute: typeof ProduseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reduceri': {
@@ -647,6 +667,7 @@ const rootRouteChildren: RootRouteChildren = {
   NoutatiRoute: NoutatiRoute,
   PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
   PoliticaDeReturRoute: PoliticaDeReturRoute,
+  ProduseRoute: ProduseRoute,
   ReduceriRoute: ReduceriRoute,
   TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,
