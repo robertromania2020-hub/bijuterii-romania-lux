@@ -1,0 +1,425 @@
+import type {
+  Category,
+  Collection,
+  Coupon,
+  Customer,
+  Discount,
+  Order,
+  Product,
+} from "./types";
+
+import catInele from "@/assets/cat-inele.jpg";
+import catBratari from "@/assets/cat-bratari.jpg";
+import catColiere from "@/assets/cat-coliere.jpg";
+import catCercei from "@/assets/cat-cercei.jpg";
+import pCerceiHuggie from "@/assets/p-cercei-huggie.jpg";
+import pColierDelicat from "@/assets/p-colier-delicat.jpg";
+import pSetInele from "@/assets/p-set-inele.jpg";
+import pBratraOtel from "@/assets/p-bratara-otel.jpg";
+import pInelSignet from "@/assets/p-inel-signet.jpg";
+import pSetCadou from "@/assets/p-set-cadou.jpg";
+import colGold from "@/assets/col-gold.jpg";
+import colMinimal from "@/assets/col-minimal.jpg";
+
+/**
+ * Date demonstrative. În faza următoare vor fi înlocuite cu interogări
+ * către baza de date, păstrând aceleași tipuri.
+ */
+
+export const categories: Category[] = [
+  { id: "c1", slug: "inele", name: "Inele", image: catInele, productCount: 124, tone: "lilac" },
+  { id: "c2", slug: "bratari", name: "Brățări", image: catBratari, productCount: 98, tone: "mint" },
+  { id: "c3", slug: "coliere", name: "Coliere", image: catColiere, productCount: 156, tone: "peach" },
+  { id: "c4", slug: "cercei", name: "Cercei", image: catCercei, productCount: 87, tone: "lilac" },
+  { id: "c5", slug: "seturi", name: "Seturi", image: pSetCadou, productCount: 42, tone: "peach" },
+  { id: "c6", slug: "placate-cu-aur", name: "Bijuterii placate cu aur", image: colGold, productCount: 210, tone: "mint" },
+  { id: "c7", slug: "otel", name: "Bijuterii din oțel", image: colMinimal, productCount: 175, tone: "lilac" },
+  { id: "c8", slug: "reduceri", name: "Reduceri", image: pSetInele, productCount: 63, tone: "peach" },
+];
+
+export const collections: Collection[] = [
+  {
+    id: "k1",
+    slug: "gold-collection",
+    name: "Gold Collection",
+    description: "Piese placate cu aur de 18K, pentru zilele în care vrei să strălucești.",
+    image: colGold,
+  },
+  {
+    id: "k2",
+    slug: "stainless-steel",
+    name: "Stainless Steel",
+    description: "Oțel inoxidabil rezistent la apă, potrivit pentru purtare zilnică.",
+    image: colMinimal,
+  },
+  {
+    id: "k3",
+    slug: "minimal",
+    name: "Minimal",
+    description: "Linii curate și forme discrete, pentru un stil fără efort.",
+    image: pColierDelicat,
+  },
+  {
+    id: "k4",
+    slug: "elegance",
+    name: "Elegance",
+    description: "Bijuterii statement pentru ocazii speciale.",
+    image: pInelSignet,
+  },
+  {
+    id: "k5",
+    slug: "cadouri",
+    name: "Cadouri",
+    description: "Seturi ambalate cadou, gata de dăruit.",
+    image: pSetCadou,
+  },
+];
+
+export const products: Product[] = [
+  {
+    id: "p1",
+    slug: "cercei-huggie-aur",
+    sku: "BJ-CER-001",
+    name: "Cercei Huggie placați cu aur",
+    description:
+      "Cercei huggie cu finisaj lucios, placați cu aur de 18K pe bază de oțel inoxidabil. Ușori, confortabili și potriviți pentru purtare zilnică.",
+    price: 189,
+    oldPrice: 270,
+    material: "aur",
+    categorySlug: "cercei",
+    collectionSlug: "gold-collection",
+    stock: 24,
+    minStock: 5,
+    images: [pCerceiHuggie, catCercei],
+    variants: [],
+    status: "activ",
+    isNew: false,
+    isFeatured: true,
+    popularity: 98,
+    createdAt: "2026-05-11",
+  },
+  {
+    id: "p2",
+    slug: "colier-delicat-aur",
+    sku: "BJ-COL-014",
+    name: "Colier delicat placat cu aur",
+    description:
+      "Colier fin cu zale mici, lungime reglabilă. Se poartă singur sau în combinație cu alte lănțișoare.",
+    price: 240,
+    oldPrice: null,
+    material: "aur",
+    categorySlug: "coliere",
+    collectionSlug: "minimal",
+    stock: 4,
+    minStock: 5,
+    images: [pColierDelicat, catColiere],
+    variants: ["40 cm", "45 cm", "50 cm"],
+    status: "activ",
+    isNew: true,
+    isFeatured: true,
+    popularity: 91,
+    createdAt: "2026-08-02",
+  },
+  {
+    id: "p3",
+    slug: "set-inele-aur",
+    sku: "BJ-INE-032",
+    name: "Set 3 inele placate cu aur",
+    description:
+      "Set format din trei inele subțiri care se poartă suprapuse. Rezistente la apă și la zgârieturi.",
+    price: 312,
+    oldPrice: 390,
+    material: "aur",
+    categorySlug: "seturi",
+    collectionSlug: "gold-collection",
+    stock: 12,
+    minStock: 4,
+    images: [pSetInele, catInele],
+    variants: ["16 mm", "17 mm", "18 mm"],
+    status: "activ",
+    isNew: false,
+    isFeatured: true,
+    popularity: 87,
+    createdAt: "2026-04-20",
+  },
+  {
+    id: "p4",
+    slug: "bratara-otel-meridian",
+    sku: "BJ-BRA-007",
+    name: "Brățară Meridian din oțel",
+    description:
+      "Brățară din bile de oțel inoxidabil, cu închidere reglabilă. Nu se decolorează și nu provoacă alergii.",
+    price: 129,
+    oldPrice: null,
+    material: "otel",
+    categorySlug: "bratari",
+    collectionSlug: "stainless-steel",
+    stock: 31,
+    minStock: 6,
+    images: [pBratraOtel, catBratari],
+    variants: [],
+    status: "activ",
+    isNew: false,
+    isFeatured: true,
+    popularity: 76,
+    createdAt: "2026-03-15",
+  },
+  {
+    id: "p5",
+    slug: "inel-signet-elegance",
+    sku: "BJ-INE-045",
+    name: "Inel Signet Elegance",
+    description:
+      "Inel statement cu piatră centrală și detalii pavé. Perfect pentru evenimente și ocazii speciale.",
+    price: 349,
+    oldPrice: 499,
+    material: "aur",
+    categorySlug: "inele",
+    collectionSlug: "elegance",
+    stock: 0,
+    minStock: 3,
+    images: [pInelSignet, catInele],
+    variants: ["16 mm", "17 mm", "18 mm", "19 mm"],
+    status: "activ",
+    isNew: true,
+    isFeatured: true,
+    popularity: 82,
+    createdAt: "2026-08-19",
+  },
+  {
+    id: "p6",
+    slug: "set-cadou-floral",
+    sku: "BJ-SET-011",
+    name: "Set cadou Floral: colier și cercei",
+    description:
+      "Set format din colier și cercei asortați, livrat în cutie cadou. Alegerea potrivită pentru un cadou memorabil.",
+    price: 279,
+    oldPrice: 349,
+    material: "argint",
+    categorySlug: "seturi",
+    collectionSlug: "cadouri",
+    stock: 9,
+    minStock: 4,
+    images: [pSetCadou, colGold],
+    variants: [],
+    status: "activ",
+    isNew: true,
+    isFeatured: false,
+    popularity: 69,
+    createdAt: "2026-08-25",
+  },
+  {
+    id: "p7",
+    slug: "colier-perla-luna",
+    sku: "BJ-COL-022",
+    name: "Colier cu perlă Luna",
+    description:
+      "Colier cu pandantiv rotund și perlă naturală de apă dulce, montată pe lănțișor placat cu aur.",
+    price: 219,
+    oldPrice: null,
+    material: "perle",
+    categorySlug: "coliere",
+    collectionSlug: "elegance",
+    stock: 17,
+    minStock: 5,
+    images: [catColiere, pColierDelicat],
+    variants: ["42 cm", "45 cm"],
+    status: "activ",
+    isNew: false,
+    isFeatured: false,
+    popularity: 64,
+    createdAt: "2026-02-10",
+  },
+  {
+    id: "p8",
+    slug: "cercei-cerc-otel",
+    sku: "BJ-CER-018",
+    name: "Cercei cerc din oțel",
+    description:
+      "Cercei tip cerc, din oțel inoxidabil lustruit. Rezistenți la apă, potriviți pentru purtare zilnică.",
+    price: 99,
+    oldPrice: 139,
+    material: "otel",
+    categorySlug: "cercei",
+    collectionSlug: "stainless-steel",
+    stock: 2,
+    minStock: 5,
+    images: [catCercei, pCerceiHuggie],
+    variants: [],
+    status: "activ",
+    isNew: false,
+    isFeatured: false,
+    popularity: 58,
+    createdAt: "2026-06-30",
+  },
+];
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return products.find((p) => p.slug === slug);
+}
+
+export function getProductById(id: string): Product | undefined {
+  return products.find((p) => p.id === id);
+}
+
+export const orders: Order[] = [
+  {
+    id: "o1",
+    number: "#1042",
+    customerName: "Ioana Popescu",
+    customerEmail: "ioana.popescu@example.ro",
+    customerPhone: "0745 123 456",
+    city: "Cluj-Napoca",
+    county: "Cluj",
+    total: 468,
+    status: "noua",
+    awb: null,
+    notes: null,
+    items: [
+      { productId: "p1", name: "Cercei Huggie placați cu aur", quantity: 1, price: 189 },
+      { productId: "p2", name: "Colier delicat placat cu aur", quantity: 1, price: 240 },
+    ],
+    createdAt: "2026-08-29",
+  },
+  {
+    id: "o2",
+    number: "#1041",
+    customerName: "Andreea Marin",
+    customerEmail: "andreea.marin@example.ro",
+    customerPhone: "0722 987 654",
+    city: "București",
+    county: "București",
+    total: 312,
+    status: "in_procesare",
+    awb: null,
+    notes: "Ambalare cadou",
+    items: [{ productId: "p3", name: "Set 3 inele placate cu aur", quantity: 1, price: 312 }],
+    createdAt: "2026-08-28",
+  },
+  {
+    id: "o3",
+    number: "#1040",
+    customerName: "Maria Ionescu",
+    customerEmail: "maria.ionescu@example.ro",
+    customerPhone: "0733 555 111",
+    city: "Iași",
+    county: "Iași",
+    total: 129,
+    status: "expediata",
+    awb: "SM12345678RO",
+    notes: null,
+    items: [{ productId: "p4", name: "Brățară Meridian din oțel", quantity: 1, price: 129 }],
+    createdAt: "2026-08-26",
+  },
+  {
+    id: "o4",
+    number: "#1039",
+    customerName: "Elena Dobre",
+    customerEmail: "elena.dobre@example.ro",
+    customerPhone: "0766 222 333",
+    city: "Timișoara",
+    county: "Timiș",
+    total: 558,
+    status: "livrata",
+    awb: "SM12345611RO",
+    notes: null,
+    items: [{ productId: "p6", name: "Set cadou Floral", quantity: 2, price: 279 }],
+    createdAt: "2026-08-21",
+  },
+];
+
+export const customers: Customer[] = [
+  {
+    id: "cu1",
+    name: "Ioana Popescu",
+    email: "ioana.popescu@example.ro",
+    phone: "0745 123 456",
+    ordersCount: 4,
+    totalSpent: 1420,
+    createdAt: "2026-01-14",
+  },
+  {
+    id: "cu2",
+    name: "Andreea Marin",
+    email: "andreea.marin@example.ro",
+    phone: "0722 987 654",
+    ordersCount: 2,
+    totalSpent: 640,
+    createdAt: "2026-03-02",
+  },
+  {
+    id: "cu3",
+    name: "Maria Ionescu",
+    email: "maria.ionescu@example.ro",
+    phone: "0733 555 111",
+    ordersCount: 1,
+    totalSpent: 129,
+    createdAt: "2026-07-19",
+  },
+];
+
+export const discounts: Discount[] = [
+  {
+    id: "d1",
+    name: "Reducere vară — placate cu aur",
+    type: "procent",
+    value: 30,
+    target: "Categoria: Bijuterii placate cu aur",
+    startsAt: "2026-08-01",
+    endsAt: "2026-09-15",
+    active: true,
+  },
+  {
+    id: "d2",
+    name: "Colecția Elegance",
+    type: "procent",
+    value: 20,
+    target: "Colecția: Elegance",
+    startsAt: "2026-08-10",
+    endsAt: "2026-09-30",
+    active: true,
+  },
+  {
+    id: "d3",
+    name: "Lichidare stoc cercei",
+    type: "suma_fixa",
+    value: 40,
+    target: "Produse selectate: 6",
+    startsAt: "2026-07-01",
+    endsAt: "2026-07-31",
+    active: false,
+  },
+];
+
+export const coupons: Coupon[] = [
+  {
+    id: "cp1",
+    code: "BINEVENIT10",
+    type: "procent",
+    value: 10,
+    usageLimit: 500,
+    used: 213,
+    active: true,
+    expiresAt: "2026-12-31",
+  },
+  {
+    id: "cp2",
+    code: "TRANSPORTGRATIS",
+    type: "suma_fixa",
+    value: 20,
+    usageLimit: 200,
+    used: 187,
+    active: true,
+    expiresAt: "2026-10-01",
+  },
+  {
+    id: "cp3",
+    code: "TOAMNA25",
+    type: "procent",
+    value: 25,
+    usageLimit: 100,
+    used: 0,
+    active: false,
+    expiresAt: "2026-11-30",
+  },
+];
