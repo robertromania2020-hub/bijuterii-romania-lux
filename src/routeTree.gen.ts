@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BijuteriiRouteImport } from './routes/bijuterii'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContRouteImport } from './routes/cont'
@@ -23,6 +24,7 @@ import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politi
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
 import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
@@ -30,6 +32,11 @@ import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BijuteriiRoute = BijuteriiRouteImport.update({
@@ -98,6 +105,11 @@ const TermeniSiConditiiRoute = TermeniSiConditiiRouteImport.update({
   path: '/termeni-si-conditii',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ColectiiIndexRoute = ColectiiIndexRouteImport.update({
   id: '/colectii/',
   path: '/colectii/',
@@ -116,6 +128,7 @@ const ProdusSlugRoute = ProdusSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bijuterii': typeof BijuteriiRoute
   '/checkout': typeof CheckoutRoute
   '/cont': typeof ContRoute
@@ -131,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRoutesByTo {
@@ -150,11 +164,13 @@ export interface FileRoutesByTo {
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/colectii': typeof ColectiiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bijuterii': typeof BijuteriiRoute
   '/checkout': typeof CheckoutRoute
   '/cont': typeof ContRoute
@@ -170,12 +186,14 @@ export interface FileRoutesById {
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/bijuterii'
     | '/checkout'
     | '/cont'
@@ -191,6 +209,7 @@ export interface FileRouteTypes {
     | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
+    | '/admin/'
     | '/colectii/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -210,10 +229,12 @@ export interface FileRouteTypes {
     | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
+    | '/admin'
     | '/colectii'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/bijuterii'
     | '/checkout'
     | '/cont'
@@ -229,11 +250,13 @@ export interface FileRouteTypes {
     | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
+    | '/admin/'
     | '/colectii/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BijuteriiRoute: typeof BijuteriiRoute
   CheckoutRoute: typeof CheckoutRoute
   ContRoute: typeof ContRoute
@@ -259,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bijuterii': {
@@ -352,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermeniSiConditiiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/colectii/': {
       id: '/colectii/'
       path: '/colectii'
@@ -376,8 +413,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   BijuteriiRoute: BijuteriiRoute,
   CheckoutRoute: CheckoutRoute,
   ContRoute: ContRoute,
