@@ -8,25 +8,25 @@ import { MATERIAL_LABELS, stockStatus, type Material } from "@/data/types";
 type Sortare = "recomandate" | "noi" | "pret_asc" | "pret_desc" | "populare";
 
 interface BijuteriiSearch {
-  q?: string;
-  categorie?: string;
-  material?: string;
-  pretMax?: number;
-  disponibil?: boolean;
-  sortare?: Sortare;
+  q?: string | undefined;
+  categorie?: string | undefined;
+  material?: string | undefined;
+  pretMax?: number | undefined;
+  disponibil?: boolean | undefined;
+  sortare?: Sortare | undefined;
 }
 
 export const Route = createFileRoute("/bijuterii")({
   validateSearch: (search: Record<string, unknown>): BijuteriiSearch => ({
-    q: typeof search.q === "string" && search.q ? search.q : undefined,
-    categorie: typeof search.categorie === "string" ? search.categorie : undefined,
-    material: typeof search.material === "string" ? search.material : undefined,
-    pretMax: typeof search.pretMax === "number" ? search.pretMax : undefined,
-    disponibil: search.disponibil === true ? true : undefined,
+    q: typeof search['q'] === "string" && search['q'] ? search['q'] : undefined,
+    categorie: typeof search['categorie'] === "string" ? search['categorie'] : undefined,
+    material: typeof search['material'] === "string" ? search['material'] : undefined,
+    pretMax: typeof search['pretMax'] === "number" ? search['pretMax'] : undefined,
+    disponibil: search['disponibil'] === true ? true : undefined,
     sortare: (["recomandate", "noi", "pret_asc", "pret_desc", "populare"] as const).includes(
-      search.sortare as Sortare,
+      search['sortare'] as Sortare,
     )
-      ? (search.sortare as Sortare)
+      ? (search['sortare'] as Sortare)
       : undefined,
   }),
   head: () => ({
@@ -63,7 +63,7 @@ function ListingPage() {
     navigate({ search: (prev) => ({ ...prev, ...patch }) });
 
   const rezultate = useMemo(() => {
-    const term = (search.q ?? "").trim().toLowerCase();
+    const term = (search['q'] ?? "").trim().toLowerCase();
     let list = products.filter((p) => p.status === "activ");
 
     if (term) {
@@ -74,26 +74,26 @@ function ListingPage() {
           p.sku.toLowerCase().includes(term),
       );
     }
-    if (search.categorie) {
+    if (search['categorie']) {
       list = list.filter(
         (p) =>
-          p.categorySlug === search.categorie ||
-          (search.categorie === "reduceri" && p.oldPrice !== null) ||
-          (search.categorie === "placate-cu-aur" && p.material === "aur") ||
-          (search.categorie === "otel" && p.material === "otel"),
+          p.categorySlug === search['categorie'] ||
+          (search['categorie'] === "reduceri" && p.oldPrice !== null) ||
+          (search['categorie'] === "placate-cu-aur" && p.material === "aur") ||
+          (search['categorie'] === "otel" && p.material === "otel"),
       );
     }
-    if (search.material) {
-      list = list.filter((p) => p.material === search.material);
+    if (search['material']) {
+      list = list.filter((p) => p.material === search['material']);
     }
-    if (search.pretMax) {
-      list = list.filter((p) => p.price <= search.pretMax!);
+    if (search['pretMax']) {
+      list = list.filter((p) => p.price <= search['pretMax']!);
     }
-    if (search.disponibil) {
+    if (search['disponibil']) {
       list = list.filter((p) => stockStatus(p) !== "stoc_epuizat");
     }
 
-    switch (search.sortare) {
+    switch (search['sortare']) {
       case "noi":
         return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       case "pret_asc":
@@ -125,7 +125,7 @@ function ListingPage() {
               id="filtru-cautare"
               className="field mt-2"
               placeholder="Caută produse"
-              value={search.q ?? ""}
+              value={search['q'] ?? ""}
               onChange={(e) => setSearch({ q: e.target.value || undefined })}
             />
           </div>
@@ -137,7 +137,7 @@ function ListingPage() {
             <select
               id="filtru-categorie"
               className="field mt-2"
-              value={search.categorie ?? ""}
+              value={search['categorie'] ?? ""}
               onChange={(e) => setSearch({ categorie: e.target.value || undefined })}
             >
               <option value="">Toate categoriile</option>
@@ -156,7 +156,7 @@ function ListingPage() {
             <select
               id="filtru-material"
               className="field mt-2"
-              value={search.material ?? ""}
+              value={search['material'] ?? ""}
               onChange={(e) => setSearch({ material: e.target.value || undefined })}
             >
               <option value="">Toate materialele</option>
@@ -170,7 +170,7 @@ function ListingPage() {
 
           <div className="mt-5">
             <label htmlFor="filtru-pret" className="text-sm font-semibold">
-              Preț maxim: {search.pretMax ?? 500} lei
+              Preț maxim: {search['pretMax'] ?? 500} lei
             </label>
             <input
               id="filtru-pret"
@@ -179,7 +179,7 @@ function ListingPage() {
               max={500}
               step={10}
               className="mt-3 w-full accent-primary"
-              value={search.pretMax ?? 500}
+              value={search['pretMax'] ?? 500}
               onChange={(e) => setSearch({ pretMax: Number(e.target.value) })}
             />
           </div>
@@ -189,7 +189,7 @@ function ListingPage() {
               id="filtru-disponibil"
               type="checkbox"
               className="size-4 accent-primary"
-              checked={search.disponibil ?? false}
+              checked={search['disponibil'] ?? false}
               onChange={(e) => setSearch({ disponibil: e.target.checked || undefined })}
             />
             <label htmlFor="filtru-disponibil" className="text-sm">
@@ -218,7 +218,7 @@ function ListingPage() {
               <select
                 id="sortare"
                 className="field w-auto"
-                value={search.sortare ?? "recomandate"}
+                value={search['sortare'] ?? "recomandate"}
                 onChange={(e) => setSearch({ sortare: e.target.value as Sortare })}
               >
                 {(Object.keys(SORT_LABELS) as Sortare[]).map((s) => (

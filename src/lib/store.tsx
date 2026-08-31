@@ -72,7 +72,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const idx = prev.findIndex((l) => l.productId === productId && l.variant === variant);
         if (idx >= 0) {
           const next = [...prev];
-          next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
+          next[idx] = { ...next[idx]!, quantity: next[idx]!.quantity + quantity };
           return next;
         }
         return [...prev, { productId, variant, quantity }];
