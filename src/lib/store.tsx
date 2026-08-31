@@ -27,7 +27,7 @@ interface StoreValue {
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   cartCount: number;
-  cartLines: Array<CartLine & { product: Product }>;
+  cartLines: Array<CartLine & { product: Product; unitPrice: number }>;
   totals: { subtotal: number; discount: number; shipping: number; total: number };
 }
 
