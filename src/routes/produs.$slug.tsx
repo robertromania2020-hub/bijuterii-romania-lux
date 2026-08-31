@@ -4,8 +4,16 @@ import { Heart, Minus, Plus, RotateCcw, Shield, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout, EmptyState } from "@/components/SiteLayout";
 import { ProductCard } from "@/components/ProductCard";
-import { getProductBySlug, products } from "@/data/catalog";
-import { MATERIAL_LABELS, STOCK_LABELS, stockStatus } from "@/data/types";
+import {
+  activeProducts,
+  attributesFor,
+  formatAttributeValue,
+  getBrand,
+  getCategory,
+  getDepartment,
+  getProductBySlug,
+} from "@/data/catalog";
+import { STOCK_LABELS, stockStatus } from "@/data/types";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 
