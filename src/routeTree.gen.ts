@@ -25,6 +25,15 @@ import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminCategoriiRouteImport } from './routes/admin.categorii'
+import { Route as AdminClientiRouteImport } from './routes/admin.clienti'
+import { Route as AdminCoduriPromotionaleRouteImport } from './routes/admin.coduri-promotionale'
+import { Route as AdminColectiiRouteImport } from './routes/admin.colectii'
+import { Route as AdminComenziRouteImport } from './routes/admin.comenzi'
+import { Route as AdminProduseRouteImport } from './routes/admin.produse'
+import { Route as AdminReduceriRouteImport } from './routes/admin.reduceri'
+import { Route as AdminSetariRouteImport } from './routes/admin.setari'
+import { Route as AdminStocRouteImport } from './routes/admin.stoc'
 import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
 import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
@@ -110,6 +119,51 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCategoriiRoute = AdminCategoriiRouteImport.update({
+  id: '/categorii',
+  path: '/categorii',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientiRoute = AdminClientiRouteImport.update({
+  id: '/clienti',
+  path: '/clienti',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCoduriPromotionaleRoute = AdminCoduriPromotionaleRouteImport.update({
+  id: '/coduri-promotionale',
+  path: '/coduri-promotionale',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminColectiiRoute = AdminColectiiRouteImport.update({
+  id: '/colectii',
+  path: '/colectii',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminComenziRoute = AdminComenziRouteImport.update({
+  id: '/comenzi',
+  path: '/comenzi',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProduseRoute = AdminProduseRouteImport.update({
+  id: '/produse',
+  path: '/produse',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReduceriRoute = AdminReduceriRouteImport.update({
+  id: '/reduceri',
+  path: '/reduceri',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSetariRoute = AdminSetariRouteImport.update({
+  id: '/setari',
+  path: '/setari',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStocRoute = AdminStocRouteImport.update({
+  id: '/stoc',
+  path: '/stoc',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ColectiiIndexRoute = ColectiiIndexRouteImport.update({
   id: '/colectii/',
   path: '/colectii/',
@@ -142,6 +196,15 @@ export interface FileRoutesByFullPath {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/categorii': typeof AdminCategoriiRoute
+  '/admin/clienti': typeof AdminClientiRoute
+  '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
+  '/admin/colectii': typeof AdminColectiiRoute
+  '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/produse': typeof AdminProduseRoute
+  '/admin/reduceri': typeof AdminReduceriRoute
+  '/admin/setari': typeof AdminSetariRoute
+  '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -162,6 +225,15 @@ export interface FileRoutesByTo {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/categorii': typeof AdminCategoriiRoute
+  '/admin/clienti': typeof AdminClientiRoute
+  '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
+  '/admin/colectii': typeof AdminColectiiRoute
+  '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/produse': typeof AdminProduseRoute
+  '/admin/reduceri': typeof AdminReduceriRoute
+  '/admin/setari': typeof AdminSetariRoute
+  '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -184,6 +256,15 @@ export interface FileRoutesById {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/categorii': typeof AdminCategoriiRoute
+  '/admin/clienti': typeof AdminClientiRoute
+  '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
+  '/admin/colectii': typeof AdminColectiiRoute
+  '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/produse': typeof AdminProduseRoute
+  '/admin/reduceri': typeof AdminReduceriRoute
+  '/admin/setari': typeof AdminSetariRoute
+  '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -207,6 +288,15 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/categorii'
+    | '/admin/clienti'
+    | '/admin/coduri-promotionale'
+    | '/admin/colectii'
+    | '/admin/comenzi'
+    | '/admin/produse'
+    | '/admin/reduceri'
+    | '/admin/setari'
+    | '/admin/stoc'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/admin/'
@@ -227,6 +317,15 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/categorii'
+    | '/admin/clienti'
+    | '/admin/coduri-promotionale'
+    | '/admin/colectii'
+    | '/admin/comenzi'
+    | '/admin/produse'
+    | '/admin/reduceri'
+    | '/admin/setari'
+    | '/admin/stoc'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/admin'
@@ -248,6 +347,15 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/categorii'
+    | '/admin/clienti'
+    | '/admin/coduri-promotionale'
+    | '/admin/colectii'
+    | '/admin/comenzi'
+    | '/admin/produse'
+    | '/admin/reduceri'
+    | '/admin/setari'
+    | '/admin/stoc'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/admin/'
@@ -389,6 +497,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/categorii': {
+      id: '/admin/categorii'
+      path: '/categorii'
+      fullPath: '/admin/categorii'
+      preLoaderRoute: typeof AdminCategoriiRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clienti': {
+      id: '/admin/clienti'
+      path: '/clienti'
+      fullPath: '/admin/clienti'
+      preLoaderRoute: typeof AdminClientiRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/coduri-promotionale': {
+      id: '/admin/coduri-promotionale'
+      path: '/coduri-promotionale'
+      fullPath: '/admin/coduri-promotionale'
+      preLoaderRoute: typeof AdminCoduriPromotionaleRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/colectii': {
+      id: '/admin/colectii'
+      path: '/colectii'
+      fullPath: '/admin/colectii'
+      preLoaderRoute: typeof AdminColectiiRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/comenzi': {
+      id: '/admin/comenzi'
+      path: '/comenzi'
+      fullPath: '/admin/comenzi'
+      preLoaderRoute: typeof AdminComenziRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/produse': {
+      id: '/admin/produse'
+      path: '/produse'
+      fullPath: '/admin/produse'
+      preLoaderRoute: typeof AdminProduseRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reduceri': {
+      id: '/admin/reduceri'
+      path: '/reduceri'
+      fullPath: '/admin/reduceri'
+      preLoaderRoute: typeof AdminReduceriRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/setari': {
+      id: '/admin/setari'
+      path: '/setari'
+      fullPath: '/admin/setari'
+      preLoaderRoute: typeof AdminSetariRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/stoc': {
+      id: '/admin/stoc'
+      path: '/stoc'
+      fullPath: '/admin/stoc'
+      preLoaderRoute: typeof AdminStocRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/colectii/': {
       id: '/colectii/'
       path: '/colectii'
@@ -414,10 +585,28 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminCategoriiRoute: typeof AdminCategoriiRoute
+  AdminClientiRoute: typeof AdminClientiRoute
+  AdminCoduriPromotionaleRoute: typeof AdminCoduriPromotionaleRoute
+  AdminColectiiRoute: typeof AdminColectiiRoute
+  AdminComenziRoute: typeof AdminComenziRoute
+  AdminProduseRoute: typeof AdminProduseRoute
+  AdminReduceriRoute: typeof AdminReduceriRoute
+  AdminSetariRoute: typeof AdminSetariRoute
+  AdminStocRoute: typeof AdminStocRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCategoriiRoute: AdminCategoriiRoute,
+  AdminClientiRoute: AdminClientiRoute,
+  AdminCoduriPromotionaleRoute: AdminCoduriPromotionaleRoute,
+  AdminColectiiRoute: AdminColectiiRoute,
+  AdminComenziRoute: AdminComenziRoute,
+  AdminProduseRoute: AdminProduseRoute,
+  AdminReduceriRoute: AdminReduceriRoute,
+  AdminSetariRoute: AdminSetariRoute,
+  AdminStocRoute: AdminStocRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
