@@ -11,8 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BijuteriiRouteImport } from './routes/bijuterii'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DespreNoiRouteImport } from './routes/despre-noi'
 import { Route as NoutatiRouteImport } from './routes/noutati'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
+import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
+import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -25,6 +29,16 @@ const BijuteriiRoute = BijuteriiRouteImport.update({
   path: '/bijuterii',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespreNoiRoute = DespreNoiRouteImport.update({
+  id: '/despre-noi',
+  path: '/despre-noi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NoutatiRoute = NoutatiRouteImport.update({
   id: '/noutati',
   path: '/noutati',
@@ -33,6 +47,16 @@ const NoutatiRoute = NoutatiRouteImport.update({
 const ReduceriRoute = ReduceriRouteImport.update({
   id: '/reduceri',
   path: '/reduceri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColectiiIndexRoute = ColectiiIndexRouteImport.update({
+  id: '/colectii/',
+  path: '/colectii/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColectiiSlugRoute = ColectiiSlugRouteImport.update({
+  id: '/colectii/$slug',
+  path: '/colectii/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProdusSlugRoute = ProdusSlugRouteImport.update({
@@ -44,40 +68,83 @@ const ProdusSlugRoute = ProdusSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/colectii': typeof ColectiiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
+  '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
+  fullPaths:
+    | '/'
+    | '/bijuterii'
+    | '/contact'
+    | '/despre-noi'
+    | '/noutati'
+    | '/reduceri'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/colectii/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
+  to:
+    | '/'
+    | '/bijuterii'
+    | '/contact'
+    | '/despre-noi'
+    | '/noutati'
+    | '/reduceri'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/colectii'
   id:
-    '__root__' | '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
+    | '__root__'
+    | '/'
+    | '/bijuterii'
+    | '/contact'
+    | '/despre-noi'
+    | '/noutati'
+    | '/reduceri'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/colectii/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BijuteriiRoute: typeof BijuteriiRoute
+  ContactRoute: typeof ContactRoute
+  DespreNoiRoute: typeof DespreNoiRoute
   NoutatiRoute: typeof NoutatiRoute
   ReduceriRoute: typeof ReduceriRoute
+  ColectiiSlugRoute: typeof ColectiiSlugRoute
   ProdusSlugRoute: typeof ProdusSlugRoute
+  ColectiiIndexRoute: typeof ColectiiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -96,6 +163,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BijuteriiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despre-noi': {
+      id: '/despre-noi'
+      path: '/despre-noi'
+      fullPath: '/despre-noi'
+      preLoaderRoute: typeof DespreNoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/noutati': {
       id: '/noutati'
       path: '/noutati'
@@ -108,6 +189,20 @@ declare module '@tanstack/react-router' {
       path: '/reduceri'
       fullPath: '/reduceri'
       preLoaderRoute: typeof ReduceriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colectii/': {
+      id: '/colectii/'
+      path: '/colectii'
+      fullPath: '/colectii/'
+      preLoaderRoute: typeof ColectiiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colectii/$slug': {
+      id: '/colectii/$slug'
+      path: '/colectii/$slug'
+      fullPath: '/colectii/$slug'
+      preLoaderRoute: typeof ColectiiSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/produs/$slug': {
@@ -123,9 +218,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BijuteriiRoute: BijuteriiRoute,
+  ContactRoute: ContactRoute,
+  DespreNoiRoute: DespreNoiRoute,
   NoutatiRoute: NoutatiRoute,
   ReduceriRoute: ReduceriRoute,
+  ColectiiSlugRoute: ColectiiSlugRoute,
   ProdusSlugRoute: ProdusSlugRoute,
+  ColectiiIndexRoute: ColectiiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
