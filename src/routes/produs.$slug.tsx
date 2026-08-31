@@ -173,16 +173,23 @@ function ProductPage() {
             )}
           </div>
 
-          <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-balance">
+          {brand && (
+            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {brand.name}
+            </p>
+          )}
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-balance">
             {product.name}
           </h1>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">SKU: {product.sku}</p>
+          <p className="mt-1 font-mono text-xs text-muted-foreground">
+            SKU: {selected?.sku ?? product.sku}
+          </p>
 
           <div className="mt-4 flex items-baseline gap-3">
             <span
               className={`font-display text-3xl font-semibold ${percent !== null ? "text-primary" : ""}`}
             >
-              {formatPrice(product.price)}
+              {formatPrice(price)}
             </span>
             {product.oldPrice && (
               <span className="text-base text-muted-foreground line-through">
