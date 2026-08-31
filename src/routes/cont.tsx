@@ -10,9 +10,9 @@ import { useStore } from "@/lib/store";
 type Tab = "date" | "comenzi" | "adrese" | "favorite";
 
 export const Route = createFileRoute("/cont")({
-  validateSearch: (search: Record<string, unknown>): { tab?: Tab } => ({
-    tab: (["date", "comenzi", "adrese", "favorite"] as const).includes(search.tab as Tab)
-      ? (search.tab as Tab)
+  validateSearch: (search: Record<string, unknown>): { tab?: Tab | undefined } => ({
+    tab: (["date", "comenzi", "adrese", "favorite"] as const).includes(search['tab'] as Tab)
+      ? (search['tab'] as Tab)
       : undefined,
   }),
   head: () => ({
@@ -119,19 +119,19 @@ function ContPage() {
               <dl className="mt-4 grid gap-4 sm:grid-cols-2 text-sm">
                 <div>
                   <dt className="text-muted-foreground">Nume complet</dt>
-                  <dd className="font-semibold">{client.name}</dd>
+                  <dd className="font-semibold">{client?.name}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">Email</dt>
-                  <dd className="font-semibold">{client.email}</dd>
+                  <dd className="font-semibold">{client?.email}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">Telefon</dt>
-                  <dd className="font-semibold">{client.phone}</dd>
+                  <dd className="font-semibold">{client?.phone}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">Client din</dt>
-                  <dd className="font-semibold">{formatDate(client.createdAt)}</dd>
+                  <dd className="font-semibold">{client ? formatDate(client.createdAt) : "—"}</dd>
                 </div>
               </dl>
             </div>

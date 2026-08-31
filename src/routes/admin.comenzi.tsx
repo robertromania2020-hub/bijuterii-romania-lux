@@ -114,9 +114,7 @@ function AdminComenzi() {
               </p>
               <h3 className="mt-4 font-semibold">Livrare</h3>
               <p className="mt-1 text-muted-foreground">
-                {detaliu.shippingAddress}
-                <br />
-                Metodă: {detaliu.shippingMethod} · Plată: {detaliu.paymentMethod}
+                {detaliu.city}, județul {detaliu.county}
                 <br />
                 AWB: {detaliu.awb ?? "—"}
               </p>
@@ -125,7 +123,7 @@ function AdminComenzi() {
               <h3 className="font-semibold">Produse</h3>
               <ul className="mt-2 space-y-2">
                 {detaliu.items.map((it) => (
-                  <li key={it.id} className="flex justify-between gap-4">
+                  <li key={it.productId} className="flex justify-between gap-4">
                     <span>
                       {it.name} × {it.quantity}
                     </span>

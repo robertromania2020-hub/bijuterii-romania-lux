@@ -64,7 +64,7 @@ function Field({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  error?: string;
+  error?: string | undefined;
   type?: string;
   required?: boolean;
   autoComplete?: string;

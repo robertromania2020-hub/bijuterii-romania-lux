@@ -11,7 +11,7 @@ export function InfoPage({
   intro,
   sections,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
   intro: string;
   sections: InfoSection[];
