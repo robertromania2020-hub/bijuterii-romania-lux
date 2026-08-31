@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { toast } from "sonner";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { getBrand } from "@/data/catalog";
 import { STOCK_LABELS, stockStatus, type Product } from "@/data/types";
 
 export function ProductCard({ product }: { product: Product }) {
