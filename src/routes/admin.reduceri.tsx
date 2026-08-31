@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
 import { discounts as seed } from "@/data/catalog";
+import { DISCOUNT_TARGET_LABELS } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/admin/reduceri")({
@@ -36,7 +37,9 @@ function AdminReduceri() {
             <td className="px-4 py-3 font-semibold">{d.name}</td>
             <td className="px-4 py-3">{d.type === "procent" ? "Procent" : "Sumă fixă"}</td>
             <td className="px-4 py-3">{d.type === "procent" ? `${d.value}%` : formatPrice(d.value)}</td>
-            <td className="px-4 py-3 text-muted-foreground">{d.target}</td>
+            <td className="px-4 py-3 text-muted-foreground">
+              {DISCOUNT_TARGET_LABELS[d.targetType]}: {d.targetSlug}
+            </td>
             <td className="px-4 py-3 text-muted-foreground">
               {formatDate(d.startsAt)} – {formatDate(d.endsAt)}
             </td>
