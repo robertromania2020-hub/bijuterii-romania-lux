@@ -1,36 +1,50 @@
 /**
- * Modele de date pregătite pentru conectarea la baza de date (faza următoare).
- * Numele câmpurilor reflectă tabelele viitoare: products, categories,
- * collections, product_images, product_variants, inventory, orders,
- * order_items, customers, discounts, coupons, admin_users, wishlists, addresses.
+ * Modele de date generice, pregătite pentru conectarea la baza de date.
+ * Numele câmpurilor reflectă tabelele viitoare: departments, categories,
+ * brands, products, product_images, product_attributes,
+ * product_attribute_values, product_variants, inventory, inventory_history,
+ * collections, discounts, coupons, orders, order_items, customers,
+ * customer_addresses, wishlists, admin_users.
+ *
+ * IMPORTANT: niciun produs nu presupune că este bijuterie. Atributele
+ * specifice (material, nuanță, gramaj etc.) sunt definite dinamic prin
+ * `AttributeDefinition` și stocate în `Product.attributes`.
  */
 
-export type Material = "otel" | "aur" | "argint" | "perle";
+export type Tone = "lilac" | "mint" | "peach";
 
-export const MATERIAL_LABELS: Record<Material, string> = {
-  otel: "Oțel inoxidabil",
-  aur: "Placat cu aur",
-  argint: "Argint 925",
-  perle: "Perle",
-};
-
-export type StockStatus = "in_stoc" | "stoc_limitat" | "stoc_epuizat";
-
-export const STOCK_LABELS: Record<StockStatus, string> = {
-  in_stoc: "În stoc",
-  stoc_limitat: "Stoc limitat",
-  stoc_epuizat: "Stoc epuizat",
-};
-
-export type ProductStatus = "activ" | "inactiv";
+export interface Department {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  image: string;
+  tone: Tone;
+  active: boolean;
+  position: number;
+  seoTitle?: string;
+  seoDescription?: string;
+}
 
 export interface Category {
   id: string;
   slug: string;
   name: string;
+  departmentSlug: string;
   image: string;
-  productCount: number;
-  tone: "lilac" | "mint" | "peach";
+  tone: Tone;
+  active: boolean;
+  position: number;
+  seoTitle?: string;
+  seoDescription?: string;
+}
+
+export interface Brand {
+  id: string;
+  slug: string;
+  name: string;
+  logo: string | null;
+  active: boolean;
 }
 
 export interface Collection {
@@ -39,7 +53,57 @@ export interface Collection {
   name: string;
   description: string;
   image: string;
+  departmentSlug: string | null;
 }
+
+/** Tipuri de atribute pe care administratorul le poate crea. */
+export type AttributeType = "text" | "select" | "multi" | "number" | "boolean";
+
+export const ATTRIBUTE_TYPE_LABELS: Record<AttributeType, string> = {
+  text: "Text",
+  select: "Selecție unică",
+  multi: "Selecție multiplă",
+  number: "Număr",
+  boolean: "Da / Nu",
+};
+
+export interface AttributeDefinition {
+  id: string;
+  key: string;
+  label: string;
+  type: AttributeType;
+  /** Opțiunile disponibile pentru tipurile select / multi. */
+  options: string[];
+  /** Departamentul în care se aplică atributul; null = toate departamentele. */
+  departmentSlug: string | null;
+  /** Categoriile în care se aplică; listă goală = toate categoriile departamentului. */
+  categorySlugs: string[];
+  /** Apare ca filtru în listare. */
+  filterable: boolean;
+  /** Apare în fișa produsului. */
+  showOnProduct: boolean;
+  unit?: string;
+  position: number;
+}
+
+export type AttributeValue = string | string[] | number | boolean;
+export type AttributeValues = Record<string, AttributeValue>;
+
+export interface ProductVariant {
+  id: string;
+  /** Numele atributului care generează varianta: „Nuanță", „Mărime" etc. */
+  attributeLabel: string;
+  /** Valoarea variantei, afișată clientului. */
+  label: string;
+  sku: string;
+  /** Preț propriu; null = folosește prețul produsului. */
+  price: number | null;
+  stock: number;
+  image: string | null;
+  active: boolean;
+}
+
+export type ProductStatus = "activ" | "inactiv";
 
 export interface Product {
   id: string;
@@ -48,18 +112,49 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  /** Prețul întreg, anterior reducerii. */
   oldPrice: number | null;
-  material: Material;
+  departmentSlug: string;
   categorySlug: string;
   collectionSlug: string | null;
+  brandSlug: string | null;
   stock: number;
   minStock: number;
   images: string[];
-  variants: string[];
+  variants: ProductVariant[];
+  attributes: AttributeValues;
   status: ProductStatus;
   isNew: boolean;
   isFeatured: boolean;
+  isBestseller: boolean;
   popularity: number;
+  createdAt: string;
+  seoTitle?: string;
+  seoDescription?: string;
+}
+
+export type StockStatus = "in_stoc" | "stoc_limitat" | "stoc_epuizat";
+
+export const STOCK_LABELS: Record<StockStatus, string> = {
+  in_stoc: "În stoc",
+  stoc_limitat: "Stoc redus",
+  stoc_epuizat: "Stoc epuizat",
+};
+
+export function stockStatus(product: Pick<Product, "stock" | "minStock">): StockStatus {
+  if (product.stock <= 0) return "stoc_epuizat";
+  if (product.stock <= product.minStock) return "stoc_limitat";
+  return "in_stoc";
+}
+
+export interface InventoryEntry {
+  id: string;
+  productId: string;
+  variantId: string | null;
+  change: number;
+  resulting: number;
+  reason: string;
+  author: string;
   createdAt: string;
 }
 
@@ -83,6 +178,9 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 export interface OrderItem {
   productId: string;
   name: string;
+  sku: string;
+  departmentSlug: string;
+  variantLabel: string | null;
   quantity: number;
   price: number;
 }
@@ -95,6 +193,9 @@ export interface Order {
   customerPhone: string;
   city: string;
   county: string;
+  subtotal: number;
+  discount: number;
+  shipping: number;
   total: number;
   status: OrderStatus;
   awb: string | null;
@@ -113,12 +214,23 @@ export interface Customer {
   createdAt: string;
 }
 
+export type DiscountTargetType = "produs" | "categorie" | "departament" | "colectie";
+
+export const DISCOUNT_TARGET_LABELS: Record<DiscountTargetType, string> = {
+  produs: "Produs",
+  categorie: "Categorie",
+  departament: "Departament",
+  colectie: "Colecție",
+};
+
 export interface Discount {
   id: string;
   name: string;
   type: "procent" | "suma_fixa";
   value: number;
-  target: string;
+  targetType: DiscountTargetType;
+  /** Slug-ul țintei (produs, categorie, departament sau colecție). */
+  targetSlug: string;
   startsAt: string;
   endsAt: string;
   active: boolean;
@@ -129,6 +241,7 @@ export interface Coupon {
   code: string;
   type: "procent" | "suma_fixa";
   value: number;
+  minOrder: number;
   usageLimit: number;
   used: number;
   active: boolean;
@@ -147,10 +260,4 @@ export interface Address {
   apartment?: string;
   postalCode: string;
   isDefault: boolean;
-}
-
-export function stockStatus(product: Pick<Product, "stock" | "minStock">): StockStatus {
-  if (product.stock <= 0) return "stoc_epuizat";
-  if (product.stock <= product.minStock) return "stoc_limitat";
-  return "in_stoc";
 }
