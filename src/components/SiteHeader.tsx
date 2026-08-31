@@ -117,7 +117,7 @@ export function SiteHeader() {
           <input
             id="cautare-site"
             className="field"
-            placeholder="Caută inele, coliere, cercei..."
+            placeholder="Caută bijuterii, ruj, fond de ten, brand..."
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             autoFocus
