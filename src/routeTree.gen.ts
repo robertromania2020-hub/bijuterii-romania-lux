@@ -16,8 +16,13 @@ import { Route as ContRouteImport } from './routes/cont'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CosRouteImport } from './routes/cos'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
+import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
+import { Route as LivrareRouteImport } from './routes/livrare'
 import { Route as NoutatiRouteImport } from './routes/noutati'
+import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
+import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
+import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
 import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
@@ -57,14 +62,40 @@ const DespreNoiRoute = DespreNoiRouteImport.update({
   path: '/despre-noi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IntrebariFrecventeRoute = IntrebariFrecventeRouteImport.update({
+  id: '/intrebari-frecvente',
+  path: '/intrebari-frecvente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LivrareRoute = LivrareRouteImport.update({
+  id: '/livrare',
+  path: '/livrare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NoutatiRoute = NoutatiRouteImport.update({
   id: '/noutati',
   path: '/noutati',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PoliticaDeConfidentialitateRoute =
+  PoliticaDeConfidentialitateRouteImport.update({
+    id: '/politica-de-confidentialitate',
+    path: '/politica-de-confidentialitate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PoliticaDeReturRoute = PoliticaDeReturRouteImport.update({
+  id: '/politica-de-retur',
+  path: '/politica-de-retur',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReduceriRoute = ReduceriRouteImport.update({
   id: '/reduceri',
   path: '/reduceri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermeniSiConditiiRoute = TermeniSiConditiiRouteImport.update({
+  id: '/termeni-si-conditii',
+  path: '/termeni-si-conditii',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ColectiiIndexRoute = ColectiiIndexRouteImport.update({
@@ -91,8 +122,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
   '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/colectii/': typeof ColectiiIndexRoute
@@ -105,8 +141,13 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
   '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/colectii': typeof ColectiiIndexRoute
@@ -120,8 +161,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
   '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
   '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/colectii/': typeof ColectiiIndexRoute
@@ -136,8 +182,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
     | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
     | '/reduceri'
+    | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/colectii/'
@@ -150,8 +201,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
     | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
     | '/reduceri'
+    | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/colectii'
@@ -164,8 +220,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
     | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
     | '/reduceri'
+    | '/termeni-si-conditii'
     | '/colectii/$slug'
     | '/produs/$slug'
     | '/colectii/'
@@ -179,8 +240,13 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CosRoute: typeof CosRoute
   DespreNoiRoute: typeof DespreNoiRoute
+  IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
+  LivrareRoute: typeof LivrareRoute
   NoutatiRoute: typeof NoutatiRoute
+  PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
+  PoliticaDeReturRoute: typeof PoliticaDeReturRoute
   ReduceriRoute: typeof ReduceriRoute
+  TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
   ProdusSlugRoute: typeof ProdusSlugRoute
   ColectiiIndexRoute: typeof ColectiiIndexRoute
@@ -237,6 +303,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DespreNoiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/intrebari-frecvente': {
+      id: '/intrebari-frecvente'
+      path: '/intrebari-frecvente'
+      fullPath: '/intrebari-frecvente'
+      preLoaderRoute: typeof IntrebariFrecventeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/livrare': {
+      id: '/livrare'
+      path: '/livrare'
+      fullPath: '/livrare'
+      preLoaderRoute: typeof LivrareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/noutati': {
       id: '/noutati'
       path: '/noutati'
@@ -244,11 +324,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoutatiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/politica-de-confidentialitate': {
+      id: '/politica-de-confidentialitate'
+      path: '/politica-de-confidentialitate'
+      fullPath: '/politica-de-confidentialitate'
+      preLoaderRoute: typeof PoliticaDeConfidentialitateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-retur': {
+      id: '/politica-de-retur'
+      path: '/politica-de-retur'
+      fullPath: '/politica-de-retur'
+      preLoaderRoute: typeof PoliticaDeReturRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reduceri': {
       id: '/reduceri'
       path: '/reduceri'
       fullPath: '/reduceri'
       preLoaderRoute: typeof ReduceriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termeni-si-conditii': {
+      id: '/termeni-si-conditii'
+      path: '/termeni-si-conditii'
+      fullPath: '/termeni-si-conditii'
+      preLoaderRoute: typeof TermeniSiConditiiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/colectii/': {
@@ -283,8 +384,13 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CosRoute: CosRoute,
   DespreNoiRoute: DespreNoiRoute,
+  IntrebariFrecventeRoute: IntrebariFrecventeRoute,
+  LivrareRoute: LivrareRoute,
   NoutatiRoute: NoutatiRoute,
+  PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
+  PoliticaDeReturRoute: PoliticaDeReturRoute,
   ReduceriRoute: ReduceriRoute,
+  TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,
   ProdusSlugRoute: ProdusSlugRoute,
   ColectiiIndexRoute: ColectiiIndexRoute,
