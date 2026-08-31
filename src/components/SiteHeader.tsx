@@ -25,7 +25,7 @@ export function SiteHeader() {
     e.preventDefault();
     setSearchOpen(false);
     setMenuOpen(false);
-    navigate({ to: "/bijuterii", search: { q: term || undefined } });
+    navigate({ to: "/produse", search: { q: term || undefined } });
   }
 
   return (
