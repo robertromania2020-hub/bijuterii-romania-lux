@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products as catalog } from "@/data/catalog";
+import { products as catalog, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
 
 export interface CartLine {
@@ -27,7 +27,7 @@ interface StoreValue {
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   cartCount: number;
-  cartLines: Array<CartLine & { product: Product }>;
+  cartLines: Array<CartLine & { product: Product; unitPrice: number }>;
   totals: { subtotal: number; discount: number; shipping: number; total: number };
 }
 
@@ -110,14 +110,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const cartLines = cart
       .map((line) => {
         const product = catalog.find((p) => p.id === line.productId);
-        return product ? { ...line, product } : null;
+        if (!product) return null;
+        return { ...line, product, unitPrice: variantPrice(product, line.variant) };
       })
-      .filter((l): l is CartLine & { product: Product } => l !== null);
+      .filter((l): l is CartLine & { product: Product; unitPrice: number } => l !== null);
 
-    const subtotal = cartLines.reduce((sum, l) => sum + l.product.price * l.quantity, 0);
+    const subtotal = cartLines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
     const discount = cartLines.reduce(
-      (sum, l) =>
-        sum + (l.product.oldPrice ? (l.product.oldPrice - l.product.price) * l.quantity : 0),
+      (sum, l) => sum + (l.product.oldPrice ? (l.product.oldPrice - l.unitPrice) * l.quantity : 0),
       0,
     );
     const shipping =

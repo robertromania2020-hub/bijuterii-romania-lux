@@ -3,39 +3,39 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { CatalogListing } from "@/components/CatalogListing";
 import { validateListingSearch, type ListingSearch } from "@/lib/listing";
 
-export const Route = createFileRoute("/bijuterii")({
+export const Route = createFileRoute("/machiaj")({
   validateSearch: validateListingSearch,
   head: () => ({
     meta: [
-      { title: "Bijuterii — inele, brățări, coliere, cercei | BIJUTERII" },
+      { title: "Machiaj — fond de ten, farduri, rujuri, mascara | BIJUTERII" },
       {
         name: "description",
         content:
-          "Toate bijuteriile noastre: filtrează după categorie, material, culoare, preț și disponibilitate. Livrare rapidă în toată România.",
+          "Produse de machiaj de la branduri cunoscute: fond de ten, palete de farduri, rujuri, mascara și fixatoare. Filtrează după brand, nuanță și finish.",
       },
-      { property: "og:title", content: "Bijuterii — catalog complet | BIJUTERII" },
+      { property: "og:title", content: "Machiaj — catalog complet | BIJUTERII" },
       {
         property: "og:description",
-        content: "Inele, brățări, coliere și cercei din oțel inoxidabil și placate cu aur.",
+        content: "Fond de ten, farduri, rujuri și mascara de la branduri cunoscute.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: BijuteriiPage,
+  component: MachiajPage,
 });
 
-function BijuteriiPage() {
+function MachiajPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
   return (
     <SiteLayout>
       <CatalogListing
-        departmentSlug="bijuterii"
+        departmentSlug="machiaj"
         eyebrow="Departament"
-        title="Bijuterii"
-        description="Filtrează după categorie, material, culoare, preț și disponibilitate pentru a găsi piesa potrivită."
+        title="Machiaj"
+        description="Filtrează după categorie, brand, nuanță, finish și preț pentru a găsi produsul potrivit."
         search={search}
         onChange={(patch: Partial<ListingSearch>) =>
           navigate({ search: (prev) => ({ ...prev, ...patch }) })

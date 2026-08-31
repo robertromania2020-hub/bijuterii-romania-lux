@@ -19,17 +19,22 @@ import { Route as CosRouteImport } from './routes/cos'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
 import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
 import { Route as LivrareRouteImport } from './routes/livrare'
+import { Route as MachiajRouteImport } from './routes/machiaj'
 import { Route as NoutatiRouteImport } from './routes/noutati'
 import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
+import { Route as ProduseRouteImport } from './routes/produse'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAtributeRouteImport } from './routes/admin.atribute'
+import { Route as AdminBranduriRouteImport } from './routes/admin.branduri'
 import { Route as AdminCategoriiRouteImport } from './routes/admin.categorii'
 import { Route as AdminClientiRouteImport } from './routes/admin.clienti'
 import { Route as AdminCoduriPromotionaleRouteImport } from './routes/admin.coduri-promotionale'
 import { Route as AdminColectiiRouteImport } from './routes/admin.colectii'
 import { Route as AdminComenziRouteImport } from './routes/admin.comenzi'
+import { Route as AdminDepartamenteRouteImport } from './routes/admin.departamente'
 import { Route as AdminProduseRouteImport } from './routes/admin.produse'
 import { Route as AdminReduceriRouteImport } from './routes/admin.reduceri'
 import { Route as AdminSetariRouteImport } from './routes/admin.setari'
@@ -88,6 +93,11 @@ const LivrareRoute = LivrareRouteImport.update({
   path: '/livrare',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MachiajRoute = MachiajRouteImport.update({
+  id: '/machiaj',
+  path: '/machiaj',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NoutatiRoute = NoutatiRouteImport.update({
   id: '/noutati',
   path: '/noutati',
@@ -104,6 +114,11 @@ const PoliticaDeReturRoute = PoliticaDeReturRouteImport.update({
   path: '/politica-de-retur',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProduseRoute = ProduseRouteImport.update({
+  id: '/produse',
+  path: '/produse',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReduceriRoute = ReduceriRouteImport.update({
   id: '/reduceri',
   path: '/reduceri',
@@ -117,6 +132,16 @@ const TermeniSiConditiiRoute = TermeniSiConditiiRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAtributeRoute = AdminAtributeRouteImport.update({
+  id: '/atribute',
+  path: '/atribute',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBranduriRoute = AdminBranduriRouteImport.update({
+  id: '/branduri',
+  path: '/branduri',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCategoriiRoute = AdminCategoriiRouteImport.update({
@@ -142,6 +167,11 @@ const AdminColectiiRoute = AdminColectiiRouteImport.update({
 const AdminComenziRoute = AdminComenziRouteImport.update({
   id: '/comenzi',
   path: '/comenzi',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDepartamenteRoute = AdminDepartamenteRouteImport.update({
+  id: '/departamente',
+  path: '/departamente',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProduseRoute = AdminProduseRouteImport.update({
@@ -191,16 +221,21 @@ export interface FileRoutesByFullPath {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/atribute': typeof AdminAtributeRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -220,16 +255,21 @@ export interface FileRoutesByTo {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/atribute': typeof AdminAtributeRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -251,16 +291,21 @@ export interface FileRoutesById {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/atribute': typeof AdminAtributeRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -283,16 +328,21 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/atribute'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -312,16 +362,21 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/atribute'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -342,16 +397,21 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
+    | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/atribute'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -373,9 +433,11 @@ export interface RootRouteChildren {
   DespreNoiRoute: typeof DespreNoiRoute
   IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
   LivrareRoute: typeof LivrareRoute
+  MachiajRoute: typeof MachiajRoute
   NoutatiRoute: typeof NoutatiRoute
   PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
+  ProduseRoute: typeof ProduseRoute
   ReduceriRoute: typeof ReduceriRoute
   TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
@@ -455,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivrareRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/machiaj': {
+      id: '/machiaj'
+      path: '/machiaj'
+      fullPath: '/machiaj'
+      preLoaderRoute: typeof MachiajRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/noutati': {
       id: '/noutati'
       path: '/noutati'
@@ -476,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PoliticaDeReturRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produse': {
+      id: '/produse'
+      path: '/produse'
+      fullPath: '/produse'
+      preLoaderRoute: typeof ProduseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reduceri': {
       id: '/reduceri'
       path: '/reduceri'
@@ -495,6 +571,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/atribute': {
+      id: '/admin/atribute'
+      path: '/atribute'
+      fullPath: '/admin/atribute'
+      preLoaderRoute: typeof AdminAtributeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/branduri': {
+      id: '/admin/branduri'
+      path: '/branduri'
+      fullPath: '/admin/branduri'
+      preLoaderRoute: typeof AdminBranduriRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/categorii': {
@@ -530,6 +620,13 @@ declare module '@tanstack/react-router' {
       path: '/comenzi'
       fullPath: '/admin/comenzi'
       preLoaderRoute: typeof AdminComenziRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/departamente': {
+      id: '/admin/departamente'
+      path: '/departamente'
+      fullPath: '/admin/departamente'
+      preLoaderRoute: typeof AdminDepartamenteRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/produse': {
@@ -585,11 +682,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAtributeRoute: typeof AdminAtributeRoute
+  AdminBranduriRoute: typeof AdminBranduriRoute
   AdminCategoriiRoute: typeof AdminCategoriiRoute
   AdminClientiRoute: typeof AdminClientiRoute
   AdminCoduriPromotionaleRoute: typeof AdminCoduriPromotionaleRoute
   AdminColectiiRoute: typeof AdminColectiiRoute
   AdminComenziRoute: typeof AdminComenziRoute
+  AdminDepartamenteRoute: typeof AdminDepartamenteRoute
   AdminProduseRoute: typeof AdminProduseRoute
   AdminReduceriRoute: typeof AdminReduceriRoute
   AdminSetariRoute: typeof AdminSetariRoute
@@ -598,11 +698,14 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAtributeRoute: AdminAtributeRoute,
+  AdminBranduriRoute: AdminBranduriRoute,
   AdminCategoriiRoute: AdminCategoriiRoute,
   AdminClientiRoute: AdminClientiRoute,
   AdminCoduriPromotionaleRoute: AdminCoduriPromotionaleRoute,
   AdminColectiiRoute: AdminColectiiRoute,
   AdminComenziRoute: AdminComenziRoute,
+  AdminDepartamenteRoute: AdminDepartamenteRoute,
   AdminProduseRoute: AdminProduseRoute,
   AdminReduceriRoute: AdminReduceriRoute,
   AdminSetariRoute: AdminSetariRoute,
@@ -623,9 +726,11 @@ const rootRouteChildren: RootRouteChildren = {
   DespreNoiRoute: DespreNoiRoute,
   IntrebariFrecventeRoute: IntrebariFrecventeRoute,
   LivrareRoute: LivrareRoute,
+  MachiajRoute: MachiajRoute,
   NoutatiRoute: NoutatiRoute,
   PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
   PoliticaDeReturRoute: PoliticaDeReturRoute,
+  ProduseRoute: ProduseRoute,
   ReduceriRoute: ReduceriRoute,
   TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,

@@ -4,8 +4,16 @@ import { Heart, Minus, Plus, RotateCcw, Shield, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout, EmptyState } from "@/components/SiteLayout";
 import { ProductCard } from "@/components/ProductCard";
-import { getProductBySlug, products } from "@/data/catalog";
-import { MATERIAL_LABELS, STOCK_LABELS, stockStatus } from "@/data/types";
+import {
+  activeProducts,
+  attributesFor,
+  formatAttributeValue,
+  getBrand,
+  getCategory,
+  getDepartment,
+  getProductBySlug,
+} from "@/data/catalog";
+import { STOCK_LABELS, stockStatus } from "@/data/types";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 
@@ -76,14 +84,24 @@ function ProductPage() {
   const { product } = Route.useLoaderData();
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [imageIndex, setImageIndex] = useState(0);
-  const [variant, setVariant] = useState<string | null>(product.variants[0] ?? null);
+  const activeVariants = product.variants.filter((v) => v.active);
+  const [variantId, setVariantId] = useState<string | null>(activeVariants[0]?.id ?? null);
   const [quantity, setQuantity] = useState(1);
 
-  const status = stockStatus(product);
+  const selected = activeVariants.find((v) => v.id === variantId) ?? null;
+  const price = selected?.price ?? product.price;
+  const stoc = selected ? selected.stock : product.stock;
+  const status = stockStatus({ stock: stoc, minStock: product.minStock });
   const outOfStock = status === "stoc_epuizat";
-  const percent = discountPercent(product.price, product.oldPrice);
+  const percent = discountPercent(price, product.oldPrice);
   const favorite = isInWishlist(product.id);
-  const similare = products
+  const brand = getBrand(product.brandSlug);
+  const department = getDepartment(product.departmentSlug);
+  const category = getCategory(product.categorySlug);
+  const specs = attributesFor(product.departmentSlug, product.categorySlug).filter(
+    (def) => def.showOnProduct && product.attributes[def.key] !== undefined,
+  );
+  const similare = activeProducts()
     .filter((p) => p.id !== product.id && p.categorySlug === product.categorySlug)
     .slice(0, 4);
 
@@ -94,9 +112,15 @@ function ProductPage() {
           Acasă
         </Link>
         <span aria-hidden="true"> / </span>
-        <Link to="/bijuterii" className="hover:underline">
-          Bijuterii
-        </Link>
+        {product.departmentSlug === "machiaj" ? (
+          <Link to="/machiaj" className="hover:underline">
+            Machiaj
+          </Link>
+        ) : (
+          <Link to="/bijuterii" className="hover:underline">
+            Bijuterii
+          </Link>
+        )}
         <span aria-hidden="true"> / </span>
         <span className="text-foreground">{product.name}</span>
       </nav>
@@ -149,16 +173,23 @@ function ProductPage() {
             )}
           </div>
 
-          <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-balance">
+          {brand && (
+            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {brand.name}
+            </p>
+          )}
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-balance">
             {product.name}
           </h1>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">SKU: {product.sku}</p>
+          <p className="mt-1 font-mono text-xs text-muted-foreground">
+            SKU: {selected?.sku ?? product.sku}
+          </p>
 
           <div className="mt-4 flex items-baseline gap-3">
             <span
               className={`font-display text-3xl font-semibold ${percent !== null ? "text-primary" : ""}`}
             >
-              {formatPrice(product.price)}
+              {formatPrice(price)}
             </span>
             {product.oldPrice && (
               <span className="text-base text-muted-foreground line-through">
@@ -185,32 +216,47 @@ function ProductPage() {
 
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-2xl bg-muted p-3">
-              <dt className="text-xs text-muted-foreground">Material</dt>
-              <dd className="font-semibold">{MATERIAL_LABELS[product.material]}</dd>
+              <dt className="text-xs text-muted-foreground">Departament</dt>
+              <dd className="font-semibold">{department?.name ?? "—"}</dd>
             </div>
             <div className="rounded-2xl bg-muted p-3">
               <dt className="text-xs text-muted-foreground">Categorie</dt>
-              <dd className="font-semibold capitalize">{product.categorySlug.replace(/-/g, " ")}</dd>
+              <dd className="font-semibold">{category?.name ?? "—"}</dd>
             </div>
+            {specs.map((def) => (
+              <div key={def.id} className="rounded-2xl bg-muted p-3">
+                <dt className="text-xs text-muted-foreground">{def.label}</dt>
+                <dd className="font-semibold">
+                  {formatAttributeValue(def, product.attributes[def.key]!)}
+                </dd>
+              </div>
+            ))}
           </dl>
 
-          {product.variants.length > 0 && (
+          {activeVariants.length > 0 && (
             <fieldset className="mt-5">
-              <legend className="text-sm font-semibold">Mărime</legend>
+              <legend className="text-sm font-semibold">
+                {activeVariants[0]!.attributeLabel}
+              </legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                {product.variants.map((v) => (
+                {activeVariants.map((v) => (
                   <button
-                    key={v}
+                    key={v.id}
                     type="button"
-                    onClick={() => setVariant(v)}
-                    aria-pressed={variant === v}
-                    className={`rounded-full border px-4 py-2 text-sm ${
-                      variant === v
+                    onClick={() => {
+                      setVariantId(v.id);
+                      setQuantity(1);
+                    }}
+                    disabled={v.stock <= 0}
+                    aria-pressed={variantId === v.id}
+                    className={`rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
+                      variantId === v.id
                         ? "border-transparent bg-foreground text-background"
                         : "border-border bg-surface"
                     }`}
                   >
-                    {v}
+                    {v.label}
+                    {v.stock <= 0 && " — epuizat"}
                   </button>
                 ))}
               </div>
@@ -234,7 +280,7 @@ function ProductPage() {
                 type="button"
                 className="grid size-9 place-items-center rounded-full hover:bg-muted"
                 aria-label="Crește cantitatea"
-                onClick={() => setQuantity((q) => Math.min(product.stock || 1, q + 1))}
+                onClick={() => setQuantity((q) => Math.min(stoc || 1, q + 1))}
               >
                 <Plus className="size-4" />
               </button>
@@ -244,7 +290,7 @@ function ProductPage() {
               className="btn-dark flex-1"
               disabled={outOfStock}
               onClick={() => {
-                addToCart(product.id, quantity, variant);
+                addToCart(product.id, quantity, selected?.label ?? null);
                 toast.success("Produs adăugat în coș");
               }}
             >

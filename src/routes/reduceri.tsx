@@ -6,14 +6,14 @@ import { products } from "@/data/catalog";
 export const Route = createFileRoute("/reduceri")({
   head: () => ({
     meta: [
-      { title: "Reduceri — până la -30% la bijuterii | BIJUTERII" },
+      { title: "Reduceri — până la -30% la bijuterii și machiaj | BIJUTERII" },
       {
         name: "description",
         content:
-          "Descoperă reducerile la bijuterii placate cu aur și din oțel inoxidabil. Oferte limitate, până la -30%.",
+          "Descoperă reducerile la bijuterii și la produsele de machiaj. Oferte limitate, până la -30%.",
       },
       { property: "og:title", content: "Descoperă reducerile | BIJUTERII" },
-      { property: "og:description", content: "Oferte limitate la bijuterii, până la -30%." },
+      { property: "og:description", content: "Oferte limitate la bijuterii și machiaj, până la -30%." },
     ],
   }),
   component: ReduceriPage,
@@ -36,8 +36,8 @@ function ReduceriPage() {
           reducerea.
         </p>
         <Link
-          to="/bijuterii"
-          search={{ categorie: "reduceri" }}
+          to="/produse"
+          search={{ reduceri: true }}
           className="mt-4 inline-block rounded-full bg-background px-5 py-3 text-sm font-semibold text-foreground"
         >
           Vezi toate reducerile

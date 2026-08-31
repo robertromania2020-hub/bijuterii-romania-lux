@@ -6,13 +6,13 @@ import { products } from "@/data/catalog";
 export const Route = createFileRoute("/noutati")({
   head: () => ({
     meta: [
-      { title: "Noutăți — cele mai noi bijuterii | BIJUTERII" },
+      { title: "Noutăți — cele mai noi produse | BIJUTERII" },
       {
         name: "description",
-        content: "Cele mai noi modele de inele, coliere, brățări și cercei adăugate în magazin.",
+        content: "Cele mai noi bijuterii și produse de machiaj adăugate în magazin.",
       },
       { property: "og:title", content: "Noutăți | BIJUTERII" },
-      { property: "og:description", content: "Cele mai noi bijuterii adăugate în magazin." },
+      { property: "og:description", content: "Cele mai noi bijuterii și produse de machiaj adăugate în magazin." },
     ],
   }),
   component: NoutatiPage,

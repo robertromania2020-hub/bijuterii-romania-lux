@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { toast } from "sonner";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { getBrand } from "@/data/catalog";
 import { STOCK_LABELS, stockStatus, type Product } from "@/data/types";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -55,7 +56,12 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="px-1 pb-1">
-        <h3 className="mt-2.5 text-sm font-semibold leading-tight">
+        {getBrand(product.brandSlug) && (
+          <p className="mt-2.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            {getBrand(product.brandSlug)!.name}
+          </p>
+        )}
+        <h3 className="mt-1 text-sm font-semibold leading-tight">
           <Link to="/produs/$slug" params={{ slug: product.slug }}>
             {product.name}
           </Link>
@@ -83,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
           type="button"
           disabled={outOfStock}
           onClick={() => {
-            addToCart(product.id, 1, product.variants[0] ?? null);
+            addToCart(product.id, 1, product.variants[0]?.label ?? null);
             toast.success("Produs adăugat în coș");
           }}
           className="btn-soft mt-2.5 w-full"

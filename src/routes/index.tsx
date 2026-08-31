@@ -1,23 +1,31 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { ProductCard } from "@/components/ProductCard";
-import { categories, collections, products } from "@/data/catalog";
-import heroImage from "@/assets/hero.jpg";
+import {
+  activeProducts,
+  categoriesOf,
+  collections,
+  departments,
+} from "@/data/catalog";
+import heroImage from "@/assets/hero-beauty.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BIJUTERII — Eleganță pe care o porți în fiecare zi" },
+      { title: "BIJUTERII — bijuterii și machiaj, eleganță în fiecare zi" },
       {
         name: "description",
         content:
-          "Descoperă colecția de bijuterii din oțel inoxidabil și bijuterii placate cu aur: inele, brățări, coliere, cercei și seturi cadou.",
+          "Magazin online de bijuterii și machiaj: inele, brățări, coliere, cercei, fond de ten, farduri, rujuri și mascara. Livrare rapidă în toată România.",
       },
-      { property: "og:title", content: "BIJUTERII — Eleganță pe care o porți în fiecare zi" },
+      { property: "og:title", content: "BIJUTERII — bijuterii și machiaj" },
       {
         property: "og:description",
-        content: "Bijuterii din oțel și placate cu aur, create pentru a-ți completa stilul.",
+        content:
+          "Bijuterii din oțel și placate cu aur, alături de produse de machiaj de la branduri cunoscute.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: HomePage,
@@ -30,10 +38,10 @@ const toneClass = {
 } as const;
 
 function HomePage() {
-  const featured = products.filter((p) => p.isFeatured).slice(0, 4);
-  const newest = [...products]
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 4);
+  const all = activeProducts();
+  const featured = all.filter((p) => p.isFeatured).slice(0, 4);
+  const bestsellers = all.filter((p) => p.isBestseller).slice(0, 4);
+  const newest = [...all].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
 
   return (
     <SiteLayout>
@@ -41,80 +49,134 @@ function HomePage() {
       <section className="pt-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-10 lg:pt-12">
         <div>
           <p className="animate-rise font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Colecția 2026
+            Bijuterii & Machiaj — 2026
           </p>
           <h1 className="animate-rise mt-3 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-balance lg:text-6xl">
-            Eleganță pe care o <span className="text-primary">porți</span> în fiecare zi
+            Frumusețe pe care o <span className="text-primary">porți</span> în fiecare zi
           </h1>
           <p className="animate-rise mt-3 max-w-[42ch] text-sm text-muted-foreground text-pretty lg:text-base">
-            Descoperă colecția noastră de bijuterii din oțel și bijuterii placate cu aur, create
-            pentru a-ți completa stilul.
+            Două departamente, o singură comandă: bijuterii din oțel și placate cu aur, plus
+            produse de machiaj de la branduri cunoscute.
           </p>
-          <div className="animate-rise mt-5 flex gap-3">
-            <Link to="/bijuterii" className="btn-dark flex-1 text-center lg:flex-none">
-              Descoperă colecția
+          <div className="animate-rise mt-5 flex flex-wrap gap-3">
+            <Link to="/bijuterii" className="btn-dark">
+              Descoperă bijuteriile
             </Link>
-            <Link to="/reduceri" className="btn-primary">
-              Vezi reducerile
+            <Link to="/machiaj" className="btn-primary">
+              Descoperă machiajul
             </Link>
           </div>
         </div>
         <img
           src={heroImage}
-          alt="Inele și colier placate cu aur pe catifea roz"
+          alt="Bijuterii placate cu aur și produse de machiaj așezate pe un fundal pastelat"
           width={1024}
           height={768}
           className="animate-rise mt-6 aspect-[4/3] w-full rounded-[2rem] object-cover lg:mt-0"
         />
       </section>
 
-      {/* Categorii */}
-      <section className="mt-12" aria-labelledby="titlu-categorii">
-        <div className="mb-4 flex items-end justify-between">
-          <h2 id="titlu-categorii" className="font-display text-2xl font-semibold tracking-tight">
-            Categorii
-          </h2>
-          <Link to="/bijuterii" className="text-sm font-semibold text-primary">
-            Vezi toate
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {categories.map((cat) => (
+      {/* Departamente */}
+      <section className="mt-12" aria-labelledby="titlu-departamente">
+        <h2
+          id="titlu-departamente"
+          className="mb-4 font-display text-2xl font-semibold tracking-tight"
+        >
+          Departamente
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {departments.map((d) => (
             <Link
-              key={cat.id}
-              to="/bijuterii"
-              search={{ categorie: cat.slug }}
-              className={`rounded-3xl p-4 transition-transform hover:-translate-y-0.5 ${toneClass[cat.tone]}`}
+              key={d.id}
+              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              className={`overflow-hidden rounded-[2rem] p-4 transition-transform hover:-translate-y-0.5 ${toneClass[d.tone]}`}
             >
               <img
-                src={cat.image}
-                alt={cat.name}
+                src={d.image}
+                alt={d.name}
                 loading="lazy"
-                width={640}
-                height={640}
-                className="aspect-square w-full rounded-2xl object-cover"
+                width={800}
+                height={600}
+                className="aspect-[4/3] w-full rounded-3xl object-cover"
               />
-              <p className="mt-3 font-display font-semibold">{cat.name}</p>
-              <p className="font-mono text-[11px] text-muted-foreground">
-                {cat.productCount} produse
-              </p>
+              <h3 className="mt-3 font-display text-xl font-semibold">{d.name}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{d.description}</p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Produse populare */}
+      {/* Categorii pe departament */}
+      {departments.map((d) => (
+        <section key={d.id} className="mt-12" aria-labelledby={`titlu-cat-${d.slug}`}>
+          <div className="mb-4 flex items-end justify-between">
+            <h2
+              id={`titlu-cat-${d.slug}`}
+              className="font-display text-2xl font-semibold tracking-tight"
+            >
+              Categorii {d.name.toLowerCase()}
+            </h2>
+            <Link
+              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              className="text-sm font-semibold text-primary"
+            >
+              Vezi toate
+            </Link>
+          </div>
+          <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 lg:mx-0 lg:grid lg:grid-cols-6 lg:overflow-visible lg:px-0">
+            {categoriesOf(d.slug)
+              .slice(0, 6)
+              .map((cat) => (
+                <Link
+                  key={cat.id}
+                  to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+                  search={{ categorie: cat.slug }}
+                  className={`w-36 shrink-0 rounded-3xl p-3 transition-transform hover:-translate-y-0.5 lg:w-auto ${toneClass[cat.tone]}`}
+                >
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    loading="lazy"
+                    width={640}
+                    height={640}
+                    className="aspect-square w-full rounded-2xl object-cover"
+                  />
+                  <p className="mt-2.5 font-display text-sm font-semibold">{cat.name}</p>
+                </Link>
+              ))}
+          </div>
+        </section>
+      ))}
+
+      {/* Produse recomandate */}
       <section className="mt-12" aria-labelledby="titlu-populare">
         <div className="mb-4 flex items-end justify-between">
           <h2 id="titlu-populare" className="font-display text-2xl font-semibold tracking-tight">
-            Produse populare
+            Produse recomandate
           </h2>
-          <Link to="/bijuterii" search={{ sortare: "populare" }} className="text-sm font-semibold text-primary">
+          <Link to="/produse" search={{ sortare: "populare" }} className="text-sm font-semibold text-primary">
             Toate
           </Link>
         </div>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {featured.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+
+      {/* Bestselleruri */}
+      <section className="mt-12" aria-labelledby="titlu-bestsellers">
+        <div className="mb-4 flex items-end justify-between">
+          <h2 id="titlu-bestsellers" className="font-display text-2xl font-semibold tracking-tight">
+            Cele mai vândute
+          </h2>
+          <Link to="/produse" search={{ sortare: "populare" }} className="text-sm font-semibold text-primary">
+            Toate
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {bestsellers.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
@@ -152,7 +214,7 @@ function HomePage() {
             Până la <span className="text-gold">-30%</span>
           </h2>
           <p className="mt-2 max-w-[34ch] text-sm text-background/70">
-            Reduceri speciale pe bijuterii placate cu aur și din oțel inoxidabil.
+            Reduceri la bijuterii placate cu aur și la produsele de machiaj preferate.
           </p>
           <Link
             to="/reduceri"

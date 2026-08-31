@@ -5,14 +5,14 @@ import { collections } from "@/data/catalog";
 export const Route = createFileRoute("/colectii/")({
   head: () => ({
     meta: [
-      { title: "Colecții de bijuterii | BIJUTERII" },
+      { title: "Colecții de bijuterii și machiaj | BIJUTERII" },
       {
         name: "description",
         content:
-          "Colecțiile noastre: Gold Collection, Stainless Steel, Minimal, Elegance și Cadouri.",
+          "Colecțiile noastre de bijuterii și machiaj: Gold Collection, Stainless Steel, Minimal, Elegance, Cadouri, Nude Essentials și Glam Night.",
       },
-      { property: "og:title", content: "Colecții de bijuterii | BIJUTERII" },
-      { property: "og:description", content: "Gold Collection, Stainless Steel, Minimal, Elegance, Cadouri." },
+      { property: "og:title", content: "Colecții de bijuterii și machiaj | BIJUTERII" },
+      { property: "og:description", content: "Gold Collection, Stainless Steel, Minimal, Elegance, Cadouri, Nude Essentials, Glam Night." },
     ],
   }),
   component: ColectiiPage,
@@ -24,7 +24,7 @@ function ColectiiPage() {
       <PageHeading
         eyebrow="Selecții curatoriate"
         title="Colecții"
-        description="Piese grupate pe stil, material și ocazie."
+        description="Produse grupate pe stil, ocazie și tip de machiaj."
       />
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {collections.map((col, i) => (

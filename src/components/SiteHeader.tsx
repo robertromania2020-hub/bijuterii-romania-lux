@@ -6,6 +6,7 @@ import { useStore } from "@/lib/store";
 const NAV = [
   { to: "/", label: "Acasă", exact: true },
   { to: "/bijuterii", label: "Bijuterii" },
+  { to: "/machiaj", label: "Machiaj" },
   { to: "/noutati", label: "Noutăți" },
   { to: "/colectii", label: "Colecții" },
   { to: "/reduceri", label: "Reduceri" },
@@ -24,7 +25,7 @@ export function SiteHeader() {
     e.preventDefault();
     setSearchOpen(false);
     setMenuOpen(false);
-    navigate({ to: "/bijuterii", search: { q: term || undefined } });
+    navigate({ to: "/produse", search: { q: term || undefined } });
   }
 
   return (
@@ -116,7 +117,7 @@ export function SiteHeader() {
           <input
             id="cautare-site"
             className="field"
-            placeholder="Caută inele, coliere, cercei..."
+            placeholder="Caută bijuterii, ruj, fond de ten, brand..."
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             autoFocus
