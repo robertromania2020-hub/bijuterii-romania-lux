@@ -10,33 +10,269 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BijuteriiRouteImport } from './routes/bijuterii'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ContRouteImport } from './routes/cont'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CosRouteImport } from './routes/cos'
+import { Route as DespreNoiRouteImport } from './routes/despre-noi'
+import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
+import { Route as LivrareRouteImport } from './routes/livrare'
+import { Route as NoutatiRouteImport } from './routes/noutati'
+import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
+import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
+import { Route as ReduceriRouteImport } from './routes/reduceri'
+import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
+import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
+import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BijuteriiRoute = BijuteriiRouteImport.update({
+  id: '/bijuterii',
+  path: '/bijuterii',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContRoute = ContRouteImport.update({
+  id: '/cont',
+  path: '/cont',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CosRoute = CosRouteImport.update({
+  id: '/cos',
+  path: '/cos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespreNoiRoute = DespreNoiRouteImport.update({
+  id: '/despre-noi',
+  path: '/despre-noi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntrebariFrecventeRoute = IntrebariFrecventeRouteImport.update({
+  id: '/intrebari-frecvente',
+  path: '/intrebari-frecvente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LivrareRoute = LivrareRouteImport.update({
+  id: '/livrare',
+  path: '/livrare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoutatiRoute = NoutatiRouteImport.update({
+  id: '/noutati',
+  path: '/noutati',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDeConfidentialitateRoute =
+  PoliticaDeConfidentialitateRouteImport.update({
+    id: '/politica-de-confidentialitate',
+    path: '/politica-de-confidentialitate',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PoliticaDeReturRoute = PoliticaDeReturRouteImport.update({
+  id: '/politica-de-retur',
+  path: '/politica-de-retur',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReduceriRoute = ReduceriRouteImport.update({
+  id: '/reduceri',
+  path: '/reduceri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermeniSiConditiiRoute = TermeniSiConditiiRouteImport.update({
+  id: '/termeni-si-conditii',
+  path: '/termeni-si-conditii',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ColectiiIndexRoute = ColectiiIndexRouteImport.update({
+  id: '/colectii/',
+  path: '/colectii/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColectiiSlugRoute = ColectiiSlugRouteImport.update({
+  id: '/colectii/$slug',
+  path: '/colectii/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdusSlugRoute = ProdusSlugRouteImport.update({
+  id: '/produs/$slug',
+  path: '/produs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
+  '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
+  '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
+  '/produs/$slug': typeof ProdusSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
+  '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
+  '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
+  '/produs/$slug': typeof ProdusSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/colectii': typeof ColectiiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
+  '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/intrebari-frecvente': typeof IntrebariFrecventeRoute
+  '/livrare': typeof LivrareRoute
+  '/noutati': typeof NoutatiRoute
+  '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
+  '/politica-de-retur': typeof PoliticaDeReturRoute
+  '/reduceri': typeof ReduceriRoute
+  '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/colectii/$slug': typeof ColectiiSlugRoute
+  '/produs/$slug': typeof ProdusSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/colectii/': typeof ColectiiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/bijuterii'
+    | '/checkout'
+    | '/cont'
+    | '/contact'
+    | '/cos'
+    | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
+    | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
+    | '/reduceri'
+    | '/termeni-si-conditii'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/admin/'
+    | '/colectii/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bijuterii'
+    | '/checkout'
+    | '/cont'
+    | '/contact'
+    | '/cos'
+    | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
+    | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
+    | '/reduceri'
+    | '/termeni-si-conditii'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/admin'
+    | '/colectii'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/bijuterii'
+    | '/checkout'
+    | '/cont'
+    | '/contact'
+    | '/cos'
+    | '/despre-noi'
+    | '/intrebari-frecvente'
+    | '/livrare'
+    | '/noutati'
+    | '/politica-de-confidentialitate'
+    | '/politica-de-retur'
+    | '/reduceri'
+    | '/termeni-si-conditii'
+    | '/colectii/$slug'
+    | '/produs/$slug'
+    | '/admin/'
+    | '/colectii/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  BijuteriiRoute: typeof BijuteriiRoute
+  CheckoutRoute: typeof CheckoutRoute
+  ContRoute: typeof ContRoute
+  ContactRoute: typeof ContactRoute
+  CosRoute: typeof CosRoute
+  DespreNoiRoute: typeof DespreNoiRoute
+  IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
+  LivrareRoute: typeof LivrareRoute
+  NoutatiRoute: typeof NoutatiRoute
+  PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
+  PoliticaDeReturRoute: typeof PoliticaDeReturRoute
+  ReduceriRoute: typeof ReduceriRoute
+  TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
+  ColectiiSlugRoute: typeof ColectiiSlugRoute
+  ProdusSlugRoute: typeof ProdusSlugRoute
+  ColectiiIndexRoute: typeof ColectiiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +284,164 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bijuterii': {
+      id: '/bijuterii'
+      path: '/bijuterii'
+      fullPath: '/bijuterii'
+      preLoaderRoute: typeof BijuteriiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cont': {
+      id: '/cont'
+      path: '/cont'
+      fullPath: '/cont'
+      preLoaderRoute: typeof ContRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cos': {
+      id: '/cos'
+      path: '/cos'
+      fullPath: '/cos'
+      preLoaderRoute: typeof CosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despre-noi': {
+      id: '/despre-noi'
+      path: '/despre-noi'
+      fullPath: '/despre-noi'
+      preLoaderRoute: typeof DespreNoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intrebari-frecvente': {
+      id: '/intrebari-frecvente'
+      path: '/intrebari-frecvente'
+      fullPath: '/intrebari-frecvente'
+      preLoaderRoute: typeof IntrebariFrecventeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/livrare': {
+      id: '/livrare'
+      path: '/livrare'
+      fullPath: '/livrare'
+      preLoaderRoute: typeof LivrareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/noutati': {
+      id: '/noutati'
+      path: '/noutati'
+      fullPath: '/noutati'
+      preLoaderRoute: typeof NoutatiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-confidentialitate': {
+      id: '/politica-de-confidentialitate'
+      path: '/politica-de-confidentialitate'
+      fullPath: '/politica-de-confidentialitate'
+      preLoaderRoute: typeof PoliticaDeConfidentialitateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-retur': {
+      id: '/politica-de-retur'
+      path: '/politica-de-retur'
+      fullPath: '/politica-de-retur'
+      preLoaderRoute: typeof PoliticaDeReturRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reduceri': {
+      id: '/reduceri'
+      path: '/reduceri'
+      fullPath: '/reduceri'
+      preLoaderRoute: typeof ReduceriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termeni-si-conditii': {
+      id: '/termeni-si-conditii'
+      path: '/termeni-si-conditii'
+      fullPath: '/termeni-si-conditii'
+      preLoaderRoute: typeof TermeniSiConditiiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/colectii/': {
+      id: '/colectii/'
+      path: '/colectii'
+      fullPath: '/colectii/'
+      preLoaderRoute: typeof ColectiiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colectii/$slug': {
+      id: '/colectii/$slug'
+      path: '/colectii/$slug'
+      fullPath: '/colectii/$slug'
+      preLoaderRoute: typeof ColectiiSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produs/$slug': {
+      id: '/produs/$slug'
+      path: '/produs/$slug'
+      fullPath: '/produs/$slug'
+      preLoaderRoute: typeof ProdusSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  BijuteriiRoute: BijuteriiRoute,
+  CheckoutRoute: CheckoutRoute,
+  ContRoute: ContRoute,
+  ContactRoute: ContactRoute,
+  CosRoute: CosRoute,
+  DespreNoiRoute: DespreNoiRoute,
+  IntrebariFrecventeRoute: IntrebariFrecventeRoute,
+  LivrareRoute: LivrareRoute,
+  NoutatiRoute: NoutatiRoute,
+  PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
+  PoliticaDeReturRoute: PoliticaDeReturRoute,
+  ReduceriRoute: ReduceriRoute,
+  TermeniSiConditiiRoute: TermeniSiConditiiRoute,
+  ColectiiSlugRoute: ColectiiSlugRoute,
+  ProdusSlugRoute: ProdusSlugRoute,
+  ColectiiIndexRoute: ColectiiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
