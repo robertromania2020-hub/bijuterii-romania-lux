@@ -216,32 +216,47 @@ function ProductPage() {
 
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-2xl bg-muted p-3">
-              <dt className="text-xs text-muted-foreground">Material</dt>
-              <dd className="font-semibold">{MATERIAL_LABELS[product.material]}</dd>
+              <dt className="text-xs text-muted-foreground">Departament</dt>
+              <dd className="font-semibold">{department?.name ?? "—"}</dd>
             </div>
             <div className="rounded-2xl bg-muted p-3">
               <dt className="text-xs text-muted-foreground">Categorie</dt>
-              <dd className="font-semibold capitalize">{product.categorySlug.replace(/-/g, " ")}</dd>
+              <dd className="font-semibold">{category?.name ?? "—"}</dd>
             </div>
+            {specs.map((def) => (
+              <div key={def.id} className="rounded-2xl bg-muted p-3">
+                <dt className="text-xs text-muted-foreground">{def.label}</dt>
+                <dd className="font-semibold">
+                  {formatAttributeValue(def, product.attributes[def.key]!)}
+                </dd>
+              </div>
+            ))}
           </dl>
 
-          {product.variants.length > 0 && (
+          {activeVariants.length > 0 && (
             <fieldset className="mt-5">
-              <legend className="text-sm font-semibold">Mărime</legend>
+              <legend className="text-sm font-semibold">
+                {activeVariants[0]!.attributeLabel}
+              </legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                {product.variants.map((v) => (
+                {activeVariants.map((v) => (
                   <button
-                    key={v}
+                    key={v.id}
                     type="button"
-                    onClick={() => setVariant(v)}
-                    aria-pressed={variant === v}
-                    className={`rounded-full border px-4 py-2 text-sm ${
-                      variant === v
+                    onClick={() => {
+                      setVariantId(v.id);
+                      setQuantity(1);
+                    }}
+                    disabled={v.stock <= 0}
+                    aria-pressed={variantId === v.id}
+                    className={`rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
+                      variantId === v.id
                         ? "border-transparent bg-foreground text-background"
                         : "border-border bg-surface"
                     }`}
                   >
-                    {v}
+                    {v.label}
+                    {v.stock <= 0 && " — epuizat"}
                   </button>
                 ))}
               </div>
