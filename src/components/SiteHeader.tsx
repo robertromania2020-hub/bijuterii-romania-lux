@@ -6,6 +6,7 @@ import { useStore } from "@/lib/store";
 const NAV = [
   { to: "/", label: "Acasă", exact: true },
   { to: "/bijuterii", label: "Bijuterii" },
+  { to: "/machiaj", label: "Machiaj" },
   { to: "/noutati", label: "Noutăți" },
   { to: "/colectii", label: "Colecții" },
   { to: "/reduceri", label: "Reduceri" },
