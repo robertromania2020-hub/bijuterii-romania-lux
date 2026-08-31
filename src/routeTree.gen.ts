@@ -32,6 +32,7 @@ import { Route as AdminClientiRouteImport } from './routes/admin.clienti'
 import { Route as AdminCoduriPromotionaleRouteImport } from './routes/admin.coduri-promotionale'
 import { Route as AdminColectiiRouteImport } from './routes/admin.colectii'
 import { Route as AdminComenziRouteImport } from './routes/admin.comenzi'
+import { Route as AdminDepartamenteRouteImport } from './routes/admin.departamente'
 import { Route as AdminProduseRouteImport } from './routes/admin.produse'
 import { Route as AdminReduceriRouteImport } from './routes/admin.reduceri'
 import { Route as AdminSetariRouteImport } from './routes/admin.setari'
@@ -156,6 +157,11 @@ const AdminComenziRoute = AdminComenziRouteImport.update({
   path: '/comenzi',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDepartamenteRoute = AdminDepartamenteRouteImport.update({
+  id: '/departamente',
+  path: '/departamente',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProduseRoute = AdminProduseRouteImport.update({
   id: '/produse',
   path: '/produse',
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
   '/admin/colectii': typeof AdminColectiiRoute
   '/admin/comenzi': typeof AdminComenziRoute
+  '/admin/departamente': typeof AdminDepartamenteRoute
   '/admin/produse': typeof AdminProduseRoute
   '/admin/reduceri': typeof AdminReduceriRoute
   '/admin/setari': typeof AdminSetariRoute
@@ -313,6 +322,7 @@ export interface FileRouteTypes {
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/coduri-promotionale'
     | '/admin/colectii'
     | '/admin/comenzi'
+    | '/admin/departamente'
     | '/admin/produse'
     | '/admin/reduceri'
     | '/admin/setari'
@@ -572,6 +584,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminComenziRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/departamente': {
+      id: '/admin/departamente'
+      path: '/departamente'
+      fullPath: '/admin/departamente'
+      preLoaderRoute: typeof AdminDepartamenteRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produse': {
       id: '/admin/produse'
       path: '/produse'
@@ -630,6 +649,7 @@ interface AdminRouteChildren {
   AdminCoduriPromotionaleRoute: typeof AdminCoduriPromotionaleRoute
   AdminColectiiRoute: typeof AdminColectiiRoute
   AdminComenziRoute: typeof AdminComenziRoute
+  AdminDepartamenteRoute: typeof AdminDepartamenteRoute
   AdminProduseRoute: typeof AdminProduseRoute
   AdminReduceriRoute: typeof AdminReduceriRoute
   AdminSetariRoute: typeof AdminSetariRoute
@@ -643,6 +663,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCoduriPromotionaleRoute: AdminCoduriPromotionaleRoute,
   AdminColectiiRoute: AdminColectiiRoute,
   AdminComenziRoute: AdminComenziRoute,
+  AdminDepartamenteRoute: AdminDepartamenteRoute,
   AdminProduseRoute: AdminProduseRoute,
   AdminReduceriRoute: AdminReduceriRoute,
   AdminSetariRoute: AdminSetariRoute,
