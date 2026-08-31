@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BijuteriiRouteImport } from './routes/bijuterii'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ContRouteImport } from './routes/cont'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CosRouteImport } from './routes/cos'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
 import { Route as NoutatiRouteImport } from './routes/noutati'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
@@ -29,9 +32,24 @@ const BijuteriiRoute = BijuteriiRouteImport.update({
   path: '/bijuterii',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContRoute = ContRouteImport.update({
+  id: '/cont',
+  path: '/cont',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CosRoute = CosRouteImport.update({
+  id: '/cos',
+  path: '/cos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DespreNoiRoute = DespreNoiRouteImport.update({
@@ -68,7 +86,10 @@ const ProdusSlugRoute = ProdusSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
@@ -79,7 +100,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
@@ -91,7 +115,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/checkout': typeof CheckoutRoute
+  '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
+  '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
   '/noutati': typeof NoutatiRoute
   '/reduceri': typeof ReduceriRoute
@@ -104,7 +131,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bijuterii'
+    | '/checkout'
+    | '/cont'
     | '/contact'
+    | '/cos'
     | '/despre-noi'
     | '/noutati'
     | '/reduceri'
@@ -115,7 +145,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bijuterii'
+    | '/checkout'
+    | '/cont'
     | '/contact'
+    | '/cos'
     | '/despre-noi'
     | '/noutati'
     | '/reduceri'
@@ -126,7 +159,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/bijuterii'
+    | '/checkout'
+    | '/cont'
     | '/contact'
+    | '/cos'
     | '/despre-noi'
     | '/noutati'
     | '/reduceri'
@@ -138,7 +174,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BijuteriiRoute: typeof BijuteriiRoute
+  CheckoutRoute: typeof CheckoutRoute
+  ContRoute: typeof ContRoute
   ContactRoute: typeof ContactRoute
+  CosRoute: typeof CosRoute
   DespreNoiRoute: typeof DespreNoiRoute
   NoutatiRoute: typeof NoutatiRoute
   ReduceriRoute: typeof ReduceriRoute
@@ -163,11 +202,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BijuteriiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cont': {
+      id: '/cont'
+      path: '/cont'
+      fullPath: '/cont'
+      preLoaderRoute: typeof ContRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cos': {
+      id: '/cos'
+      path: '/cos'
+      fullPath: '/cos'
+      preLoaderRoute: typeof CosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/despre-noi': {
@@ -218,7 +278,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BijuteriiRoute: BijuteriiRoute,
+  CheckoutRoute: CheckoutRoute,
+  ContRoute: ContRoute,
   ContactRoute: ContactRoute,
+  CosRoute: CosRoute,
   DespreNoiRoute: DespreNoiRoute,
   NoutatiRoute: NoutatiRoute,
   ReduceriRoute: ReduceriRoute,
