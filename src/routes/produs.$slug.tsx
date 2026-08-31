@@ -280,7 +280,7 @@ function ProductPage() {
                 type="button"
                 className="grid size-9 place-items-center rounded-full hover:bg-muted"
                 aria-label="Crește cantitatea"
-                onClick={() => setQuantity((q) => Math.min(product.stock || 1, q + 1))}
+                onClick={() => setQuantity((q) => Math.min(stoc || 1, q + 1))}
               >
                 <Plus className="size-4" />
               </button>
