@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products as catalog } from "@/data/catalog";
+import { products as catalog, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
 
 export interface CartLine {
