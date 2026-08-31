@@ -27,6 +27,7 @@ import { Route as ProduseRouteImport } from './routes/produse'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminBranduriRouteImport } from './routes/admin.branduri'
 import { Route as AdminCategoriiRouteImport } from './routes/admin.categorii'
 import { Route as AdminClientiRouteImport } from './routes/admin.clienti'
 import { Route as AdminCoduriPromotionaleRouteImport } from './routes/admin.coduri-promotionale'
@@ -132,6 +133,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBranduriRoute = AdminBranduriRouteImport.update({
+  id: '/branduri',
+  path: '/branduri',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriiRoute = AdminCategoriiRouteImport.update({
   id: '/categorii',
   path: '/categorii',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
+  '/admin/branduri': typeof AdminBranduriRoute
   '/admin/categorii': typeof AdminCategoriiRoute
   '/admin/clienti': typeof AdminClientiRoute
   '/admin/coduri-promotionale': typeof AdminCoduriPromotionaleRoute
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
@@ -382,6 +393,7 @@ export interface FileRouteTypes {
     | '/produse'
     | '/reduceri'
     | '/termeni-si-conditii'
+    | '/admin/branduri'
     | '/admin/categorii'
     | '/admin/clienti'
     | '/admin/coduri-promotionale'
@@ -549,6 +561,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/branduri': {
+      id: '/admin/branduri'
+      path: '/branduri'
+      fullPath: '/admin/branduri'
+      preLoaderRoute: typeof AdminBranduriRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categorii': {
       id: '/admin/categorii'
       path: '/categorii'
@@ -644,6 +663,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminBranduriRoute: typeof AdminBranduriRoute
   AdminCategoriiRoute: typeof AdminCategoriiRoute
   AdminClientiRoute: typeof AdminClientiRoute
   AdminCoduriPromotionaleRoute: typeof AdminCoduriPromotionaleRoute
@@ -658,6 +678,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminBranduriRoute: AdminBranduriRoute,
   AdminCategoriiRoute: AdminCategoriiRoute,
   AdminClientiRoute: AdminClientiRoute,
   AdminCoduriPromotionaleRoute: AdminCoduriPromotionaleRoute,
