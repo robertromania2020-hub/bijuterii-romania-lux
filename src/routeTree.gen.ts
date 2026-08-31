@@ -10,33 +10,74 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BijuteriiRouteImport } from './routes/bijuterii'
+import { Route as NoutatiRouteImport } from './routes/noutati'
+import { Route as ReduceriRouteImport } from './routes/reduceri'
+import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BijuteriiRoute = BijuteriiRouteImport.update({
+  id: '/bijuterii',
+  path: '/bijuterii',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoutatiRoute = NoutatiRouteImport.update({
+  id: '/noutati',
+  path: '/noutati',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReduceriRoute = ReduceriRouteImport.update({
+  id: '/reduceri',
+  path: '/reduceri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdusSlugRoute = ProdusSlugRouteImport.update({
+  id: '/produs/$slug',
+  path: '/produs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bijuterii': typeof BijuteriiRoute
+  '/noutati': typeof NoutatiRoute
+  '/reduceri': typeof ReduceriRoute
+  '/produs/$slug': typeof ProdusSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bijuterii': typeof BijuteriiRoute
+  '/noutati': typeof NoutatiRoute
+  '/reduceri': typeof ReduceriRoute
+  '/produs/$slug': typeof ProdusSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bijuterii': typeof BijuteriiRoute
+  '/noutati': typeof NoutatiRoute
+  '/reduceri': typeof ReduceriRoute
+  '/produs/$slug': typeof ProdusSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
+  id:
+    '__root__' | '/' | '/bijuterii' | '/noutati' | '/reduceri' | '/produs/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BijuteriiRoute: typeof BijuteriiRoute
+  NoutatiRoute: typeof NoutatiRoute
+  ReduceriRoute: typeof ReduceriRoute
+  ProdusSlugRoute: typeof ProdusSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +89,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bijuterii': {
+      id: '/bijuterii'
+      path: '/bijuterii'
+      fullPath: '/bijuterii'
+      preLoaderRoute: typeof BijuteriiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/noutati': {
+      id: '/noutati'
+      path: '/noutati'
+      fullPath: '/noutati'
+      preLoaderRoute: typeof NoutatiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reduceri': {
+      id: '/reduceri'
+      path: '/reduceri'
+      fullPath: '/reduceri'
+      preLoaderRoute: typeof ReduceriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produs/$slug': {
+      id: '/produs/$slug'
+      path: '/produs/$slug'
+      fullPath: '/produs/$slug'
+      preLoaderRoute: typeof ProdusSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BijuteriiRoute: BijuteriiRoute,
+  NoutatiRoute: NoutatiRoute,
+  ReduceriRoute: ReduceriRoute,
+  ProdusSlugRoute: ProdusSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
