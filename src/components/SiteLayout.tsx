@@ -17,9 +17,9 @@ export function PageHeading({
   title,
   description,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
+  description?: string | undefined;
 }) {
   return (
     <div className="pt-8">
