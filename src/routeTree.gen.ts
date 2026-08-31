@@ -19,6 +19,7 @@ import { Route as CosRouteImport } from './routes/cos'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
 import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
 import { Route as LivrareRouteImport } from './routes/livrare'
+import { Route as MachiajRouteImport } from './routes/machiaj'
 import { Route as NoutatiRouteImport } from './routes/noutati'
 import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
@@ -86,6 +87,11 @@ const IntrebariFrecventeRoute = IntrebariFrecventeRouteImport.update({
 const LivrareRoute = LivrareRouteImport.update({
   id: '/livrare',
   path: '/livrare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MachiajRoute = MachiajRouteImport.update({
+  id: '/machiaj',
+  path: '/machiaj',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NoutatiRoute = NoutatiRouteImport.update({
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByTo {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
+  '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
+    | '/machiaj'
     | '/noutati'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
@@ -373,6 +385,7 @@ export interface RootRouteChildren {
   DespreNoiRoute: typeof DespreNoiRoute
   IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
   LivrareRoute: typeof LivrareRoute
+  MachiajRoute: typeof MachiajRoute
   NoutatiRoute: typeof NoutatiRoute
   PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
@@ -453,6 +466,13 @@ declare module '@tanstack/react-router' {
       path: '/livrare'
       fullPath: '/livrare'
       preLoaderRoute: typeof LivrareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/machiaj': {
+      id: '/machiaj'
+      path: '/machiaj'
+      fullPath: '/machiaj'
+      preLoaderRoute: typeof MachiajRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/noutati': {
@@ -623,6 +643,7 @@ const rootRouteChildren: RootRouteChildren = {
   DespreNoiRoute: DespreNoiRoute,
   IntrebariFrecventeRoute: IntrebariFrecventeRoute,
   LivrareRoute: LivrareRoute,
+  MachiajRoute: MachiajRoute,
   NoutatiRoute: NoutatiRoute,
   PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
   PoliticaDeReturRoute: PoliticaDeReturRoute,
