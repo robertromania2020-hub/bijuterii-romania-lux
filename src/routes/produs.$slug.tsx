@@ -290,7 +290,7 @@ function ProductPage() {
               className="btn-dark flex-1"
               disabled={outOfStock}
               onClick={() => {
-                addToCart(product.id, quantity, variant);
+                addToCart(product.id, quantity, selected?.label ?? null);
                 toast.success("Produs adăugat în coș");
               }}
             >
