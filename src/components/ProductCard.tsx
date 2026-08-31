@@ -89,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
           type="button"
           disabled={outOfStock}
           onClick={() => {
-            addToCart(product.id, 1, product.variants[0] ?? null);
+            addToCart(product.id, 1, product.variants[0]?.label ?? null);
             toast.success("Produs adăugat în coș");
           }}
           className="btn-soft mt-2.5 w-full"
