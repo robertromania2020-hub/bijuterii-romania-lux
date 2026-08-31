@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
 import { discounts as seed } from "@/data/catalog";
+import { DISCOUNT_TARGET_LABELS } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/admin/reduceri")({
