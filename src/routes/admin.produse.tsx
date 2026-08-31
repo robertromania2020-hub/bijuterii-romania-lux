@@ -3,8 +3,18 @@ import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminCard, AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { categories, collections, products as seed } from "@/data/catalog";
-import { MATERIAL_LABELS, type Material, type Product } from "@/data/types";
+import {
+  attributesFor,
+  brands,
+  categoriesOf,
+  collections,
+  departments,
+  formatAttributeValue,
+  getBrand,
+  getCategory,
+  products as seed,
+} from "@/data/catalog";
+import type { AttributeValue, AttributeValues, Product } from "@/data/types";
 import { formatPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/admin/produse")({
@@ -27,15 +37,21 @@ type Draft = {
   description: string;
   price: string;
   oldPrice: string;
-  material: Material;
+  departmentSlug: string;
   categorySlug: string;
+  brandSlug: string;
   collectionSlug: string;
   stock: string;
+  minStock: string;
   images: string;
+  attributes: AttributeValues;
   status: "activ" | "inactiv";
   isNew: boolean;
   isFeatured: boolean;
+  isBestseller: boolean;
 };
+
+const firstDepartment = departments[0]!;
 
 const emptyDraft: Draft = {
   id: null,
@@ -44,26 +60,45 @@ const emptyDraft: Draft = {
   description: "",
   price: "",
   oldPrice: "",
-  material: "aur",
-  categorySlug: categories[0]!.slug,
+  departmentSlug: firstDepartment.slug,
+  categorySlug: categoriesOf(firstDepartment.slug)[0]!.slug,
+  brandSlug: "",
   collectionSlug: "",
   stock: "0",
+  minStock: "5",
   images: "",
+  attributes: {},
   status: "activ",
   isNew: false,
   isFeatured: false,
+  isBestseller: false,
 };
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 function AdminProduse() {
   const [list, setList] = useState<Product[]>(seed);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [filter, setFilter] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
 
-  const vizibile = list.filter(
-    (p) =>
-      p.name.toLowerCase().includes(filter.toLowerCase()) ||
-      p.sku.toLowerCase().includes(filter.toLowerCase()),
-  );
+  const vizibile = list.filter((p) => {
+    const term = filter.trim().toLowerCase();
+    const matchTerm =
+      !term ||
+      p.name.toLowerCase().includes(term) ||
+      p.sku.toLowerCase().includes(term) ||
+      (getBrand(p.brandSlug)?.name.toLowerCase().includes(term) ?? false);
+    const matchDep = !departmentFilter || p.departmentSlug === departmentFilter;
+    return matchTerm && matchDep;
+  });
 
   function openEdit(p: Product) {
     setDraft({
@@ -73,15 +108,23 @@ function AdminProduse() {
       description: p.description,
       price: String(p.price),
       oldPrice: p.oldPrice ? String(p.oldPrice) : "",
-      material: p.material,
+      departmentSlug: p.departmentSlug,
       categorySlug: p.categorySlug,
+      brandSlug: p.brandSlug ?? "",
       collectionSlug: p.collectionSlug ?? "",
       stock: String(p.stock),
+      minStock: String(p.minStock),
       images: p.images.join(", "),
+      attributes: { ...p.attributes },
       status: p.status,
       isNew: p.isNew,
       isFeatured: p.isFeatured,
+      isBestseller: p.isBestseller,
     });
+  }
+
+  function setAttr(key: string, value: AttributeValue) {
+    setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
   function save(e: React.FormEvent) {
@@ -102,35 +145,42 @@ function AdminProduse() {
                   description: draft.description,
                   price: Number(draft.price),
                   oldPrice: draft.oldPrice ? Number(draft.oldPrice) : null,
-                  material: draft.material,
+                  departmentSlug: draft.departmentSlug,
                   categorySlug: draft.categorySlug,
+                  brandSlug: draft.brandSlug || null,
                   collectionSlug: draft.collectionSlug || null,
                   stock: Number(draft.stock),
+                  minStock: Number(draft.minStock),
+                  attributes: draft.attributes,
                   status: draft.status,
                   isNew: draft.isNew,
                   isFeatured: draft.isFeatured,
+                  isBestseller: draft.isBestseller,
                 }
               : p,
           )
         : [
             {
               id: `nou-${Date.now()}`,
-              slug: draft.name.toLowerCase().replace(/\s+/g, "-"),
+              slug: slugify(draft.name),
               sku: draft.sku,
               name: draft.name,
               description: draft.description,
               price: Number(draft.price),
               oldPrice: draft.oldPrice ? Number(draft.oldPrice) : null,
-              material: draft.material,
+              departmentSlug: draft.departmentSlug,
               categorySlug: draft.categorySlug,
               collectionSlug: draft.collectionSlug || null,
+              brandSlug: draft.brandSlug || null,
               stock: Number(draft.stock),
-              minStock: 5,
+              minStock: Number(draft.minStock),
               images: seed[0]!.images,
               variants: [],
+              attributes: draft.attributes,
               status: draft.status,
               isNew: draft.isNew,
               isFeatured: draft.isFeatured,
+              isBestseller: draft.isBestseller,
               popularity: 0,
               createdAt: new Date().toISOString().slice(0, 10),
             },
@@ -141,27 +191,49 @@ function AdminProduse() {
     toast.success("Modificările sunt vizibile local. Salvarea permanentă urmează în etapa următoare.");
   }
 
+  const draftAttributes = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
+
   return (
     <AdminShell
       title="Produse"
-      description="Adaugă, editează, activează sau șterge produse din catalog."
+      description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
         <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(emptyDraft)}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
     >
-      <div className="mb-4 max-w-sm">
-        <label htmlFor="filtru-produse" className="sr-only">
-          Caută produse
-        </label>
-        <input
-          id="filtru-produse"
-          className="field"
-          placeholder="Caută după nume sau SKU"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
+      <div className="mb-4 flex flex-wrap gap-3">
+        <div className="max-w-sm flex-1">
+          <label htmlFor="filtru-produse" className="sr-only">
+            Caută produse
+          </label>
+          <input
+            id="filtru-produse"
+            className="field"
+            placeholder="Caută după nume, SKU sau brand"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          />
+        </div>
+        <div className="w-56">
+          <label htmlFor="filtru-departament" className="sr-only">
+            Filtrează după departament
+          </label>
+          <select
+            id="filtru-departament"
+            className="field"
+            value={departmentFilter}
+            onChange={(e) => setDepartmentFilter(e.target.value)}
+          >
+            <option value="">Toate departamentele</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.slug}>
+                {d.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {draft && (
@@ -187,22 +259,44 @@ function AdminProduse() {
               <input id="p-pret" type="number" min={0} className="field mt-1.5" value={draft.price} onChange={(e) => setDraft({ ...draft, price: e.target.value })} />
             </div>
             <div>
-              <label htmlFor="p-pret-redus" className="text-sm font-semibold">Preț redus (lei)</label>
-              <input id="p-pret-redus" type="number" min={0} className="field mt-1.5" value={draft.oldPrice} onChange={(e) => setDraft({ ...draft, oldPrice: e.target.value })} />
+              <label htmlFor="p-pret-vechi" className="text-sm font-semibold">Preț întreg (lei)</label>
+              <input id="p-pret-vechi" type="number" min={0} className="field mt-1.5" value={draft.oldPrice} onChange={(e) => setDraft({ ...draft, oldPrice: e.target.value })} />
             </div>
             <div>
-              <label htmlFor="p-material" className="text-sm font-semibold">Material</label>
-              <select id="p-material" className="field mt-1.5" value={draft.material} onChange={(e) => setDraft({ ...draft, material: e.target.value as Material })}>
-                {(Object.keys(MATERIAL_LABELS) as Material[]).map((m) => (
-                  <option key={m} value={m}>{MATERIAL_LABELS[m]}</option>
+              <label htmlFor="p-departament" className="text-sm font-semibold">Departament</label>
+              <select
+                id="p-departament"
+                className="field mt-1.5"
+                value={draft.departmentSlug}
+                onChange={(e) => {
+                  const dep = e.target.value;
+                  setDraft({
+                    ...draft,
+                    departmentSlug: dep,
+                    categorySlug: categoriesOf(dep)[0]?.slug ?? "",
+                    attributes: {},
+                  });
+                }}
+              >
+                {departments.map((d) => (
+                  <option key={d.id} value={d.slug}>{d.name}</option>
                 ))}
               </select>
             </div>
             <div>
               <label htmlFor="p-categorie" className="text-sm font-semibold">Categorie</label>
               <select id="p-categorie" className="field mt-1.5" value={draft.categorySlug} onChange={(e) => setDraft({ ...draft, categorySlug: e.target.value })}>
-                {categories.map((c) => (
+                {categoriesOf(draft.departmentSlug).map((c) => (
                   <option key={c.id} value={c.slug}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="p-brand" className="text-sm font-semibold">Brand</label>
+              <select id="p-brand" className="field mt-1.5" value={draft.brandSlug} onChange={(e) => setDraft({ ...draft, brandSlug: e.target.value })}>
+                <option value="">Fără brand</option>
+                {brands.map((b) => (
+                  <option key={b.id} value={b.slug}>{b.name}</option>
                 ))}
               </select>
             </div>
@@ -219,10 +313,94 @@ function AdminProduse() {
               <label htmlFor="p-stoc" className="text-sm font-semibold">Stoc</label>
               <input id="p-stoc" type="number" min={0} className="field mt-1.5" value={draft.stock} onChange={(e) => setDraft({ ...draft, stock: e.target.value })} />
             </div>
+            <div>
+              <label htmlFor="p-stoc-minim" className="text-sm font-semibold">Prag stoc redus</label>
+              <input id="p-stoc-minim" type="number" min={0} className="field mt-1.5" value={draft.minStock} onChange={(e) => setDraft({ ...draft, minStock: e.target.value })} />
+            </div>
             <div className="sm:col-span-2">
               <label htmlFor="p-imagini" className="text-sm font-semibold">Imagini</label>
               <input id="p-imagini" className="field mt-1.5" placeholder="Încărcarea imaginilor va fi disponibilă după conectarea stocării" value={draft.images} onChange={(e) => setDraft({ ...draft, images: e.target.value })} />
             </div>
+
+            {draftAttributes.length > 0 && (
+              <fieldset className="grid gap-4 rounded-2xl border border-border p-4 sm:col-span-2 sm:grid-cols-2">
+                <legend className="px-1 text-sm font-semibold">
+                  Atribute specifice ({draft.departmentSlug})
+                </legend>
+                {draftAttributes.map((a) => {
+                  const id = `attr-${a.key}`;
+                  const value = draft.attributes[a.key];
+                  if (a.type === "boolean") {
+                    return (
+                      <label key={a.id} className="flex items-center gap-2 text-sm">
+                        <input
+                          id={id}
+                          type="checkbox"
+                          className="size-4 accent-primary"
+                          checked={value === true}
+                          onChange={(e) => setAttr(a.key, e.target.checked)}
+                        />
+                        {a.label}
+                      </label>
+                    );
+                  }
+                  return (
+                    <div key={a.id}>
+                      <label htmlFor={id} className="text-sm font-semibold">
+                        {a.label}
+                        {a.unit ? ` (${a.unit})` : ""}
+                      </label>
+                      {a.type === "select" ? (
+                        <select
+                          id={id}
+                          className="field mt-1.5"
+                          value={typeof value === "string" ? value : ""}
+                          onChange={(e) => setAttr(a.key, e.target.value)}
+                        >
+                          <option value="">Nespecificat</option>
+                          {a.options.map((o) => (
+                            <option key={o} value={o}>{o}</option>
+                          ))}
+                        </select>
+                      ) : a.type === "multi" ? (
+                        <select
+                          id={id}
+                          multiple
+                          className="field mt-1.5 h-28"
+                          value={Array.isArray(value) ? value : []}
+                          onChange={(e) =>
+                            setAttr(
+                              a.key,
+                              Array.from(e.target.selectedOptions).map((o) => o.value),
+                            )
+                          }
+                        >
+                          {a.options.map((o) => (
+                            <option key={o} value={o}>{o}</option>
+                          ))}
+                        </select>
+                      ) : a.type === "number" ? (
+                        <input
+                          id={id}
+                          type="number"
+                          className="field mt-1.5"
+                          value={typeof value === "number" ? String(value) : ""}
+                          onChange={(e) => setAttr(a.key, Number(e.target.value))}
+                        />
+                      ) : (
+                        <input
+                          id={id}
+                          className="field mt-1.5"
+                          value={typeof value === "string" ? value : ""}
+                          onChange={(e) => setAttr(a.key, e.target.value)}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </fieldset>
+            )}
+
             <div className="flex flex-wrap items-center gap-5 sm:col-span-2">
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" className="size-4 accent-primary" checked={draft.status === "activ"} onChange={(e) => setDraft({ ...draft, status: e.target.checked ? "activ" : "inactiv" })} />
@@ -236,6 +414,10 @@ function AdminProduse() {
                 <input type="checkbox" className="size-4 accent-primary" checked={draft.isFeatured} onChange={(e) => setDraft({ ...draft, isFeatured: e.target.checked })} />
                 Produs recomandat
               </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" className="size-4 accent-primary" checked={draft.isBestseller} onChange={(e) => setDraft({ ...draft, isBestseller: e.target.checked })} />
+                Bestseller
+              </label>
             </div>
             <div className="flex gap-3 sm:col-span-2">
               <button type="submit" className="btn-dark">Salvează</button>
@@ -246,69 +428,85 @@ function AdminProduse() {
       )}
 
       <AdminTable
-        head={["Produs", "SKU", "Preț", "Stoc", "Status", "Acțiuni"]}
+        head={["Produs", "Departament", "SKU", "Preț", "Stoc", "Variante", "Status", "Acțiuni"]}
         caption="Lista produselor din catalog"
       >
-        {vizibile.map((p) => (
-          <tr key={p.id}>
-            <td className="px-4 py-3">
-              <div className="flex items-center gap-3">
-                <img src={p.images[0]} alt="" loading="lazy" width={80} height={80} className="size-10 rounded-xl object-cover" />
-                <div>
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">{MATERIAL_LABELS[p.material]}</p>
+        {vizibile.map((p) => {
+          const defs = attributesFor(p.departmentSlug, p.categorySlug);
+          const rezumat = defs
+            .filter((d) => d.showOnProduct && p.attributes[d.key] !== undefined)
+            .slice(0, 2)
+            .map((d) => formatAttributeValue(d, p.attributes[d.key]!))
+            .join(" · ");
+          return (
+            <tr key={p.id}>
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <img src={p.images[0]} alt="" loading="lazy" width={80} height={80} className="size-10 rounded-xl object-cover" />
+                  <div>
+                    <p className="font-semibold">{p.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {[getBrand(p.brandSlug)?.name, getCategory(p.categorySlug)?.name, rezumat]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td className="px-4 py-3 font-mono text-xs">{p.sku}</td>
-            <td className="px-4 py-3">
-              {formatPrice(p.price)}
-              {p.oldPrice && (
-                <span className="ml-1 text-xs text-muted-foreground line-through">
-                  {formatPrice(p.oldPrice)}
-                </span>
-              )}
-            </td>
-            <td className="px-4 py-3">{p.stock}</td>
-            <td className="px-4 py-3">
-              <Pill tone={p.status === "activ" ? "mint" : "muted"}>
-                {p.status === "activ" ? "Activ" : "Inactiv"}
-              </Pill>
-            </td>
-            <td className="px-4 py-3">
-              <div className="flex gap-2">
-                <button type="button" className="btn-soft" onClick={() => openEdit(p)} aria-label={`Editează ${p.name}`}>
-                  <Pencil className="size-4" />
-                </button>
-                <button
-                  type="button"
-                  className="btn-soft"
-                  aria-label={`Activează sau dezactivează ${p.name}`}
-                  onClick={() =>
-                    setList((prev) =>
-                      prev.map((x) =>
-                        x.id === p.id ? { ...x, status: x.status === "activ" ? "inactiv" : "activ" } : x,
-                      ),
-                    )
-                  }
-                >
-                  {p.status === "activ" ? "Dezactivează" : "Activează"}
-                </button>
-                <button
-                  type="button"
-                  className="btn-soft text-destructive"
-                  aria-label={`Șterge ${p.name}`}
-                  onClick={() => {
-                    setList((prev) => prev.filter((x) => x.id !== p.id));
-                    toast.success("Produs eliminat din listă (temporar).");
-                  }}
-                >
-                  <Trash2 className="size-4" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
+              </td>
+              <td className="px-4 py-3 text-muted-foreground">
+                {departments.find((d) => d.slug === p.departmentSlug)?.name ?? p.departmentSlug}
+              </td>
+              <td className="px-4 py-3 font-mono text-xs">{p.sku}</td>
+              <td className="px-4 py-3">
+                {formatPrice(p.price)}
+                {p.oldPrice && (
+                  <span className="ml-1 text-xs text-muted-foreground line-through">
+                    {formatPrice(p.oldPrice)}
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-3">{p.stock}</td>
+              <td className="px-4 py-3">{p.variants.length || "—"}</td>
+              <td className="px-4 py-3">
+                <Pill tone={p.status === "activ" ? "mint" : "muted"}>
+                  {p.status === "activ" ? "Activ" : "Inactiv"}
+                </Pill>
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex gap-2">
+                  <button type="button" className="btn-soft" onClick={() => openEdit(p)} aria-label={`Editează ${p.name}`}>
+                    <Pencil className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-soft"
+                    aria-label={`Activează sau dezactivează ${p.name}`}
+                    onClick={() =>
+                      setList((prev) =>
+                        prev.map((x) =>
+                          x.id === p.id ? { ...x, status: x.status === "activ" ? "inactiv" : "activ" } : x,
+                        ),
+                      )
+                    }
+                  >
+                    {p.status === "activ" ? "Dezactivează" : "Activează"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-soft text-destructive"
+                    aria-label={`Șterge ${p.name}`}
+                    onClick={() => {
+                      setList((prev) => prev.filter((x) => x.id !== p.id));
+                      toast.success("Produs eliminat din listă (temporar).");
+                    }}
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
       </AdminTable>
       {vizibile.length === 0 && (
         <p className="mt-4 text-sm text-muted-foreground">Niciun produs nu corespunde căutării.</p>
