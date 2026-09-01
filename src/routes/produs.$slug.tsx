@@ -14,11 +14,13 @@ import {
   getProductBySlug,
 } from "@/data/catalog";
 import { STOCK_LABELS, stockStatus } from "@/data/types";
+import { ensureCatalog } from "@/lib/catalog-live";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/produs/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    await ensureCatalog();
     const product = getProductBySlug(params.slug);
     if (!product) throw notFound();
     return { product };

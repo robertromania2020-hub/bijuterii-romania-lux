@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { brands as seed, products } from "@/data/catalog";
+import { products } from "@/data/catalog";
+import { deleteRow, mapBrand, slugify, updateRow, upsertRow, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/branduri")({
   head: () => ({
@@ -18,34 +19,43 @@ export const Route = createFileRoute("/admin/branduri")({
 });
 
 function AdminBranduri() {
-  const [list, setList] = useState(seed);
+  const { rows: list, loading, error } = useLiveTable("brands", mapBrand, {
+    column: "position",
+    ascending: true,
+  });
   const [name, setName] = useState("");
 
-  function add() {
+  async function add() {
     const trimmed = name.trim();
     if (!trimmed) {
       toast.error("Introdu numele brandului.");
       return;
     }
-    const slug = trimmed
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
+    const slug = slugify(trimmed);
     if (list.some((b) => b.slug === slug)) {
       toast.error("Acest brand există deja.");
       return;
     }
-    setList((prev) => [...prev, { id: `b${Date.now()}`, slug, name: trimmed, logo: null, active: true }]);
-    setName("");
-    toast.success("Brand adăugat");
+    try {
+      await upsertRow("brands", {
+        id: `b-${slug}`,
+        slug,
+        name: trimmed,
+        logo: null,
+        active: true,
+        position: list.length + 1,
+      });
+      setName("");
+      toast.success("Brand adăugat");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Salvare eșuată.");
+    }
   }
 
   return (
     <AdminShell
       title="Branduri"
-      description="Brandurile disponibile pentru produsele din orice departament."
+      description="Brandurile disponibile pentru produsele din orice departament. Modificările se salvează în baza de date."
     >
       <div className="mb-6 flex flex-wrap items-end gap-3 rounded-3xl border border-border bg-surface p-4">
         <div className="min-w-[240px] flex-1">
@@ -60,10 +70,13 @@ function AdminBranduri() {
             placeholder="ex. Rimmel"
           />
         </div>
-        <button type="button" className="btn-dark" onClick={add}>
+        <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă brand
         </button>
       </div>
+
+      {error ? <p className="mb-4 text-sm text-destructive">{error}</p> : null}
+      {loading ? <p className="mb-4 text-sm text-muted-foreground">Se încarcă…</p> : null}
 
       <AdminTable head={["Brand", "Slug", "Produse", "Status", "Acțiuni"]} caption="Branduri">
         {list.map((b) => (
@@ -74,18 +87,32 @@ function AdminBranduri() {
             <td className="px-4 py-3">
               <Pill tone={b.active ? "mint" : "muted"}>{b.active ? "Activ" : "Inactiv"}</Pill>
             </td>
-            <td className="px-4 py-3">
+            <td className="space-x-4 px-4 py-3">
               <button
                 type="button"
                 className="text-sm font-semibold text-primary"
                 onClick={() => {
-                  setList((prev) =>
-                    prev.map((x) => (x.id === b.id ? { ...x, active: !x.active } : x)),
-                  );
-                  toast.success(b.active ? "Brand dezactivat" : "Brand activat");
+                  void updateRow("brands", b.id, { active: !b.active })
+                    .then(() => toast.success(b.active ? "Brand dezactivat" : "Brand activat"))
+                    .catch((err: Error) => toast.error(err.message));
                 }}
               >
                 {b.active ? "Dezactivează" : "Activează"}
+              </button>
+              <button
+                type="button"
+                className="text-sm font-semibold text-destructive"
+                onClick={() => {
+                  if (products.some((p) => p.brandSlug === b.slug)) {
+                    toast.error("Brandul are produse asociate.");
+                    return;
+                  }
+                  void deleteRow("brands", b.id)
+                    .then(() => toast.success("Brand șters"))
+                    .catch((err: Error) => toast.error(err.message));
+                }}
+              >
+                Șterge
               </button>
             </td>
           </tr>

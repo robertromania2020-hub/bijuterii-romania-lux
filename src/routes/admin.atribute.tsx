@@ -2,18 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { attributeDefinitions as seed, departments, getCategory } from "@/data/catalog";
+import { departments, getCategory } from "@/data/catalog";
 import { ATTRIBUTE_TYPE_LABELS, type AttributeType } from "@/data/types";
+import {
+  deleteRow,
+  mapAttributeDefinition,
+  slugify,
+  updateRow,
+  upsertRow,
+  useLiveTable,
+} from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/atribute")({
   head: () => ({
     meta: [
-      { title: "Atribute produse — Administrare | BIJUTERII" },
-      {
-        name: "description",
-        content: "Definirea atributelor specifice fiecărui departament și fiecărei categorii.",
-      },
-      { property: "og:title", content: "Atribute produse — Administrare | BIJUTERII" },
+      { title: "Atribute — Administrare | BIJUTERII" },
+      { name: "description", content: "Definirea atributelor dinamice pentru produse." },
+      { property: "og:title", content: "Atribute — Administrare | BIJUTERII" },
       { property: "og:description", content: "Atributele produselor." },
       { name: "robots", content: "noindex, nofollow" },
     ],
@@ -22,28 +27,32 @@ export const Route = createFileRoute("/admin/atribute")({
 });
 
 function AdminAtribute() {
-  const [list, setList] = useState(seed);
+  const { rows: list, loading, error } = useLiveTable(
+    "attribute_definitions",
+    mapAttributeDefinition,
+    { column: "position", ascending: true },
+  );
   const [label, setLabel] = useState("");
   const [type, setType] = useState<AttributeType>("select");
-  const [departmentSlug, setDepartmentSlug] = useState<string>(departments[0]!.slug);
+  const [departmentSlug, setDepartmentSlug] = useState("");
   const [options, setOptions] = useState("");
 
-  function add() {
+  const dep = departmentSlug || departments[0]?.slug || "";
+
+  async function add() {
     const trimmed = label.trim();
     if (!trimmed) {
       toast.error("Introdu denumirea atributului.");
       return;
     }
-    const key = trimmed
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "_")
-      .replace(/^_|_$/g, "");
-    setList((prev) => [
-      ...prev,
-      {
-        id: `a${Date.now()}`,
+    const key = slugify(trimmed, "_");
+    if (list.some((a) => a.key === key && a.departmentSlug === dep)) {
+      toast.error("Acest atribut există deja în departament.");
+      return;
+    }
+    try {
+      await upsertRow("attribute_definitions", {
+        id: `attr-${dep}-${key}`,
         key,
         label: trimmed,
         type,
@@ -51,22 +60,25 @@ function AdminAtribute() {
           .split(",")
           .map((o) => o.trim())
           .filter(Boolean),
-        departmentSlug,
-        categorySlugs: [],
+        department_slug: dep || null,
+        category_slugs: [],
         filterable: type === "select" || type === "multi",
-        showOnProduct: true,
-        position: prev.length + 1,
-      },
-    ]);
-    setLabel("");
-    setOptions("");
-    toast.success("Atribut adăugat");
+        show_on_product: true,
+        unit: null,
+        position: list.length + 1,
+      });
+      setLabel("");
+      setOptions("");
+      toast.success("Atribut adăugat");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Salvare eșuată.");
+    }
   }
 
   return (
     <AdminShell
       title="Atribute produse"
-      description="Atributele se aplică pe departament sau pe categorii și pot fi folosite ca filtre în magazin."
+      description="Atributele se aplică pe departament sau pe categorii și pot fi folosite ca filtre în magazin. Modificările se salvează în baza de date."
     >
       <div className="mb-6 grid gap-3 rounded-3xl border border-border bg-surface p-4 lg:grid-cols-5 lg:items-end">
         <div>
@@ -105,7 +117,7 @@ function AdminAtribute() {
           <select
             id="attr-dep"
             className="field mt-1.5"
-            value={departmentSlug}
+            value={dep}
             onChange={(e) => setDepartmentSlug(e.target.value)}
           >
             {departments.map((d) => (
@@ -127,13 +139,25 @@ function AdminAtribute() {
             placeholder="ex. 15, 30, 50"
           />
         </div>
-        <button type="button" className="btn-dark" onClick={add}>
+        <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă atribut
         </button>
       </div>
 
+      {error ? <p className="mb-4 text-sm text-destructive">{error}</p> : null}
+      {loading ? <p className="mb-4 text-sm text-muted-foreground">Se încarcă…</p> : null}
+
       <AdminTable
-        head={["Atribut", "Cheie", "Tip", "Departament", "Categorii", "Opțiuni", "Filtru"]}
+        head={[
+          "Atribut",
+          "Cheie",
+          "Tip",
+          "Departament",
+          "Categorii",
+          "Opțiuni",
+          "Filtru",
+          "Acțiuni",
+        ]}
         caption="Atribute produse"
       >
         {list.map((a) => (
@@ -158,13 +182,27 @@ function AdminAtribute() {
               <button
                 type="button"
                 onClick={() => {
-                  setList((prev) =>
-                    prev.map((x) => (x.id === a.id ? { ...x, filterable: !x.filterable } : x)),
-                  );
-                  toast.success(a.filterable ? "Eliminat din filtre" : "Adăugat în filtre");
+                  void updateRow("attribute_definitions", a.id, { filterable: !a.filterable })
+                    .then(() =>
+                      toast.success(a.filterable ? "Eliminat din filtre" : "Adăugat în filtre"),
+                    )
+                    .catch((err: Error) => toast.error(err.message));
                 }}
               >
                 <Pill tone={a.filterable ? "mint" : "muted"}>{a.filterable ? "Da" : "Nu"}</Pill>
+              </button>
+            </td>
+            <td className="px-4 py-3">
+              <button
+                type="button"
+                className="text-sm font-semibold text-destructive"
+                onClick={() => {
+                  void deleteRow("attribute_definitions", a.id)
+                    .then(() => toast.success("Atribut șters"))
+                    .catch((err: Error) => toast.error(err.message));
+                }}
+              >
+                Șterge
               </button>
             </td>
           </tr>

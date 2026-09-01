@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type {
+  AttributeDefinition,
+  AttributeType,
+  AttributeValue,
   AttributeValues,
+  Brand,
+  Category,
+  Collection,
+  Department,
   Discount,
   DiscountTargetType,
   Order,
@@ -10,18 +17,122 @@ import type {
   Product,
   ProductStatus,
   ProductVariant,
+  Tone,
 } from "@/data/types";
 
 /* ------------------------------------------------------------------ */
 /* Mapare rânduri din baza de date → modele folosite în interfață      */
 /* ------------------------------------------------------------------ */
 
-type Row = Record<string, unknown>;
+export type Row = Record<string, unknown>;
 
 const num = (v: unknown, fallback = 0) => (v === null || v === undefined ? fallback : Number(v));
 const str = (v: unknown, fallback = "") => (typeof v === "string" ? v : fallback);
 
+/** Selectul complet pentru produs, incluzând tabelele normalizate. */
+export const PRODUCT_SELECT =
+  "*, product_images(*), product_variants(*), product_attribute_values(*)";
+
+const rows = (v: unknown): Row[] => (Array.isArray(v) ? (v as Row[]) : []);
+
+export function mapDepartment(row: Row): Department {
+  return {
+    id: str(row["id"]),
+    slug: str(row["slug"]),
+    name: str(row["name"]),
+    description: str(row["description"]),
+    image: str(row["image"]),
+    tone: str(row["tone"], "lilac") as Tone,
+    active: Boolean(row["active"]),
+    position: num(row["position"]),
+    ...(row["seo_title"] ? { seoTitle: str(row["seo_title"]) } : {}),
+    ...(row["seo_description"] ? { seoDescription: str(row["seo_description"]) } : {}),
+  };
+}
+
+export function mapCategory(row: Row): Category {
+  return {
+    id: str(row["id"]),
+    slug: str(row["slug"]),
+    name: str(row["name"]),
+    departmentSlug: str(row["department_slug"]),
+    image: str(row["image"]),
+    tone: str(row["tone"], "lilac") as Tone,
+    active: Boolean(row["active"]),
+    position: num(row["position"]),
+    ...(row["seo_title"] ? { seoTitle: str(row["seo_title"]) } : {}),
+    ...(row["seo_description"] ? { seoDescription: str(row["seo_description"]) } : {}),
+  };
+}
+
+export function mapBrand(row: Row): Brand {
+  return {
+    id: str(row["id"]),
+    slug: str(row["slug"]),
+    name: str(row["name"]),
+    logo: (row["logo"] as string | null) ?? null,
+    active: Boolean(row["active"]),
+  };
+}
+
+export function mapCollection(row: Row): Collection {
+  return {
+    id: str(row["id"]),
+    slug: str(row["slug"]),
+    name: str(row["name"]),
+    description: str(row["description"]),
+    image: str(row["image"]),
+    departmentSlug: (row["department_slug"] as string | null) ?? null,
+  };
+}
+
+export function mapAttributeDefinition(row: Row): AttributeDefinition {
+  return {
+    id: str(row["id"]),
+    key: str(row["key"]),
+    label: str(row["label"]),
+    type: str(row["type"], "text") as AttributeType,
+    options: (row["options"] as string[] | null) ?? [],
+    departmentSlug: (row["department_slug"] as string | null) ?? null,
+    categorySlugs: (row["category_slugs"] as string[] | null) ?? [],
+    filterable: Boolean(row["filterable"]),
+    showOnProduct: Boolean(row["show_on_product"]),
+    ...(row["unit"] ? { unit: str(row["unit"]) } : {}),
+    position: num(row["position"]),
+  };
+}
+
+function mapVariant(row: Row): ProductVariant {
+  return {
+    id: str(row["id"]),
+    attributeLabel: str(row["attribute_label"]),
+    label: str(row["label"]),
+    sku: str(row["sku"]),
+    price: row["price"] === null || row["price"] === undefined ? null : num(row["price"]),
+    stock: num(row["stock"]),
+    image: (row["image"] as string | null) ?? null,
+    active: Boolean(row["active"]),
+  };
+}
+
 export function mapProduct(row: Row): Product {
+  const images = rows(row["product_images"])
+    .slice()
+    .sort((a, b) => num(a["position"]) - num(b["position"]))
+    .map((r) => str(r["url"]))
+    .filter(Boolean);
+
+  const variants = rows(row["product_variants"])
+    .slice()
+    .sort((a, b) => num(a["position"]) - num(b["position"]))
+    .map(mapVariant);
+
+  const attributes: AttributeValues = {};
+  for (const r of rows(row["product_attribute_values"])) {
+    const key = str(r["attribute_key"]);
+    if (key) attributes[key] = r["value"] as AttributeValue;
+  }
+
   return {
     id: str(row["id"]),
     slug: str(row["slug"]),
@@ -36,9 +147,9 @@ export function mapProduct(row: Row): Product {
     brandSlug: (row["brand_slug"] as string | null) ?? null,
     stock: num(row["stock"]),
     minStock: num(row["min_stock"]),
-    images: (row["images"] as string[] | null) ?? [],
-    variants: (row["variants"] as ProductVariant[] | null) ?? [],
-    attributes: (row["attributes"] as AttributeValues | null) ?? {},
+    images,
+    variants,
+    attributes,
     status: (str(row["status"], "activ") as ProductStatus) ?? "activ",
     isNew: Boolean(row["is_new"]),
     isFeatured: Boolean(row["is_featured"]),
@@ -65,9 +176,6 @@ export function productToRow(p: Product): Row {
     brand_slug: p.brandSlug,
     stock: p.stock,
     min_stock: p.minStock,
-    images: p.images,
-    variants: p.variants,
-    attributes: p.attributes,
     status: p.status,
     is_new: p.isNew,
     is_featured: p.isFeatured,
@@ -118,7 +226,17 @@ export function mapDiscount(row: Row): Discount {
 /* Hook generic cu actualizare în timp real                            */
 /* ------------------------------------------------------------------ */
 
-type TableName = "products" | "orders" | "discounts";
+export type TableName =
+  | "products"
+  | "orders"
+  | "discounts"
+  | "departments"
+  | "categories"
+  | "brands"
+  | "collections"
+  | "attribute_definitions";
+
+const CHILD_TABLES = ["product_images", "product_variants", "product_attribute_values"] as const;
 
 export function useLiveTable<T>(
   table: TableName,
@@ -132,13 +250,14 @@ export function useLiveTable<T>(
   const load = useCallback(async () => {
     const { data, error: err } = await supabase
       .from(table)
-      .select("*")
+      .select((table === "products" ? PRODUCT_SELECT : "*") as "*")
       .order(orderBy.column, { ascending: orderBy.ascending ?? false });
     if (err) setError(err.message);
     else {
       setError(null);
-      setRows((data ?? []).map((r) => mapRow(r as Row)));
+      setRows(((data ?? []) as unknown as Row[]).map((r) => mapRow(r)));
     }
+
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table, orderBy.column, orderBy.ascending]);
@@ -149,8 +268,17 @@ export function useLiveTable<T>(
       .channel(`admin-${table}`)
       .on("postgres_changes", { event: "*", schema: "public", table }, () => {
         void load();
-      })
-      .subscribe();
+      });
+    if (table === "products") {
+      for (const child of CHILD_TABLES) {
+        channel.on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: child },
+          () => void load(),
+        );
+      }
+    }
+    channel.subscribe();
     return () => {
       void supabase.removeChannel(channel);
     };
@@ -165,6 +293,80 @@ export function useLiveTable<T>(
 
 export async function saveProduct(product: Product) {
   const { error } = await supabase.from("products").upsert(productToRow(product) as never);
+  if (error) throw new Error(error.message);
+  await saveProductImages(product);
+  await saveProductVariants(product);
+  await saveProductAttributes(product);
+}
+
+async function saveProductImages(product: Product) {
+  const del = await supabase.from("product_images").delete().eq("product_id", product.id);
+  if (del.error) throw new Error(del.error.message);
+  if (product.images.length === 0) return;
+  const payload = product.images.map((url, index) => ({
+    product_id: product.id,
+    url,
+    alt: product.name,
+    position: index,
+    is_primary: index === 0,
+  }));
+  const { error } = await supabase.from("product_images").insert(payload as never);
+  if (error) throw new Error(error.message);
+}
+
+async function saveProductVariants(product: Product) {
+  const del = await supabase.from("product_variants").delete().eq("product_id", product.id);
+  if (del.error) throw new Error(del.error.message);
+  if (product.variants.length === 0) return;
+  const payload = product.variants.map((v, index) => ({
+    id: v.id,
+    product_id: product.id,
+    attribute_label: v.attributeLabel,
+    label: v.label,
+    sku: v.sku,
+    price: v.price,
+    stock: v.stock,
+    image: v.image,
+    active: v.active,
+    position: index,
+  }));
+  const { error } = await supabase.from("product_variants").insert(payload as never);
+  if (error) throw new Error(error.message);
+}
+
+async function saveProductAttributes(product: Product) {
+  const del = await supabase
+    .from("product_attribute_values")
+    .delete()
+    .eq("product_id", product.id);
+  if (del.error) throw new Error(del.error.message);
+  const entries = Object.entries(product.attributes);
+  if (entries.length === 0) return;
+  const payload = entries.map(([attribute_key, value]) => ({
+    product_id: product.id,
+    attribute_key,
+    value,
+  }));
+  const { error } = await supabase.from("product_attribute_values").insert(payload as never);
+  if (error) throw new Error(error.message);
+}
+
+/* ------------------------------------------------------------------ */
+/* CRUD pentru metadatele catalogului                                  */
+/* ------------------------------------------------------------------ */
+
+export async function upsertRow(table: TableName, row: Row) {
+  const { error } = await supabase.from(table).upsert(row as never);
+  if (error) throw new Error(error.message);
+}
+
+export async function updateRow(table: TableName, id: string, fields: Row) {
+  const { error } = await supabase.from(table).update(fields as never).eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteRow(table: TableName, id: string) {
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
 
@@ -186,4 +388,14 @@ export async function updateOrderStatus(id: string, status: OrderStatus) {
 export async function updateDiscountActive(id: string, active: boolean) {
   const { error } = await supabase.from("discounts").update({ active } as never).eq("id", id);
   if (error) throw new Error(error.message);
+}
+
+/** Slug simplu, fără diacritice. */
+export function slugify(value: string, separator = "-"): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, separator)
+    .replace(new RegExp(`^${separator}|${separator}$`, "g"), "");
 }
