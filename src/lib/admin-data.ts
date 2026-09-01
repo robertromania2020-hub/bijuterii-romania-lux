@@ -45,8 +45,8 @@ export function mapProduct(row: Row): Product {
     isBestseller: Boolean(row["is_bestseller"]),
     popularity: num(row["popularity"]),
     createdAt: str(row["created_at"]),
-    seoTitle: (row["seo_title"] as string | null) ?? undefined,
-    seoDescription: (row["seo_description"] as string | null) ?? undefined,
+    ...(row["seo_title"] ? { seoTitle: str(row["seo_title"]) } : {}),
+    ...(row["seo_description"] ? { seoDescription: str(row["seo_description"]) } : {}),
   };
 }
 
