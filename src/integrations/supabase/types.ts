@@ -611,6 +611,8 @@ export type Database = {
           is_primary: boolean
           position: number
           product_id: string
+          storage_path: string | null
+          updated_at: string
           url: string
         }
         Insert: {
@@ -620,6 +622,8 @@ export type Database = {
           is_primary?: boolean
           position?: number
           product_id: string
+          storage_path?: string | null
+          updated_at?: string
           url: string
         }
         Update: {
@@ -629,6 +633,8 @@ export type Database = {
           is_primary?: boolean
           position?: number
           product_id?: string
+          storage_path?: string | null
+          updated_at?: string
           url?: string
         }
         Relationships: [

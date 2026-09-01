@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { removeAllProductFiles, type ProductImage } from "@/lib/product-images";
 import type {
   AttributeDefinition,
   AttributeType,
@@ -291,27 +292,38 @@ export function useLiveTable<T>(
 /* Operațiuni de scriere                                               */
 /* ------------------------------------------------------------------ */
 
-export async function saveProduct(product: Product) {
+export async function saveProduct(product: Product, images?: ProductImage[]) {
   const { error } = await supabase.from("products").upsert(productToRow(product) as never);
   if (error) throw new Error(error.message);
-  await saveProductImages(product);
+  await saveProductImages(product, images);
   await saveProductVariants(product);
   await saveProductAttributes(product);
 }
 
-async function saveProductImages(product: Product) {
+async function saveProductImages(product: Product, images?: ProductImage[]) {
+  const list: ProductImage[] =
+    images ??
+    product.images.map((url, index) => ({
+      id: null,
+      url,
+      storagePath: null,
+      isPrimary: index === 0,
+    }));
+
   const del = await supabase.from("product_images").delete().eq("product_id", product.id);
   if (del.error) throw new Error(del.error.message);
-  if (product.images.length === 0) return;
-  const payload = product.images.map((url, index) => ({
+  if (list.length === 0) return;
+  const primaryIndex = Math.max(0, list.findIndex((i) => i.isPrimary));
+  const payload = list.map((img, index) => ({
     product_id: product.id,
-    url,
+    url: img.url,
+    storage_path: img.storagePath,
     alt: product.name,
     position: index,
-    is_primary: index === 0,
+    is_primary: index === primaryIndex,
   }));
-  const { error } = await supabase.from("product_images").insert(payload as never);
-  if (error) throw new Error(error.message);
+  const { error: insErr } = await supabase.from("product_images").insert(payload as never);
+  if (insErr) throw new Error(insErr.message);
 }
 
 async function saveProductVariants(product: Product) {
@@ -371,6 +383,7 @@ export async function deleteRow(table: TableName, id: string) {
 }
 
 export async function deleteProduct(id: string) {
+  await removeAllProductFiles(id).catch(() => undefined);
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
