@@ -16,6 +16,8 @@ import {
 import type { AttributeValue, AttributeValues, Product } from "@/data/types";
 import { formatPrice } from "@/lib/format";
 import { resolveImage } from "@/lib/asset-map";
+import { ProductImagesEditor } from "@/components/admin/ProductImagesEditor";
+import { fetchProductImages, type ProductImage } from "@/lib/product-images";
 import {
   deleteProduct,
   mapProduct,
@@ -50,7 +52,7 @@ type Draft = {
   collectionSlug: string;
   stock: string;
   minStock: string;
-  images: string;
+  images: ProductImage[];
   attributes: AttributeValues;
   status: "activ" | "inactiv";
   isNew: boolean;
@@ -73,7 +75,7 @@ const emptyDraft: Draft = {
   collectionSlug: "",
   stock: "0",
   minStock: "5",
-  images: "",
+  images: [],
   attributes: {},
   status: "activ",
   isNew: false,
@@ -99,6 +101,7 @@ function AdminProduse() {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [filter, setFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
+  const [idNou] = useState(() => `p-${Date.now()}`);
 
   const vizibile = rows.filter((p) => {
     const term = filter.trim().toLowerCase();
@@ -125,13 +128,16 @@ function AdminProduse() {
       collectionSlug: p.collectionSlug ?? "",
       stock: String(p.stock),
       minStock: String(p.minStock),
-      images: p.images.join(", "),
+      images: p.images.map((url) => ({ id: null, url, storagePath: null, isPrimary: false })),
       attributes: { ...p.attributes },
       status: p.status,
       isNew: p.isNew,
       isFeatured: p.isFeatured,
       isBestseller: p.isBestseller,
     });
+    void fetchProductImages(p.id)
+      .then((imgs) => setDraft((d) => (d && d.id === p.id ? { ...d, images: imgs } : d)))
+      .catch(() => toast.error("Nu am putut încărca imaginile produsului."));
   }
 
   function setAttr(key: string, value: AttributeValue) {
@@ -146,13 +152,10 @@ function AdminProduse() {
       return;
     }
     const existent = draft.id ? rows.find((p) => p.id === draft.id) : undefined;
-    const imagini = draft.images
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const imagini = draft.images;
 
     const produs: Product = {
-      id: existent?.id ?? `p-${Date.now()}`,
+      id: existent?.id ?? idNou,
       slug: existent?.slug ?? slugify(draft.name),
       sku: draft.sku,
       name: draft.name,
@@ -165,7 +168,7 @@ function AdminProduse() {
       brandSlug: draft.brandSlug || null,
       stock: Number(draft.stock),
       minStock: Number(draft.minStock),
-      images: imagini.length > 0 ? imagini : (existent?.images ?? []),
+      images: imagini.map((i) => i.url),
       variants: existent?.variants ?? [],
       attributes: draft.attributes,
       status: draft.status,
@@ -178,7 +181,7 @@ function AdminProduse() {
 
     setSeSalveaza(true);
     try {
-      await saveProduct(produs);
+      await saveProduct(produs, imagini);
       setDraft(null);
       toast.success(existent ? "Produs actualizat." : "Produs adăugat.");
     } catch (err) {
@@ -207,6 +210,7 @@ function AdminProduse() {
   }
 
 
+  const productIdCurent = draft?.id ?? idNou;
   const draftAttributes = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
 
   return (
@@ -214,7 +218,7 @@ function AdminProduse() {
       title="Produse"
       description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
-        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(emptyDraft)}>
+        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft({ ...emptyDraft, id: null, images: [] })}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
@@ -334,8 +338,15 @@ function AdminProduse() {
               <input id="p-stoc-minim" type="number" min={0} className="field mt-1.5" value={draft.minStock} onChange={(e) => setDraft({ ...draft, minStock: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="p-imagini" className="text-sm font-semibold">Imagini</label>
-              <input id="p-imagini" className="field mt-1.5" placeholder="Încărcarea imaginilor va fi disponibilă după conectarea stocării" value={draft.images} onChange={(e) => setDraft({ ...draft, images: e.target.value })} />
+              <span className="text-sm font-semibold">Imagini</span>
+              <div className="mt-1.5">
+                <ProductImagesEditor
+                  productId={productIdCurent}
+                  images={draft.images}
+                  onChange={(images) => setDraft((d) => (d ? { ...d, images } : d))}
+                  disabled={seSalveaza}
+                />
+              </div>
             </div>
 
             {draftAttributes.length > 0 && (
@@ -437,7 +448,7 @@ function AdminProduse() {
             </div>
             <div className="flex gap-3 sm:col-span-2">
               <button type="submit" className="btn-dark" disabled={seSalveaza}>
-                {seSalveaza ? "Se salvează…" : "Salvează"}
+                {seSalveaza ? "Se salvează produsul…" : "Salvează"}
               </button>
               <button type="button" className="btn-soft" onClick={() => setDraft(null)}>Renunță</button>
             </div>
