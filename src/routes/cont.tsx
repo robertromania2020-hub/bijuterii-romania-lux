@@ -200,7 +200,7 @@ function FormularAdresa({
     ["building", "Bloc"],
     ["entrance", "Scară"],
     ["floor", "Etaj"],
-    ["apartament" as keyof typeof f, "Apartament"],
+    ["apartment", "Apartament"],
     ["postalCode", "Cod poștal"],
   ];
 
@@ -216,22 +216,19 @@ function FormularAdresa({
         {valoare ? "Editează adresa" : "Adaugă o adresă"}
       </h3>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {campuri.map(([key, label]) => {
-          const realKey = key === ("apartament" as keyof typeof f) ? "apartment" : key;
-          return (
-            <div key={String(realKey)}>
-              <label htmlFor={`a-${String(realKey)}`} className="text-sm font-semibold">
-                {label}
-              </label>
-              <input
-                id={`a-${String(realKey)}`}
-                className="field mt-1.5"
-                value={String(f[realKey as keyof typeof f] ?? "")}
-                onChange={(e) => set(realKey as keyof typeof f)(e.target.value)}
-              />
-            </div>
-          );
-        })}
+        {campuri.map(([key, label]) => (
+          <div key={String(key)}>
+            <label htmlFor={`a-${String(key)}`} className="text-sm font-semibold">
+              {label}
+            </label>
+            <input
+              id={`a-${String(key)}`}
+              className="field mt-1.5"
+              value={String(f[key] ?? "")}
+              onChange={(e) => set(key)(e.target.value)}
+            />
+          </div>
+        ))}
       </div>
       <div className="mt-3">
         <label htmlFor="a-info" className="text-sm font-semibold">Informații suplimentare</label>
