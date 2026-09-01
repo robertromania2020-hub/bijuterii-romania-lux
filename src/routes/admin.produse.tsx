@@ -497,13 +497,7 @@ function AdminProduse() {
                     type="button"
                     className="btn-soft"
                     aria-label={`Activează sau dezactivează ${p.name}`}
-                    onClick={() =>
-                      setList((prev) =>
-                        prev.map((x) =>
-                          x.id === p.id ? { ...x, status: x.status === "activ" ? "inactiv" : "activ" } : x,
-                        ),
-                      )
-                    }
+                    onClick={() => void comutaStatus(p)}
                   >
                     {p.status === "activ" ? "Dezactivează" : "Activează"}
                   </button>
@@ -511,13 +505,11 @@ function AdminProduse() {
                     type="button"
                     className="btn-soft text-destructive"
                     aria-label={`Șterge ${p.name}`}
-                    onClick={() => {
-                      setList((prev) => prev.filter((x) => x.id !== p.id));
-                      toast.success("Produs eliminat din listă (temporar).");
-                    }}
+                    onClick={() => void sterge(p)}
                   >
                     <Trash2 className="size-4" />
                   </button>
+
                 </div>
               </td>
             </tr>
