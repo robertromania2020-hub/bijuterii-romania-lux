@@ -2,9 +2,11 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { ProductCard } from "@/components/ProductCard";
 import { collections, products } from "@/data/catalog";
+import { ensureCatalog } from "@/lib/catalog-live";
 
 export const Route = createFileRoute("/colectii/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    await ensureCatalog();
     const collection = collections.find((c) => c.slug === params.slug);
     if (!collection) throw notFound();
     return { collection };
