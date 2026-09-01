@@ -93,6 +93,16 @@ export function AdminShell({
           >
             Înapoi la magazin
           </Link>
+          <button
+            type="button"
+            onClick={() => {
+              void supabase.auth.signOut();
+            }}
+            className="mt-2 w-full rounded-2xl border border-border px-3 py-2.5 text-left text-sm text-muted-foreground hover:bg-muted"
+          >
+            Ieși din cont
+          </button>
+
         </nav>
       </aside>
 
