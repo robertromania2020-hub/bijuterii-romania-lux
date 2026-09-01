@@ -12,10 +12,17 @@ import {
   formatAttributeValue,
   getBrand,
   getCategory,
-  products as seed,
 } from "@/data/catalog";
 import type { AttributeValue, AttributeValues, Product } from "@/data/types";
 import { formatPrice } from "@/lib/format";
+import { resolveImage } from "@/lib/asset-map";
+import {
+  deleteProduct,
+  mapProduct,
+  saveProduct,
+  updateProductFields,
+  useLiveTable,
+} from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/produse")({
   head: () => ({
@@ -84,12 +91,16 @@ function slugify(value: string) {
 }
 
 function AdminProduse() {
-  const [list, setList] = useState<Product[]>(seed);
+  const { rows, loading, error } = useLiveTable<Product>("products", mapProduct, {
+    column: "name",
+    ascending: true,
+  });
+  const [seSalveaza, setSeSalveaza] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [filter, setFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
 
-  const vizibile = list.filter((p) => {
+  const vizibile = rows.filter((p) => {
     const term = filter.trim().toLowerCase();
     const matchTerm =
       !term ||
@@ -127,69 +138,74 @@ function AdminProduse() {
     setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
-  function save(e: React.FormEvent) {
+  async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!draft) return;
     if (draft.name.trim().length < 3 || !draft.sku.trim() || !draft.price) {
       toast.error("Completează numele, SKU-ul și prețul.");
       return;
     }
-    setList((prev) =>
-      draft.id
-        ? prev.map((p) =>
-            p.id === draft.id
-              ? {
-                  ...p,
-                  name: draft.name,
-                  sku: draft.sku,
-                  description: draft.description,
-                  price: Number(draft.price),
-                  oldPrice: draft.oldPrice ? Number(draft.oldPrice) : null,
-                  departmentSlug: draft.departmentSlug,
-                  categorySlug: draft.categorySlug,
-                  brandSlug: draft.brandSlug || null,
-                  collectionSlug: draft.collectionSlug || null,
-                  stock: Number(draft.stock),
-                  minStock: Number(draft.minStock),
-                  attributes: draft.attributes,
-                  status: draft.status,
-                  isNew: draft.isNew,
-                  isFeatured: draft.isFeatured,
-                  isBestseller: draft.isBestseller,
-                }
-              : p,
-          )
-        : [
-            {
-              id: `nou-${Date.now()}`,
-              slug: slugify(draft.name),
-              sku: draft.sku,
-              name: draft.name,
-              description: draft.description,
-              price: Number(draft.price),
-              oldPrice: draft.oldPrice ? Number(draft.oldPrice) : null,
-              departmentSlug: draft.departmentSlug,
-              categorySlug: draft.categorySlug,
-              collectionSlug: draft.collectionSlug || null,
-              brandSlug: draft.brandSlug || null,
-              stock: Number(draft.stock),
-              minStock: Number(draft.minStock),
-              images: seed[0]!.images,
-              variants: [],
-              attributes: draft.attributes,
-              status: draft.status,
-              isNew: draft.isNew,
-              isFeatured: draft.isFeatured,
-              isBestseller: draft.isBestseller,
-              popularity: 0,
-              createdAt: new Date().toISOString().slice(0, 10),
-            },
-            ...prev,
-          ],
-    );
-    setDraft(null);
-    toast.success("Modificările sunt vizibile local. Salvarea permanentă urmează în etapa următoare.");
+    const existent = draft.id ? rows.find((p) => p.id === draft.id) : undefined;
+    const imagini = draft.images
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const produs: Product = {
+      id: existent?.id ?? `p-${Date.now()}`,
+      slug: existent?.slug ?? slugify(draft.name),
+      sku: draft.sku,
+      name: draft.name,
+      description: draft.description,
+      price: Number(draft.price),
+      oldPrice: draft.oldPrice ? Number(draft.oldPrice) : null,
+      departmentSlug: draft.departmentSlug,
+      categorySlug: draft.categorySlug,
+      collectionSlug: draft.collectionSlug || null,
+      brandSlug: draft.brandSlug || null,
+      stock: Number(draft.stock),
+      minStock: Number(draft.minStock),
+      images: imagini.length > 0 ? imagini : (existent?.images ?? []),
+      variants: existent?.variants ?? [],
+      attributes: draft.attributes,
+      status: draft.status,
+      isNew: draft.isNew,
+      isFeatured: draft.isFeatured,
+      isBestseller: draft.isBestseller,
+      popularity: existent?.popularity ?? 0,
+      createdAt: existent?.createdAt ?? new Date().toISOString().slice(0, 10),
+    };
+
+    setSeSalveaza(true);
+    try {
+      await saveProduct(produs);
+      setDraft(null);
+      toast.success(existent ? "Produs actualizat." : "Produs adăugat.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Produsul nu a putut fi salvat.");
+    } finally {
+      setSeSalveaza(false);
+    }
   }
+
+  async function comutaStatus(p: Product) {
+    try {
+      await updateProductFields(p.id, { status: p.status === "activ" ? "inactiv" : "activ" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Statusul nu a putut fi salvat.");
+    }
+  }
+
+  async function sterge(p: Product) {
+    if (!window.confirm(`Ștergi definitiv produsul „${p.name}”?`)) return;
+    try {
+      await deleteProduct(p.id);
+      toast.success("Produs șters.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Produsul nu a putut fi șters.");
+    }
+  }
+
 
   const draftAttributes = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
 

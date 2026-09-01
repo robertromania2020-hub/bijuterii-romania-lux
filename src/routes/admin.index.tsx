@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminCard, AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { customers, orders, products } from "@/data/catalog";
-import { ORDER_STATUS_LABELS, stockStatus } from "@/data/types";
+import { ORDER_STATUS_LABELS, stockStatus, type Order, type Product } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
+import { mapOrder, mapProduct, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
@@ -18,16 +18,28 @@ export const Route = createFileRoute("/admin/")({
 });
 
 function AdminDashboard() {
-  const venit = orders
-    .filter((o) => o.status !== "anulata")
-    .reduce((sum, o) => sum + o.total, 0);
+  const { rows: orders } = useLiveTable<Order>("orders", mapOrder, {
+    column: "created_at",
+    ascending: false,
+  });
+  const { rows: products } = useLiveTable<Product>("products", mapProduct, {
+    column: "name",
+    ascending: true,
+  });
+
+  const venit = orders.filter((o) => o.status !== "anulata").reduce((sum, o) => sum + o.total, 0);
   const stocRedus = products.filter((p) => stockStatus(p) !== "in_stoc");
+  const clienti = new Set(orders.map((o) => o.customerEmail)).size;
 
   const kpi = [
     { label: "Comenzi totale", value: String(orders.length), tone: "bg-lilac" },
     { label: "Venit total", value: formatPrice(venit), tone: "bg-mint" },
-    { label: "Produse active", value: String(products.filter((p) => p.status === "activ").length), tone: "bg-peach" },
-    { label: "Clienți", value: String(customers.length), tone: "bg-lilac" },
+    {
+      label: "Produse active",
+      value: String(products.filter((p) => p.status === "activ").length),
+      tone: "bg-peach",
+    },
+    { label: "Clienți", value: String(clienti), tone: "bg-lilac" },
   ];
 
   return (
@@ -45,7 +57,7 @@ function AdminDashboard() {
         <div>
           <h2 className="mb-3 font-display text-lg font-semibold">Comenzi recente</h2>
           <AdminTable head={["Comandă", "Client", "Dată", "Total", "Status"]} caption="Comenzi recente">
-            {orders.map((o) => (
+            {orders.slice(0, 8).map((o) => (
               <tr key={o.id}>
                 <td className="px-4 py-3 font-semibold">{o.number}</td>
                 <td className="px-4 py-3">{o.customerName}</td>

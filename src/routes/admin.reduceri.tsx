@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { discounts as seed } from "@/data/catalog";
-import { DISCOUNT_TARGET_LABELS } from "@/data/types";
+import { DISCOUNT_TARGET_LABELS, type Discount } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
+import { mapDiscount, updateDiscountActive, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/reduceri")({
   head: () => ({
@@ -20,19 +19,33 @@ export const Route = createFileRoute("/admin/reduceri")({
 });
 
 function AdminReduceri() {
-  const [list, setList] = useState(seed);
+  const { rows, loading, error } = useLiveTable<Discount>("discounts", mapDiscount, {
+    column: "starts_at",
+    ascending: false,
+  });
+
+  async function comuta(d: Discount) {
+    try {
+      await updateDiscountActive(d.id, !d.active);
+      toast.success(d.active ? "Campanie dezactivată" : "Campanie activată");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Modificarea nu a putut fi salvată.");
+    }
+  }
 
   return (
     <AdminShell
       title="Reduceri"
       description="Campanii aplicate produselor, categoriilor sau colecțiilor."
-      actions={<button className="btn-dark">Adaugă campanie</button>}
     >
+      {error && <p className="mb-4 rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+      {loading && <p className="mb-4 text-sm text-muted-foreground">Se încarcă campaniile…</p>}
+
       <AdminTable
         head={["Campanie", "Tip", "Valoare", "Se aplică la", "Perioadă", "Status"]}
         caption="Campanii de reduceri"
       >
-        {list.map((d) => (
+        {rows.map((d) => (
           <tr key={d.id}>
             <td className="px-4 py-3 font-semibold">{d.name}</td>
             <td className="px-4 py-3">{d.type === "procent" ? "Procent" : "Sumă fixă"}</td>
@@ -44,15 +57,7 @@ function AdminReduceri() {
               {formatDate(d.startsAt)} – {formatDate(d.endsAt)}
             </td>
             <td className="px-4 py-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setList((prev) =>
-                    prev.map((x) => (x.id === d.id ? { ...x, active: !x.active } : x)),
-                  );
-                  toast.success(d.active ? "Campanie dezactivată" : "Campanie activată");
-                }}
-              >
+              <button type="button" onClick={() => void comuta(d)}>
                 <Pill tone={d.active ? "mint" : "muted"}>{d.active ? "Activă" : "Inactivă"}</Pill>
               </button>
             </td>
