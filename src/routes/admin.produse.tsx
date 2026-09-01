@@ -458,7 +458,7 @@ function AdminProduse() {
             <tr key={p.id}>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <img src={p.images[0]} alt="" loading="lazy" width={80} height={80} className="size-10 rounded-xl object-cover" />
+                  <img src={resolveImage(p.images[0])} alt="" loading="lazy" width={80} height={80} className="size-10 rounded-xl object-cover" />
                   <div>
                     <p className="font-semibold">{p.name}</p>
                     <p className="text-xs text-muted-foreground">
