@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminCard, AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { orders as seed } from "@/data/catalog";
-import { ORDER_STATUS_LABELS, type OrderStatus } from "@/data/types";
+import { ORDER_STATUS_LABELS, type Order, type OrderStatus } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
+import { mapOrder, updateOrderStatus, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/comenzi")({
   head: () => ({
@@ -22,15 +22,30 @@ export const Route = createFileRoute("/admin/comenzi")({
 const STATUSES = Object.keys(ORDER_STATUS_LABELS) as OrderStatus[];
 
 function AdminComenzi() {
-  const [list, setList] = useState(seed);
+  const { rows, loading, error } = useLiveTable<Order>("orders", mapOrder, {
+    column: "created_at",
+    ascending: false,
+  });
   const [status, setStatus] = useState<OrderStatus | "toate">("toate");
   const [selected, setSelected] = useState<string | null>(null);
 
-  const vizibile = status === "toate" ? list : list.filter((o) => o.status === status);
-  const detaliu = list.find((o) => o.id === selected) ?? null;
+  const vizibile = status === "toate" ? rows : rows.filter((o) => o.status === status);
+  const detaliu = rows.find((o) => o.id === selected) ?? null;
+
+  async function schimbaStatus(o: Order, value: OrderStatus) {
+    try {
+      await updateOrderStatus(o.id, value);
+      toast.success(`Comanda ${o.number}: ${ORDER_STATUS_LABELS[value]}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Statusul nu a putut fi salvat.");
+    }
+  }
 
   return (
     <AdminShell title="Comenzi" description="Urmărește și actualizează statusul comenzilor.">
+      {error && <p className="mb-4 rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+      {loading && <p className="mb-4 text-sm text-muted-foreground">Se încarcă comenzile…</p>}
+
       <div className="mb-4 flex flex-wrap gap-2">
         {(["toate", ...STATUSES] as const).map((s) => (
           <button
@@ -68,11 +83,7 @@ function AdminComenzi() {
                 id={`status-${o.id}`}
                 className="field py-2"
                 value={o.status}
-                onChange={(e) => {
-                  const value = e.target.value as OrderStatus;
-                  setList((prev) => prev.map((x) => (x.id === o.id ? { ...x, status: value } : x)));
-                  toast.success(`Comanda ${o.number}: ${ORDER_STATUS_LABELS[value]}`);
-                }}
+                onChange={(e) => void schimbaStatus(o, e.target.value as OrderStatus)}
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -123,7 +134,7 @@ function AdminComenzi() {
               <h3 className="font-semibold">Produse</h3>
               <ul className="mt-2 space-y-2">
                 {detaliu.items.map((it) => (
-                  <li key={it.productId} className="flex justify-between gap-4">
+                  <li key={`${it.productId}-${it.variantLabel ?? ""}`} className="flex justify-between gap-4">
                     <span>
                       {it.name} × {it.quantity}
                     </span>

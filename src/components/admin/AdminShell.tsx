@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import {
@@ -93,6 +94,16 @@ export function AdminShell({
           >
             Înapoi la magazin
           </Link>
+          <button
+            type="button"
+            onClick={() => {
+              void supabase.auth.signOut();
+            }}
+            className="mt-2 w-full rounded-2xl border border-border px-3 py-2.5 text-left text-sm text-muted-foreground hover:bg-muted"
+          >
+            Ieși din cont
+          </button>
+
         </nav>
       </aside>
 
@@ -104,10 +115,11 @@ export function AdminShell({
           </div>
           {actions}
         </header>
-        <p className="mt-4 rounded-2xl bg-peach p-3 text-xs">
-          Zonă protejată — autentificarea și autorizarea administratorilor vor fi implementate în
-          etapa următoare. Modificările nu sunt încă salvate.
+        <p className="mt-4 rounded-2xl bg-mint p-3 text-xs">
+          Zonă protejată — datele despre produse, stoc, comenzi și reduceri sunt salvate în timp
+          real în baza de date.
         </p>
+
         <div className="mt-6">{children}</div>
       </div>
     </div>
