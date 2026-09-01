@@ -63,6 +63,24 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
   };
 }
 
+let catalogPromise: Promise<void> | null = null;
+
+/**
+ * Se asigură că modulul `@/data/catalog` este populat. Poate fi apelată din
+ * loadere de rută, înainte de randarea componentelor.
+ */
+export function ensureCatalog(): Promise<void> {
+  if (!catalogPromise) {
+    catalogPromise = fetchCatalog()
+      .then(hydrateCatalog)
+      .catch((err) => {
+        catalogPromise = null;
+        throw err;
+      });
+  }
+  return catalogPromise;
+}
+
 interface CatalogState {
   ready: boolean;
   error: string | null;
@@ -89,12 +107,19 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+    let initial = true;
 
     const load = async () => {
       try {
-        const snapshot = await fetchCatalog();
-        if (cancelled) return;
-        hydrateCatalog(snapshot);
+        if (!initial) {
+          const snapshot = await fetchCatalog();
+          if (cancelled) return;
+          hydrateCatalog(snapshot);
+        } else {
+          await ensureCatalog();
+          if (cancelled) return;
+        }
+        initial = false;
         setError(null);
         setVersion((v) => v + 1);
       } catch (err) {
