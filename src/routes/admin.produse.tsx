@@ -436,12 +436,17 @@ function AdminProduse() {
               </label>
             </div>
             <div className="flex gap-3 sm:col-span-2">
-              <button type="submit" className="btn-dark">Salvează</button>
+              <button type="submit" className="btn-dark" disabled={seSalveaza}>
+                {seSalveaza ? "Se salvează…" : "Salvează"}
+              </button>
               <button type="button" className="btn-soft" onClick={() => setDraft(null)}>Renunță</button>
             </div>
           </form>
         </AdminCard>
       )}
+
+      {error && <p className="mb-4 rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+      {loading && <p className="mb-4 text-sm text-muted-foreground">Se încarcă produsele…</p>}
 
       <AdminTable
         head={["Produs", "Departament", "SKU", "Preț", "Stoc", "Variante", "Status", "Acțiuni"]}
