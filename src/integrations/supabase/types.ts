@@ -16,47 +16,71 @@ export type Database = {
     Tables: {
       addresses: {
         Row: {
+          additional_information: string | null
+          apartment: string | null
+          building: string | null
           city: string
           country: string
           county: string
           created_at: string
+          entrance: string | null
+          first_name: string
+          floor: string | null
           id: string
           is_default: boolean
           label: string
+          last_name: string
           phone: string
           postal_code: string
           recipient: string
           street: string
+          street_number: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          additional_information?: string | null
+          apartment?: string | null
+          building?: string | null
           city?: string
           country?: string
           county?: string
           created_at?: string
+          entrance?: string | null
+          first_name?: string
+          floor?: string | null
           id?: string
           is_default?: boolean
           label?: string
+          last_name?: string
           phone?: string
           postal_code?: string
           recipient?: string
           street?: string
+          street_number?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          additional_information?: string | null
+          apartment?: string | null
+          building?: string | null
           city?: string
           country?: string
           county?: string
           created_at?: string
+          entrance?: string | null
+          first_name?: string
+          floor?: string | null
           id?: string
           is_default?: boolean
           label?: string
+          last_name?: string
           phone?: string
           postal_code?: string
           recipient?: string
           street?: string
+          street_number?: string
           updated_at?: string
           user_id?: string
         }
@@ -327,63 +351,223 @@ export type Database = {
         }
         Relationships: []
       }
+      inventory_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_quantity: number
+          previous_quantity: number
+          product_id: string | null
+          quantity_change: number
+          reason: string
+          reference_id: string | null
+          reference_type: string | null
+          variant_id: string | null
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_quantity?: number
+          previous_quantity?: number
+          product_id?: string | null
+          quantity_change?: number
+          reason?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          variant_id?: string | null
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_quantity?: number
+          previous_quantity?: number
+          product_id?: string | null
+          quantity_change?: number
+          reason?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          variant_id?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          department_slug: string
+          discount_amount: number
+          id: string
+          order_id: string
+          product_id: string | null
+          product_image_snapshot: string | null
+          product_name_snapshot: string
+          quantity: number
+          sku_snapshot: string
+          total: number
+          unit_price: number
+          variant_id: string | null
+          variant_name_snapshot: string | null
+        }
+        Insert: {
+          created_at?: string
+          department_slug?: string
+          discount_amount?: number
+          id?: string
+          order_id: string
+          product_id?: string | null
+          product_image_snapshot?: string | null
+          product_name_snapshot: string
+          quantity?: number
+          sku_snapshot?: string
+          total?: number
+          unit_price?: number
+          variant_id?: string | null
+          variant_name_snapshot?: string | null
+        }
+        Update: {
+          created_at?: string
+          department_slug?: string
+          discount_amount?: number
+          id?: string
+          order_id?: string
+          product_id?: string | null
+          product_image_snapshot?: string | null
+          product_name_snapshot?: string
+          quantity?: number
+          sku_snapshot?: string
+          total?: number
+          unit_price?: number
+          variant_id?: string | null
+          variant_name_snapshot?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_status: string
+          note: string | null
+          old_status: string | null
+          order_id: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status: string
+          note?: string | null
+          old_status?: string | null
+          order_id: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string
+          note?: string | null
+          old_status?: string | null
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_status_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
+          admin_notes: string | null
           awb: string | null
           city: string
           county: string
+          coupon_code: string | null
           created_at: string
           customer_email: string
           customer_name: string
+          customer_notes: string | null
           customer_phone: string
           discount: number
           id: string
           items: Json
           notes: string | null
           number: string
+          payment_method: string
+          payment_status: string
           shipping: number
+          shipping_address: Json
           status: string
           subtotal: number
           total: number
           updated_at: string
+          user_id: string | null
         }
         Insert: {
+          admin_notes?: string | null
           awb?: string | null
           city?: string
           county?: string
+          coupon_code?: string | null
           created_at?: string
           customer_email: string
           customer_name: string
+          customer_notes?: string | null
           customer_phone?: string
           discount?: number
           id: string
           items?: Json
           notes?: string | null
           number: string
+          payment_method?: string
+          payment_status?: string
           shipping?: number
+          shipping_address?: Json
           status?: string
           subtotal?: number
           total?: number
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
+          admin_notes?: string | null
           awb?: string | null
           city?: string
           county?: string
+          coupon_code?: string | null
           created_at?: string
           customer_email?: string
           customer_name?: string
+          customer_notes?: string | null
           customer_phone?: string
           discount?: number
           id?: string
           items?: Json
           notes?: string | null
           number?: string
+          payment_method?: string
+          payment_status?: string
           shipping?: number
+          shipping_address?: Json
           status?: string
           subtotal?: number
           total?: number
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -465,6 +649,7 @@ export type Database = {
           id: string
           image: string | null
           label: string
+          min_stock: number
           position: number
           price: number | null
           product_id: string
@@ -479,6 +664,7 @@ export type Database = {
           id: string
           image?: string | null
           label: string
+          min_stock?: number
           position?: number
           price?: number | null
           product_id: string
@@ -493,6 +679,7 @@ export type Database = {
           id?: string
           image?: string | null
           label?: string
+          min_stock?: number
           position?: number
           price?: number | null
           product_id?: string
@@ -673,12 +860,50 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      adjust_stock: {
+        Args: {
+          p_new_quantity: number
+          p_product_id: string
+          p_reason?: string
+          p_variant_id: string
+        }
+        Returns: number
+      }
+      admin_customers: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          first_name: string
+          last_name: string
+          last_order_at: string
+          orders_count: number
+          phone: string
+          total_spent: number
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      place_order: {
+        Args: {
+          p_coupon_code?: string
+          p_customer: Json
+          p_customer_notes?: string
+          p_items: Json
+          p_payment_method?: string
+          p_shipping: Json
+        }
+        Returns: Json
+      }
+      set_order_status: {
+        Args: { p_note?: string; p_order_id: string; p_status: string }
+        Returns: undefined
       }
     }
     Enums: {

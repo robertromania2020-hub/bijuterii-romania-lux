@@ -1,9 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { mesajEroare, placeOrder, useSession } from "@/lib/shop-data";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -40,6 +41,7 @@ const initialForm = {
   numar: "",
   bloc: "",
   scara: "",
+  etaj: "",
   apartament: "",
   codPostal: "",
   observatii: "",
@@ -95,13 +97,23 @@ function Field({
 }
 
 function CheckoutPage() {
-  const { cartLines, totals, hydrated } = useStore();
+  const { cartLines, totals, hydrated, clearCart } = useStore();
+  const navigate = useNavigate();
+  const { session, loading: sessionLoading } = useSession();
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Errors>({});
+  const [seTrimite, setSeTrimite] = useState(false);
+
+  useEffect(() => {
+    if (session?.user.email && !form.email) {
+      setForm((f) => ({ ...f, email: session.user.email ?? "" }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   const set = (key: keyof FormState) => (v: string) => setForm((f) => ({ ...f, [key]: v }));
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     const next: Errors = {};
     if (form.nume.trim().length < 2) next.nume = "Introdu numele.";
@@ -114,16 +126,70 @@ function CheckoutPage() {
     if (form.localitate.trim().length < 2) next.localitate = "Introdu localitatea.";
     if (form.adresa.trim().length < 3) next.adresa = "Introdu adresa (strada).";
     if (form.numar.trim().length < 1) next.numar = "Introdu numărul.";
-    if (!/^[0-9]{6}$/.test(form.codPostal.trim()))
-      next.codPostal = "Codul poștal are 6 cifre.";
+    if (!/^[0-9]{6}$/.test(form.codPostal.trim())) next.codPostal = "Codul poștal are 6 cifre.";
 
     setErrors(next);
     if (Object.keys(next).length > 0) {
-      toast.error("Verifică datele completate.");
+      toast.error("Datele introduse nu sunt valide.");
       return;
     }
-    toast.info(
-      "Datele sunt valide. Plasarea comenzii va fi activată după conectarea bazei de date și a plăților.",
+
+    setSeTrimite(true);
+    try {
+      const rezultat = await placeOrder({
+        items: cartLines.map((line) => ({
+          product_id: line.productId,
+          variant_id: line.product.variants.find((v) => v.label === line.variant)?.id ?? null,
+          quantity: line.quantity,
+        })),
+        customer: {
+          first_name: form.prenume.trim(),
+          last_name: form.nume.trim(),
+          email: form.email.trim(),
+          phone: form.telefon.trim(),
+        },
+        shipping: {
+          county: form.judet,
+          city: form.localitate.trim(),
+          address: form.adresa.trim(),
+          number: form.numar.trim(),
+          building: form.bloc.trim(),
+          entrance: form.scara.trim(),
+          floor: form.etaj.trim(),
+          apartment: form.apartament.trim(),
+          postal_code: form.codPostal.trim(),
+          delivery_method: form.livrare,
+          recipient: `${form.nume.trim()} ${form.prenume.trim()}`,
+          phone: form.telefon.trim(),
+        },
+        ...(form.observatii.trim() ? { customerNotes: form.observatii.trim() } : {}),
+      });
+      clearCart();
+      toast.success(`Comanda ${rezultat.number} a fost plasată. Îți mulțumim!`);
+      void navigate({ to: "/cont", search: { tab: "comenzi" } });
+    } catch (err) {
+      toast.error(mesajEroare(err, "Nu am putut finaliza comanda. Te rugăm să încerci din nou."));
+    } finally {
+      setSeTrimite(false);
+    }
+  }
+
+  if (!sessionLoading && !session) {
+    return (
+      <SiteLayout>
+        <PageHeading title="Finalizează comanda" />
+        <div className="mt-6">
+          <EmptyState
+            title="Autentificare necesară"
+            description="Pentru a plasa o comandă în siguranță, te rugăm să te autentifici sau să îți creezi un cont."
+            action={
+              <Link to="/cont" className="btn-dark">
+                Autentifică-te
+              </Link>
+            }
+          />
+        </div>
+      </SiteLayout>
     );
   }
 
@@ -150,10 +216,10 @@ function CheckoutPage() {
     <SiteLayout>
       <PageHeading
         title="Finalizează comanda"
-        description="Completează datele pentru livrare. Nu se efectuează nicio plată în această etapă."
+        description="Completează datele pentru livrare. Plata se face ramburs, la primirea coletului."
       />
 
-      <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]" noValidate>
+      <form onSubmit={(e) => void submit(e)} className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]" noValidate>
         <div className="space-y-6">
           <fieldset className="rounded-3xl border border-border bg-surface p-5">
             <legend className="px-2 font-display text-lg font-semibold">Date de contact</legend>
@@ -193,6 +259,7 @@ function CheckoutPage() {
               <Field id="numar" label="Număr" value={form.numar} onChange={set("numar")} error={errors.numar} required />
               <Field id="bloc" label="Bloc" value={form.bloc} onChange={set("bloc")} />
               <Field id="scara" label="Scară" value={form.scara} onChange={set("scara")} />
+              <Field id="etaj" label="Etaj" value={form.etaj} onChange={set("etaj")} />
               <Field id="apartament" label="Apartament" value={form.apartament} onChange={set("apartament")} />
               <Field id="codPostal" label="Cod poștal" value={form.codPostal} onChange={set("codPostal")} error={errors.codPostal} required />
             </div>
@@ -215,7 +282,7 @@ function CheckoutPage() {
             <div className="space-y-2">
               {[
                 { id: "curier", label: "Curier rapid (1–3 zile lucrătoare)", cost: totals.shipping },
-                { id: "easybox", label: "Ridicare din Easybox", cost: 14.99 },
+                { id: "easybox", label: "Ridicare din Easybox", cost: totals.shipping },
               ].map((opt) => (
                 <label
                   key={opt.id}
@@ -241,29 +308,12 @@ function CheckoutPage() {
 
           <fieldset className="rounded-3xl border border-border bg-surface p-5">
             <legend className="px-2 font-display text-lg font-semibold">Metoda de plată</legend>
-            <div className="space-y-2">
-              {[
-                { id: "ramburs", label: "Plata ramburs (la livrare)" },
-                { id: "card", label: "Plata online cu cardul" },
-              ].map((opt) => (
-                <label
-                  key={opt.id}
-                  className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border p-3 text-sm"
-                >
-                  <input
-                    type="radio"
-                    name="plata"
-                    className="size-4 accent-primary"
-                    checked={form.plata === opt.id}
-                    onChange={() => set("plata")(opt.id)}
-                  />
-                  {opt.label}
-                </label>
-              ))}
-            </div>
+            <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border p-3 text-sm">
+              <input type="radio" name="plata" className="size-4 accent-primary" checked readOnly />
+              Plata ramburs (la livrare)
+            </label>
             <p className="mt-3 rounded-2xl bg-peach p-3 text-xs">
-              Procesarea plăților va fi activată într-o etapă ulterioară. Momentan nu se efectuează
-              nicio tranzacție.
+              Plata online cu cardul va fi disponibilă într-o etapă ulterioară.
             </p>
           </fieldset>
         </div>
@@ -274,9 +324,10 @@ function CheckoutPage() {
             {cartLines.map((line) => (
               <li key={`${line.productId}-${line.variant ?? ""}`} className="flex justify-between gap-3">
                 <span className="text-muted-foreground">
-                  {line.product.name} × {line.quantity}
+                  {line.product.name}
+                  {line.variant ? ` — ${line.variant}` : ""} × {line.quantity}
                 </span>
-                <span className="shrink-0">{formatPrice(line.product.price * line.quantity)}</span>
+                <span className="shrink-0">{formatPrice(line.unitPrice * line.quantity)}</span>
               </li>
             ))}
           </ul>
@@ -294,12 +345,15 @@ function CheckoutPage() {
               <dd>{totals.shipping === 0 ? "Gratuit" : formatPrice(totals.shipping)}</dd>
             </div>
             <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
-              <dt>Total</dt>
+              <dt>Total estimat</dt>
               <dd className="font-display">{formatPrice(totals.total)}</dd>
             </div>
           </dl>
-          <button type="submit" className="btn-dark mt-5 w-full">
-            Plasează comanda
+          <p className="mt-2 text-xs text-muted-foreground">
+            Totalul final este calculat și validat în siguranță pe server, la plasarea comenzii.
+          </p>
+          <button type="submit" className="btn-dark mt-5 w-full" disabled={seTrimite}>
+            {seTrimite ? "Se plasează comanda…" : "Plasează comanda"}
           </button>
         </aside>
       </form>

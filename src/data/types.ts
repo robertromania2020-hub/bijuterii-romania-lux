@@ -164,7 +164,8 @@ export type OrderStatus =
   | "in_procesare"
   | "expediata"
   | "livrata"
-  | "anulata";
+  | "anulata"
+  | "returnata";
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   noua: "Nouă",
@@ -173,6 +174,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   expediata: "Expediată",
   livrata: "Livrată",
   anulata: "Anulată",
+  returnata: "Returnată",
 };
 
 export interface OrderItem {

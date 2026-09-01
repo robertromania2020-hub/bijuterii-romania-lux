@@ -1,10 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AdminCard, AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
-import { ORDER_STATUS_LABELS, type Order, type OrderStatus } from "@/data/types";
+import { ORDER_STATUS_LABELS, type OrderStatus } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
-import { mapOrder, updateOrderStatus, useLiveTable } from "@/lib/admin-data";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  mapCustomerOrder,
+  mesajEroare,
+  ORDER_SELECT,
+  type CustomerOrder,
+} from "@/lib/shop-data";
+import { setOrderStatus, updateOrderFields } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/comenzi")({
   head: () => ({
@@ -21,23 +28,118 @@ export const Route = createFileRoute("/admin/comenzi")({
 
 const STATUSES = Object.keys(ORDER_STATUS_LABELS) as OrderStatus[];
 
-function AdminComenzi() {
-  const { rows, loading, error } = useLiveTable<Order>("orders", mapOrder, {
-    column: "created_at",
-    ascending: false,
-  });
-  const [status, setStatus] = useState<OrderStatus | "toate">("toate");
-  const [selected, setSelected] = useState<string | null>(null);
+interface ComandaAdmin extends CustomerOrder {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  city: string;
+  county: string;
+  adminNotes: string;
+  customerNotes: string;
+  shippingAddress: Record<string, string>;
+}
 
-  const vizibile = status === "toate" ? rows : rows.filter((o) => o.status === status);
+function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
+  return {
+    ...mapCustomerOrder(row),
+    customerName: String(row["customer_name"] ?? ""),
+    customerEmail: String(row["customer_email"] ?? ""),
+    customerPhone: String(row["customer_phone"] ?? ""),
+    city: String(row["city"] ?? ""),
+    county: String(row["county"] ?? ""),
+    adminNotes: String(row["admin_notes"] ?? ""),
+    customerNotes: String(row["customer_notes"] ?? ""),
+    shippingAddress: (row["shipping_address"] as Record<string, string>) ?? {},
+  };
+}
+
+function adresaText(a: Record<string, string>): string {
+  const parti = [
+    a["address"] ? `${a["address"]} nr. ${a["number"] ?? ""}` : "",
+    a["building"] ? `bl. ${a["building"]}` : "",
+    a["entrance"] ? `sc. ${a["entrance"]}` : "",
+    a["floor"] ? `et. ${a["floor"]}` : "",
+    a["apartment"] ? `ap. ${a["apartment"]}` : "",
+  ].filter(Boolean);
+  return parti.join(", ");
+}
+
+function AdminComenzi() {
+  const [rows, setRows] = useState<ComandaAdmin[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<OrderStatus | "toate">("toate");
+  const [cautare, setCautare] = useState("");
+  const [dela, setDela] = useState("");
+  const [panaLa, setPanaLa] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [note, setNote] = useState("");
+  const [awb, setAwb] = useState("");
+
+  async function incarca() {
+    const { data, error: err } = await supabase
+      .from("orders")
+      .select(ORDER_SELECT)
+      .order("created_at", { ascending: false });
+    if (err) setError(mesajEroare(err, "Nu am putut încărca comenzile."));
+    else {
+      setError(null);
+      setRows(((data ?? []) as unknown as Record<string, unknown>[]).map(mapAdminOrder));
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    void incarca();
+    const channel = supabase
+      .channel("admin-orders-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
+        void incarca();
+      })
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const q = cautare.trim().toLowerCase();
+  const vizibile = rows.filter((o) => {
+    if (status !== "toate" && o.status !== status) return false;
+    if (dela && o.createdAt < dela) return false;
+    if (panaLa && o.createdAt > panaLa) return false;
+    if (q) {
+      const hay = `${o.number} ${o.customerName} ${o.customerEmail} ${o.customerPhone}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
   const detaliu = rows.find((o) => o.id === selected) ?? null;
 
-  async function schimbaStatus(o: Order, value: OrderStatus) {
+  useEffect(() => {
+    if (detaliu) {
+      setNote(detaliu.adminNotes);
+      setAwb(detaliu.awb ?? "");
+    }
+  }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function schimbaStatus(o: ComandaAdmin, value: OrderStatus) {
     try {
-      await updateOrderStatus(o.id, value);
+      await setOrderStatus(o.id, value);
       toast.success(`Comanda ${o.number}: ${ORDER_STATUS_LABELS[value]}`);
+      await incarca();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Statusul nu a putut fi salvat.");
+      toast.error(mesajEroare(err, "Statusul nu a putut fi salvat."));
+    }
+  }
+
+  async function salveazaDetalii(o: ComandaAdmin) {
+    try {
+      await updateOrderFields(o.id, { admin_notes: note, awb: awb || null });
+      toast.success("Detaliile comenzii au fost salvate.");
+      await incarca();
+    } catch (err) {
+      toast.error(mesajEroare(err, "Nu am putut salva detaliile."));
     }
   }
 
@@ -45,6 +147,27 @@ function AdminComenzi() {
     <AdminShell title="Comenzi" description="Urmărește și actualizează statusul comenzilor.">
       {error && <p className="mb-4 rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
       {loading && <p className="mb-4 text-sm text-muted-foreground">Se încarcă comenzile…</p>}
+
+      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className="sr-only" htmlFor="cautare">Caută comandă</label>
+          <input
+            id="cautare"
+            className="field"
+            placeholder="Număr comandă, client sau telefon"
+            value={cautare}
+            onChange={(e) => setCautare(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="text-xs text-muted-foreground" htmlFor="dela">De la</label>
+          <input id="dela" type="date" className="field" value={dela} onChange={(e) => setDela(e.target.value)} />
+        </div>
+        <div>
+          <label className="text-xs text-muted-foreground" htmlFor="panala">Până la</label>
+          <input id="panala" type="date" className="field" value={panaLa} onChange={(e) => setPanaLa(e.target.value)} />
+        </div>
+      </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {(["toate", ...STATUSES] as const).map((s) => (
@@ -62,7 +185,7 @@ function AdminComenzi() {
       </div>
 
       <AdminTable
-        head={["Comandă", "Client", "Dată", "Produse", "Total", "Status", "Acțiuni"]}
+        head={["Comandă", "Client", "Dată", "Produse", "Total", "Plată", "Status", "Acțiuni"]}
         caption="Lista comenzilor"
       >
         {vizibile.map((o) => (
@@ -71,10 +194,14 @@ function AdminComenzi() {
             <td className="px-4 py-3">
               <p>{o.customerName}</p>
               <p className="text-xs text-muted-foreground">{o.customerEmail}</p>
+              <p className="text-xs text-muted-foreground">{o.customerPhone}</p>
             </td>
             <td className="px-4 py-3 text-muted-foreground">{formatDate(o.createdAt)}</td>
             <td className="px-4 py-3">{o.items.length}</td>
             <td className="px-4 py-3">{formatPrice(o.total)}</td>
+            <td className="px-4 py-3 text-xs text-muted-foreground">
+              Ramburs · {o.paymentStatus === "platita" ? "Plătită" : "Neplătită"}
+            </td>
             <td className="px-4 py-3">
               <label className="sr-only" htmlFor={`status-${o.id}`}>
                 Status pentru comanda {o.number}
@@ -123,29 +250,76 @@ function AdminComenzi() {
                 <br />
                 {detaliu.customerPhone}
               </p>
-              <h3 className="mt-4 font-semibold">Livrare</h3>
+              <h3 className="mt-4 font-semibold">Adresă de livrare</h3>
               <p className="mt-1 text-muted-foreground">
-                {detaliu.city}, județul {detaliu.county}
+                {adresaText(detaliu.shippingAddress)}
                 <br />
-                AWB: {detaliu.awb ?? "—"}
+                {detaliu.city}, județul {detaliu.county}
+                {detaliu.shippingAddress["postal_code"]
+                  ? `, ${detaliu.shippingAddress["postal_code"]}`
+                  : ""}
               </p>
+              {detaliu.customerNotes && (
+                <>
+                  <h3 className="mt-4 font-semibold">Observațiile clientului</h3>
+                  <p className="mt-1 text-muted-foreground">{detaliu.customerNotes}</p>
+                </>
+              )}
+
+              <div className="mt-4 space-y-3">
+                <div>
+                  <label htmlFor="awb" className="text-sm font-semibold">AWB</label>
+                  <input id="awb" className="field mt-1.5" value={awb} onChange={(e) => setAwb(e.target.value)} />
+                </div>
+                <div>
+                  <label htmlFor="note-admin" className="text-sm font-semibold">Note interne</label>
+                  <textarea
+                    id="note-admin"
+                    rows={3}
+                    className="field mt-1.5"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+                </div>
+                <button type="button" className="btn-dark" onClick={() => void salveazaDetalii(detaliu)}>
+                  Salvează detaliile
+                </button>
+              </div>
             </div>
             <div className="text-sm">
               <h3 className="font-semibold">Produse</h3>
               <ul className="mt-2 space-y-2">
                 {detaliu.items.map((it) => (
-                  <li key={`${it.productId}-${it.variantLabel ?? ""}`} className="flex justify-between gap-4">
+                  <li key={it.id} className="flex justify-between gap-4">
                     <span>
-                      {it.name} × {it.quantity}
+                      {it.name}
+                      {it.variantLabel ? ` — ${it.variantLabel}` : ""} × {it.quantity}
+                      <span className="block text-xs text-muted-foreground">
+                        {it.sku} · {formatPrice(it.unitPrice)}/buc
+                      </span>
                     </span>
-                    <span>{formatPrice(it.price * it.quantity)}</span>
+                    <span>{formatPrice(it.total)}</span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 flex justify-between border-t border-border pt-3 font-display text-base font-semibold">
-                <span>Total</span>
-                <span>{formatPrice(detaliu.total)}</span>
-              </p>
+              <dl className="mt-4 space-y-1 border-t border-border pt-3">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Subtotal</dt>
+                  <dd>{formatPrice(detaliu.subtotal)}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Reducere</dt>
+                  <dd>-{formatPrice(detaliu.discount)}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Transport</dt>
+                  <dd>{detaliu.shipping === 0 ? "Gratuit" : formatPrice(detaliu.shipping)}</dd>
+                </div>
+                <div className="flex justify-between font-display text-base font-semibold">
+                  <dt>Total</dt>
+                  <dd>{formatPrice(detaliu.total)}</dd>
+                </div>
+              </dl>
             </div>
           </div>
         </AdminCard>

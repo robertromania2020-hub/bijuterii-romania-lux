@@ -381,9 +381,36 @@ export async function updateProductFields(id: string, fields: Row) {
 }
 
 export async function updateOrderStatus(id: string, status: OrderStatus) {
-  const { error } = await supabase.from("orders").update({ status } as never).eq("id", id);
+  const { error } = await supabase.rpc("set_order_status", {
+    p_order_id: id,
+    p_status: status,
+  });
   if (error) throw new Error(error.message);
 }
+
+export const setOrderStatus = updateOrderStatus;
+
+export async function updateOrderFields(id: string, fields: Row) {
+  const { error } = await supabase.from("orders").update(fields as never).eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+/** Setează stocul absolut pentru un produs sau o variantă, cu istoric. */
+export async function adjustStock(
+  productId: string,
+  variantId: string | null,
+  newQuantity: number,
+  reason = "Ajustare manuală",
+) {
+  const { error } = await supabase.rpc("adjust_stock", {
+    p_product_id: productId,
+    p_variant_id: variantId as string,
+    p_new_quantity: newQuantity,
+    p_reason: reason,
+  });
+  if (error) throw new Error(error.message);
+}
+
 
 export async function updateDiscountActive(id: string, active: boolean) {
   const { error } = await supabase.from("discounts").update({ active } as never).eq("id", id);
