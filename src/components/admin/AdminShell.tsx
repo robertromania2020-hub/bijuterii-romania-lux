@@ -104,10 +104,11 @@ export function AdminShell({
           </div>
           {actions}
         </header>
-        <p className="mt-4 rounded-2xl bg-peach p-3 text-xs">
-          Zonă protejată — autentificarea și autorizarea administratorilor vor fi implementate în
-          etapa următoare. Modificările nu sunt încă salvate.
+        <p className="mt-4 rounded-2xl bg-mint p-3 text-xs">
+          Zonă protejată — datele despre produse, stoc, comenzi și reduceri sunt salvate în timp
+          real în baza de date.
         </p>
+
         <div className="mt-6">{children}</div>
       </div>
     </div>
