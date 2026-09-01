@@ -293,8 +293,8 @@ export async function placeOrder(input: PlaceOrderInput) {
     p_customer: input.customer as never,
     p_shipping: input.shipping as never,
     p_payment_method: "ramburs",
-    p_customer_notes: input.customerNotes ?? null,
-    p_coupon_code: null,
+    p_customer_notes: input.customerNotes ?? "",
+
   });
   if (error) throw new Error(mesajEroare(error));
   return data as unknown as { order_id: string; number: string; total: number };
