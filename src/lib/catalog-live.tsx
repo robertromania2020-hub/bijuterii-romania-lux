@@ -53,11 +53,16 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
     };
   });
 
+  const withImage = <T extends { image?: string | null }>(item: T): T => ({
+    ...item,
+    image: item.image ? resolveImage(item.image) : item.image,
+  });
+
   return {
-    departments: ((dep.data ?? []) as Row[]).map(mapDepartment),
-    categories: ((cat.data ?? []) as Row[]).map(mapCategory),
+    departments: ((dep.data ?? []) as Row[]).map(mapDepartment).map(withImage),
+    categories: ((cat.data ?? []) as Row[]).map(mapCategory).map(withImage),
     brands: ((bra.data ?? []) as Row[]).map(mapBrand),
-    collections: ((col.data ?? []) as Row[]).map(mapCollection),
+    collections: ((col.data ?? []) as Row[]).map(mapCollection).map(withImage),
     attributeDefinitions: ((att.data ?? []) as Row[]).map(mapAttributeDefinition),
     products,
   };
