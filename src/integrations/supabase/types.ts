@@ -507,11 +507,17 @@ export type Database = {
           items: Json
           notes: string | null
           number: string
+          paid_at: string | null
           payment_method: string
           payment_status: string
+          refund_status: string
+          refunded_amount: number
           shipping: number
           shipping_address: Json
           status: string
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          stripe_refund_id: string | null
           subtotal: number
           total: number
           updated_at: string
@@ -533,11 +539,17 @@ export type Database = {
           items?: Json
           notes?: string | null
           number: string
+          paid_at?: string | null
           payment_method?: string
           payment_status?: string
+          refund_status?: string
+          refunded_amount?: number
           shipping?: number
           shipping_address?: Json
           status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_refund_id?: string | null
           subtotal?: number
           total?: number
           updated_at?: string
@@ -559,11 +571,17 @@ export type Database = {
           items?: Json
           notes?: string | null
           number?: string
+          paid_at?: string | null
           payment_method?: string
           payment_status?: string
+          refund_status?: string
+          refunded_amount?: number
           shipping?: number
           shipping_address?: Json
           status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_refund_id?: string | null
           subtotal?: number
           total?: number
           updated_at?: string
@@ -840,6 +858,27 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_events: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          order_id?: string | null
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -888,6 +927,17 @@ export type Database = {
           total_spent: number
           user_id: string
         }[]
+      }
+      apply_stripe_payment_event: {
+        Args: {
+          p_event_id: string
+          p_event_type: string
+          p_order_id: string
+          p_outcome: string
+          p_payment_intent_id?: string
+          p_session_id?: string
+        }
+        Returns: Json
       }
       has_role: {
         Args: {
