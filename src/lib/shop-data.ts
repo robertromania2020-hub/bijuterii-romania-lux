@@ -262,7 +262,7 @@ export function mapCustomerOrder(row: Record<string, unknown>): CustomerOrder {
     shipping: Number(row["shipping"] ?? 0),
     total: Number(row["total"] ?? 0),
     paymentMethod: String(row["payment_method"] ?? "ramburs"),
-    paymentStatus: String(row["payment_status"] ?? "neplatita"),
+    paymentStatus: String(row["payment_status"] ?? "pending"),
     awb: (row["awb"] as string | null) ?? null,
     items,
   };
@@ -285,6 +285,7 @@ export interface PlaceOrderInput {
   customer: { first_name: string; last_name: string; email: string; phone: string };
   shipping: Record<string, string>;
   customerNotes?: string;
+  paymentMethod?: "ramburs" | "card";
 }
 
 export async function placeOrder(input: PlaceOrderInput) {
@@ -292,7 +293,7 @@ export async function placeOrder(input: PlaceOrderInput) {
     p_items: input.items as never,
     p_customer: input.customer as never,
     p_shipping: input.shipping as never,
-    p_payment_method: "ramburs",
+    p_payment_method: input.paymentMethod ?? "ramburs",
     p_customer_notes: input.customerNotes ?? "",
 
   });

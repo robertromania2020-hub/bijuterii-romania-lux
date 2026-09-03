@@ -41,7 +41,9 @@ import { Route as AdminSetariRouteImport } from './routes/admin.setari'
 import { Route as AdminStocRouteImport } from './routes/admin.stoc'
 import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
 import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
+import { Route as ComandaSuccesRouteImport } from './routes/comanda.succes'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiPublicProductImageSplatRouteImport } from './routes/api/public/product-image.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -205,9 +207,19 @@ const ColectiiSlugRoute = ColectiiSlugRouteImport.update({
   path: '/colectii/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComandaSuccesRoute = ComandaSuccesRouteImport.update({
+  id: '/comanda/succes',
+  path: '/comanda/succes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdusSlugRoute = ProdusSlugRouteImport.update({
   id: '/produs/$slug',
   path: '/produs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicProductImageSplatRoute =
@@ -248,9 +260,11 @@ export interface FileRoutesByFullPath {
   '/admin/setari': typeof AdminSetariRoute
   '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
+  '/comanda/succes': typeof ComandaSuccesRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRoutesByTo {
@@ -283,9 +297,11 @@ export interface FileRoutesByTo {
   '/admin/setari': typeof AdminSetariRoute
   '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
+  '/comanda/succes': typeof ComandaSuccesRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin': typeof AdminIndexRoute
   '/colectii': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRoutesById {
@@ -320,9 +336,11 @@ export interface FileRoutesById {
   '/admin/setari': typeof AdminSetariRoute
   '/admin/stoc': typeof AdminStocRoute
   '/colectii/$slug': typeof ColectiiSlugRoute
+  '/comanda/succes': typeof ComandaSuccesRoute
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRouteTypes {
@@ -358,9 +376,11 @@ export interface FileRouteTypes {
     | '/admin/setari'
     | '/admin/stoc'
     | '/colectii/$slug'
+    | '/comanda/succes'
     | '/produs/$slug'
     | '/admin/'
     | '/colectii/'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -393,9 +413,11 @@ export interface FileRouteTypes {
     | '/admin/setari'
     | '/admin/stoc'
     | '/colectii/$slug'
+    | '/comanda/succes'
     | '/produs/$slug'
     | '/admin'
     | '/colectii'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   id:
     | '__root__'
@@ -429,9 +451,11 @@ export interface FileRouteTypes {
     | '/admin/setari'
     | '/admin/stoc'
     | '/colectii/$slug'
+    | '/comanda/succes'
     | '/produs/$slug'
     | '/admin/'
     | '/colectii/'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   fileRoutesById: FileRoutesById
 }
@@ -454,8 +478,10 @@ export interface RootRouteChildren {
   ReduceriRoute: typeof ReduceriRoute
   TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
+  ComandaSuccesRoute: typeof ComandaSuccesRoute
   ProdusSlugRoute: typeof ProdusSlugRoute
   ColectiiIndexRoute: typeof ColectiiIndexRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicProductImageSplatRoute: typeof ApiPublicProductImageSplatRoute
 }
 
@@ -685,11 +711,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColectiiSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comanda/succes': {
+      id: '/comanda/succes'
+      path: '/comanda/succes'
+      fullPath: '/comanda/succes'
+      preLoaderRoute: typeof ComandaSuccesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produs/$slug': {
       id: '/produs/$slug'
       path: '/produs/$slug'
       fullPath: '/produs/$slug'
       preLoaderRoute: typeof ProdusSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/product-image/$': {
@@ -755,8 +795,10 @@ const rootRouteChildren: RootRouteChildren = {
   ReduceriRoute: ReduceriRoute,
   TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,
+  ComandaSuccesRoute: ComandaSuccesRoute,
   ProdusSlugRoute: ProdusSlugRoute,
   ColectiiIndexRoute: ColectiiIndexRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicProductImageSplatRoute: ApiPublicProductImageSplatRoute,
 }
 export const routeTree = rootRouteImport
