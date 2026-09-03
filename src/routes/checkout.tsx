@@ -308,13 +308,32 @@ function CheckoutPage() {
 
           <fieldset className="rounded-3xl border border-border bg-surface p-5">
             <legend className="px-2 font-display text-lg font-semibold">Metoda de plată</legend>
-            <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border p-3 text-sm">
-              <input type="radio" name="plata" className="size-4 accent-primary" checked readOnly />
-              Plata ramburs (la livrare)
-            </label>
-            <p className="mt-3 rounded-2xl bg-peach p-3 text-xs">
-              Plata online cu cardul va fi disponibilă într-o etapă ulterioară.
-            </p>
+            <div className="space-y-2">
+              {[
+                { value: "ramburs", label: "Plata ramburs (la livrare)" },
+                { value: "card", label: "Plata online cu cardul" },
+              ].map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border p-3 text-sm"
+                >
+                  <input
+                    type="radio"
+                    name="plata"
+                    className="size-4 accent-primary"
+                    value={opt.value}
+                    checked={form.plata === opt.value}
+                    onChange={() => set("plata")(opt.value)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </div>
+            {form.plata === "card" && (
+              <p className="mt-3 rounded-2xl bg-peach p-3 text-xs">
+                Vei fi redirecționat către pagina securizată Stripe pentru finalizarea plății.
+              </p>
+            )}
           </fieldset>
         </div>
 
