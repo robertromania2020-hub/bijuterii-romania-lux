@@ -262,7 +262,7 @@ export function mapCustomerOrder(row: Record<string, unknown>): CustomerOrder {
     shipping: Number(row["shipping"] ?? 0),
     total: Number(row["total"] ?? 0),
     paymentMethod: String(row["payment_method"] ?? "ramburs"),
-    paymentStatus: String(row["payment_status"] ?? "neplatita"),
+    paymentStatus: String(row["payment_status"] ?? "pending"),
     awb: (row["awb"] as string | null) ?? null,
     items,
   };
