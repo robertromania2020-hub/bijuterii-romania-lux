@@ -64,8 +64,8 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
           p_event_type: type,
           p_order_id: orderId,
           p_outcome: outcome,
-          p_session_id: sessionId,
-          p_payment_intent_id: paymentIntentId,
+          p_session_id: sessionId ?? undefined,
+          p_payment_intent_id: paymentIntentId ?? undefined,
         });
 
         if (error) {
