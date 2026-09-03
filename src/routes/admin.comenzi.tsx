@@ -28,6 +28,14 @@ export const Route = createFileRoute("/admin/comenzi")({
 
 const STATUSES = Object.keys(ORDER_STATUS_LABELS) as OrderStatus[];
 
+const PAYMENT_STATUS_LABELS: Record<string, string> = {
+  pending: "În așteptarea plății",
+  paid: "Plătită",
+  failed: "Plată eșuată",
+  refunded: "Rambursată",
+  cancelled: "Anulată",
+};
+
 interface ComandaAdmin extends CustomerOrder {
   customerName: string;
   customerEmail: string;
@@ -37,6 +45,9 @@ interface ComandaAdmin extends CustomerOrder {
   adminNotes: string;
   customerNotes: string;
   shippingAddress: Record<string, string>;
+  paidAt: string | null;
+  stripeSessionId: string | null;
+  stripePaymentIntentId: string | null;
 }
 
 function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
@@ -50,6 +61,9 @@ function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
     adminNotes: String(row["admin_notes"] ?? ""),
     customerNotes: String(row["customer_notes"] ?? ""),
     shippingAddress: (row["shipping_address"] as Record<string, string>) ?? {},
+    paidAt: (row["paid_at"] as string | null) ?? null,
+    stripeSessionId: (row["stripe_checkout_session_id"] as string | null) ?? null,
+    stripePaymentIntentId: (row["stripe_payment_intent_id"] as string | null) ?? null,
   };
 }
 
@@ -200,7 +214,7 @@ function AdminComenzi() {
             <td className="px-4 py-3">{o.items.length}</td>
             <td className="px-4 py-3">{formatPrice(o.total)}</td>
             <td className="px-4 py-3 text-xs text-muted-foreground">
-              Ramburs · {o.paymentStatus === "platita" ? "Plătită" : "Neplătită"}
+              {o.paymentMethod === "card" ? "Card online" : "Ramburs"} · {PAYMENT_STATUS_LABELS[o.paymentStatus] ?? o.paymentStatus}
             </td>
             <td className="px-4 py-3">
               <label className="sr-only" htmlFor={`status-${o.id}`}>
@@ -259,6 +273,31 @@ function AdminComenzi() {
                   ? `, ${detaliu.shippingAddress["postal_code"]}`
                   : ""}
               </p>
+              <h3 className="mt-4 font-semibold">Plată</h3>
+              <p className="mt-1 text-muted-foreground">
+                Metodă: {detaliu.paymentMethod === "card" ? "Card online (Stripe)" : "Ramburs"}
+                <br />
+                Status: {PAYMENT_STATUS_LABELS[detaliu.paymentStatus] ?? detaliu.paymentStatus}
+                {detaliu.paidAt ? (
+                  <>
+                    <br />
+                    Plătită la: {formatDate(detaliu.paidAt)}
+                  </>
+                ) : null}
+                {detaliu.stripeSessionId ? (
+                  <>
+                    <br />
+                    <span className="break-all text-xs">Sesiune Stripe: {detaliu.stripeSessionId}</span>
+                  </>
+                ) : null}
+                {detaliu.stripePaymentIntentId ? (
+                  <>
+                    <br />
+                    <span className="break-all text-xs">Intenție de plată: {detaliu.stripePaymentIntentId}</span>
+                  </>
+                ) : null}
+              </p>
+
               {detaliu.customerNotes && (
                 <>
                   <h3 className="mt-4 font-semibold">Observațiile clientului</h3>
