@@ -5,6 +5,8 @@ import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 import { mesajEroare, placeOrder, useSession } from "@/lib/shop-data";
+import { useServerFn } from "@tanstack/react-start";
+import { createCheckoutSession } from "@/lib/stripe-checkout.functions";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -100,6 +102,7 @@ function CheckoutPage() {
   const { cartLines, totals, hydrated, clearCart } = useStore();
   const navigate = useNavigate();
   const { session, loading: sessionLoading } = useSession();
+  const initiazaPlata = useServerFn(createCheckoutSession);
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Errors>({});
   const [seTrimite, setSeTrimite] = useState(false);
@@ -224,7 +227,7 @@ function CheckoutPage() {
     <SiteLayout>
       <PageHeading
         title="Finalizează comanda"
-        description="Completează datele pentru livrare. Plata se face ramburs, la primirea coletului."
+        description="Completează datele pentru livrare și alege metoda de plată: ramburs sau online cu cardul."
       />
 
       <form onSubmit={(e) => void submit(e)} className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]" noValidate>
