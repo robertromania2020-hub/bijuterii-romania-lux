@@ -162,8 +162,16 @@ function CheckoutPage() {
           recipient: `${form.nume.trim()} ${form.prenume.trim()}`,
           phone: form.telefon.trim(),
         },
+        paymentMethod: form.plata === "card" ? "card" : "ramburs",
         ...(form.observatii.trim() ? { customerNotes: form.observatii.trim() } : {}),
       });
+
+      if (form.plata === "card") {
+        const { url } = await initiazaPlata({ data: { orderId: rezultat.order_id } });
+        window.location.href = url;
+        return;
+      }
+
       clearCart();
       toast.success(`Comanda ${rezultat.number} a fost plasată. Îți mulțumim!`);
       void navigate({ to: "/cont", search: { tab: "comenzi" } });
