@@ -42,6 +42,7 @@ import { Route as AdminStocRouteImport } from './routes/admin.stoc'
 import { Route as ColectiiIndexRouteImport } from './routes/colectii.index'
 import { Route as ColectiiSlugRouteImport } from './routes/colectii.$slug'
 import { Route as ProdusSlugRouteImport } from './routes/produs.$slug'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiPublicProductImageSplatRouteImport } from './routes/api/public/product-image.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -210,6 +211,11 @@ const ProdusSlugRoute = ProdusSlugRouteImport.update({
   path: '/produs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicProductImageSplatRoute =
   ApiPublicProductImageSplatRouteImport.update({
     id: '/api/public/product-image/$',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRoutesByTo {
@@ -286,6 +293,7 @@ export interface FileRoutesByTo {
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin': typeof AdminIndexRoute
   '/colectii': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRoutesById {
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/produs/$slug': typeof ProdusSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/colectii/': typeof ColectiiIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/product-image/$': typeof ApiPublicProductImageSplatRoute
 }
 export interface FileRouteTypes {
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/produs/$slug'
     | '/admin/'
     | '/colectii/'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -396,6 +406,7 @@ export interface FileRouteTypes {
     | '/produs/$slug'
     | '/admin'
     | '/colectii'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   id:
     | '__root__'
@@ -432,6 +443,7 @@ export interface FileRouteTypes {
     | '/produs/$slug'
     | '/admin/'
     | '/colectii/'
+    | '/api/public/stripe-webhook'
     | '/api/public/product-image/$'
   fileRoutesById: FileRoutesById
 }
@@ -456,6 +468,7 @@ export interface RootRouteChildren {
   ColectiiSlugRoute: typeof ColectiiSlugRoute
   ProdusSlugRoute: typeof ProdusSlugRoute
   ColectiiIndexRoute: typeof ColectiiIndexRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicProductImageSplatRoute: typeof ApiPublicProductImageSplatRoute
 }
 
@@ -692,6 +705,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdusSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/product-image/$': {
       id: '/api/public/product-image/$'
       path: '/api/public/product-image/$'
@@ -757,6 +777,7 @@ const rootRouteChildren: RootRouteChildren = {
   ColectiiSlugRoute: ColectiiSlugRoute,
   ProdusSlugRoute: ProdusSlugRoute,
   ColectiiIndexRoute: ColectiiIndexRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicProductImageSplatRoute: ApiPublicProductImageSplatRoute,
 }
 export const routeTree = rootRouteImport
