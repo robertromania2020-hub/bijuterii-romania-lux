@@ -22,6 +22,7 @@ import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecv
 import { Route as LivrareRouteImport } from './routes/livrare'
 import { Route as MachiajRouteImport } from './routes/machiaj'
 import { Route as NoutatiRouteImport } from './routes/noutati'
+import { Route as ParfumuriRouteImport } from './routes/parfumuri'
 import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ProduseRouteImport } from './routes/produse'
@@ -110,6 +111,11 @@ const MachiajRoute = MachiajRouteImport.update({
 const NoutatiRoute = NoutatiRouteImport.update({
   id: '/noutati',
   path: '/noutati',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParfumuriRoute = ParfumuriRouteImport.update({
+  id: '/parfumuri',
+  path: '/parfumuri',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PoliticaDeConfidentialitateRoute =
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
+  '/parfumuri': typeof ParfumuriRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
@@ -287,6 +294,7 @@ export interface FileRoutesByTo {
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
+  '/parfumuri': typeof ParfumuriRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
   '/noutati': typeof NoutatiRoute
+  '/parfumuri': typeof ParfumuriRoute
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
@@ -368,6 +377,7 @@ export interface FileRouteTypes {
     | '/livrare'
     | '/machiaj'
     | '/noutati'
+    | '/parfumuri'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
@@ -406,6 +416,7 @@ export interface FileRouteTypes {
     | '/livrare'
     | '/machiaj'
     | '/noutati'
+    | '/parfumuri'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
@@ -445,6 +456,7 @@ export interface FileRouteTypes {
     | '/livrare'
     | '/machiaj'
     | '/noutati'
+    | '/parfumuri'
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
@@ -485,6 +497,7 @@ export interface RootRouteChildren {
   LivrareRoute: typeof LivrareRoute
   MachiajRoute: typeof MachiajRoute
   NoutatiRoute: typeof NoutatiRoute
+  ParfumuriRoute: typeof ParfumuriRoute
   PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
   ProduseRoute: typeof ProduseRoute
@@ -589,6 +602,13 @@ declare module '@tanstack/react-router' {
       path: '/noutati'
       fullPath: '/noutati'
       preLoaderRoute: typeof NoutatiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parfumuri': {
+      id: '/parfumuri'
+      path: '/parfumuri'
+      fullPath: '/parfumuri'
+      preLoaderRoute: typeof ParfumuriRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politica-de-confidentialitate': {
@@ -810,6 +830,7 @@ const rootRouteChildren: RootRouteChildren = {
   LivrareRoute: LivrareRoute,
   MachiajRoute: MachiajRoute,
   NoutatiRoute: NoutatiRoute,
+  ParfumuriRoute: ParfumuriRoute,
   PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
   PoliticaDeReturRoute: PoliticaDeReturRoute,
   ProduseRoute: ProduseRoute,
