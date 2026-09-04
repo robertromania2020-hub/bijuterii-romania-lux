@@ -140,10 +140,11 @@ const catalogVersion = useCatalogVersion();
       cartLines,
       totals: { subtotal, discount, shipping, total: subtotal + shipping },
     };
-  }, [
+}, [
     cart,
     wishlist,
     hydrated,
+    catalogVersion,
     addToCart,
     updateQuantity,
     removeFromCart,
