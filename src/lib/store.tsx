@@ -106,7 +106,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+const catalogVersion = useCatalogVersion();
+
   const value = useMemo<StoreValue>(() => {
+    void catalogVersion;
     const cartLines = cart
       .map((line) => {
         const product = catalog.find((p) => p.id === line.productId);
