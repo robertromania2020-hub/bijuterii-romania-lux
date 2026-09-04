@@ -100,13 +100,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => setCart([]), []);
 
-  const toggleWishlist = useCallback((productId: string) => {
+const toggleWishlist = useCallback((productId: string) => {
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
     );
   }, []);
 
-const catalogVersion = useCatalogVersion();
+  const catalogVersion = useCatalogVersion();
 
   const value = useMemo<StoreValue>(() => {
     void catalogVersion;
