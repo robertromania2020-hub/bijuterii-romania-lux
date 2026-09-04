@@ -27,6 +27,7 @@ import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politi
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ProduseRouteImport } from './routes/produse'
 import { Route as ReduceriRouteImport } from './routes/reduceri'
+import { Route as ResetareParolaRouteImport } from './routes/resetare-parola'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAtributeRouteImport } from './routes/admin.atribute'
@@ -138,6 +139,11 @@ const ProduseRoute = ProduseRouteImport.update({
 const ReduceriRoute = ReduceriRouteImport.update({
   id: '/reduceri',
   path: '/reduceri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetareParolaRoute = ResetareParolaRouteImport.update({
+  id: '/resetare-parola',
+  path: '/resetare-parola',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermeniSiConditiiRoute = TermeniSiConditiiRouteImport.update({
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
+  '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
   '/admin/branduri': typeof AdminBranduriRoute
@@ -306,6 +313,7 @@ export interface FileRoutesByTo {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
+  '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
   '/admin/branduri': typeof AdminBranduriRoute
@@ -348,6 +356,7 @@ export interface FileRoutesById {
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
   '/reduceri': typeof ReduceriRoute
+  '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
   '/admin/branduri': typeof AdminBranduriRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/produse'
     | '/reduceri'
+    | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
     | '/admin/branduri'
@@ -431,6 +441,7 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/produse'
     | '/reduceri'
+    | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
     | '/admin/branduri'
@@ -472,6 +483,7 @@ export interface FileRouteTypes {
     | '/politica-de-retur'
     | '/produse'
     | '/reduceri'
+    | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
     | '/admin/branduri'
@@ -514,6 +526,7 @@ export interface RootRouteChildren {
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
   ProduseRoute: typeof ProduseRoute
   ReduceriRoute: typeof ReduceriRoute
+  ResetareParolaRoute: typeof ResetareParolaRoute
   TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
   ComandaSuccesRoute: typeof ComandaSuccesRoute
@@ -649,6 +662,13 @@ declare module '@tanstack/react-router' {
       path: '/reduceri'
       fullPath: '/reduceri'
       preLoaderRoute: typeof ReduceriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resetare-parola': {
+      id: '/resetare-parola'
+      path: '/resetare-parola'
+      fullPath: '/resetare-parola'
+      preLoaderRoute: typeof ResetareParolaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/termeni-si-conditii': {
@@ -856,6 +876,7 @@ const rootRouteChildren: RootRouteChildren = {
   PoliticaDeReturRoute: PoliticaDeReturRoute,
   ProduseRoute: ProduseRoute,
   ReduceriRoute: ReduceriRoute,
+  ResetareParolaRoute: ResetareParolaRoute,
   TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,
   ComandaSuccesRoute: ComandaSuccesRoute,

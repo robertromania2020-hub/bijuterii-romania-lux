@@ -146,13 +146,20 @@ function Autentificare() {
         >
           Continuă cu Google
         </button>
+        <Link
+          to="/resetare-parola"
+          className="mt-4 block text-center text-sm text-muted-foreground underline"
+        >
+          Ți-ai uitat parola?
+        </Link>
         <button
           type="button"
-          className="mt-4 w-full text-sm text-muted-foreground underline"
+          className="mt-2 w-full text-sm text-muted-foreground underline"
           onClick={() => setMod(mod === "intra" ? "creeaza" : "intra")}
         >
           {mod === "intra" ? "Nu ai cont? Creează unul" : "Ai deja cont? Autentifică-te"}
         </button>
+
       </div>
     </SiteLayout>
   );
