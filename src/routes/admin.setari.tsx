@@ -1,6 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
+import {
+  COMPANY_ADDRESS,
+  CUI,
+  EMAIL,
+  EMAIL_HREF,
+  FREE_SHIPPING_THRESHOLD,
+  LEGAL_NAME,
+  PHONE,
+  PHONE_HREF,
+  REG_COM,
+  SHIPPING_COST,
+  SHOP_NAME,
+  SHOP_TAGLINE,
+  WORKING_HOURS,
+} from "@/data/company";
+import { formatPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/admin/setari")({
   head: () => ({
@@ -15,66 +30,60 @@ export const Route = createFileRoute("/admin/setari")({
   component: AdminSetari,
 });
 
+function Rand({ eticheta, children }: { eticheta: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-0.5 border-b border-border pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+      <dt className="text-sm text-muted-foreground">{eticheta}</dt>
+      <dd className="text-sm font-semibold sm:text-right">{children}</dd>
+    </div>
+  );
+}
+
 function AdminSetari() {
   return (
-    <AdminShell title="Setări" description="Configurări generale ale magazinului.">
-      <form
-        className="grid gap-4 lg:grid-cols-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          toast.info("Setările vor fi salvate după conectarea bazei de date.");
-        }}
-      >
+    <AdminShell
+      title="Setări"
+      description="Datele oficiale ale magazinului, folosite pe întregul site."
+    >
+      <div className="grid gap-4 lg:grid-cols-2">
         <AdminCard>
           <h2 className="font-display text-lg font-semibold">Date magazin</h2>
-          <div className="mt-4 space-y-4">
-            <div>
-              <label htmlFor="s-nume" className="text-sm font-semibold">Nume magazin</label>
-              <input id="s-nume" className="field mt-1.5" defaultValue="Casa Elegantei" />
-            </div>
-            <div>
-              <label htmlFor="s-email" className="text-sm font-semibold">Email contact</label>
-              <input id="s-email" type="email" className="field mt-1.5" defaultValue="eleganteicasa10@gmail.com" />
-            </div>
-            <div>
-              <label htmlFor="s-telefon" className="text-sm font-semibold">Telefon</label>
-              <input id="s-telefon" className="field mt-1.5" defaultValue="+40 721 000 000" />
-            </div>
-          </div>
+          <dl className="mt-4 space-y-3">
+            <Rand eticheta="Nume comercial">{SHOP_NAME}</Rand>
+            <Rand eticheta="Descriere">{SHOP_TAGLINE}</Rand>
+            <Rand eticheta="Denumire legală">{LEGAL_NAME}</Rand>
+            <Rand eticheta="CUI">{CUI}</Rand>
+            <Rand eticheta="Nr. Reg. Comerțului">{REG_COM}</Rand>
+            <Rand eticheta="Sediu social">{COMPANY_ADDRESS}</Rand>
+          </dl>
         </AdminCard>
 
         <AdminCard>
-          <h2 className="font-display text-lg font-semibold">Livrare și plată</h2>
-          <div className="mt-4 space-y-4">
-            <div>
-              <label htmlFor="s-cost" className="text-sm font-semibold">Cost livrare standard (lei)</label>
-              <input id="s-cost" type="number" min={0} className="field mt-1.5" defaultValue={20} />
-            </div>
-            <div>
-              <label htmlFor="s-prag" className="text-sm font-semibold">Prag livrare gratuită (lei)</label>
-              <input id="s-prag" type="number" min={0} className="field mt-1.5" defaultValue={250} />
-            </div>
-            <fieldset>
-              <legend className="text-sm font-semibold">Metode de plată acceptate</legend>
-              <div className="mt-2 space-y-2 text-sm">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="size-4 accent-primary" defaultChecked /> Card online
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="size-4 accent-primary" defaultChecked /> Ramburs la livrare
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="size-4 accent-primary" /> Transfer bancar
-                </label>
-              </div>
-            </fieldset>
-          </div>
+          <h2 className="font-display text-lg font-semibold">Contact și livrare</h2>
+          <dl className="mt-4 space-y-3">
+            <Rand eticheta="Telefon">
+              <a href={PHONE_HREF} className="hover:underline">
+                {PHONE}
+              </a>
+            </Rand>
+            <Rand eticheta="Email">
+              <a href={EMAIL_HREF} className="break-all hover:underline">
+                {EMAIL}
+              </a>
+            </Rand>
+            <Rand eticheta="Program">{WORKING_HOURS}</Rand>
+            <Rand eticheta="Cost livrare standard">{formatPrice(SHIPPING_COST)}</Rand>
+            <Rand eticheta="Prag livrare gratuită">{formatPrice(FREE_SHIPPING_THRESHOLD)}</Rand>
+            <Rand eticheta="Metode de plată">Card online, ramburs la livrare</Rand>
+          </dl>
         </AdminCard>
 
-        <div className="lg:col-span-2">
-          <button type="submit" className="btn-dark">Salvează setările</button>
-        </div>
-      </form>
+        <p className="text-xs text-muted-foreground lg:col-span-2">
+          Aceste date sunt sursa unică de adevăr pentru site (antet, subsol, pagini legale, facturi
+          și calculul transportului). Modificarea lor se face în fișierul de configurare al
+          magazinului, iar costul de livrare este aplicat identic și la plasarea comenzii.
+        </p>
+      </div>
     </AdminShell>
   );
 }
