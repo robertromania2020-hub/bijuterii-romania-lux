@@ -416,47 +416,137 @@ function ContPage() {
           )}
 
           {tab === "comenzi" &&
-            (comenzi.length === 0 ? (
-              <EmptyState
-                title="Nu ai comenzi încă"
-                description="Comenzile plasate vor apărea aici, cu tot cu statusul livrării."
-                action={
-                  <Link to="/bijuterii" className="btn-dark">
-                    Începe cumpărăturile
-                  </Link>
-                }
-              />
-            ) : (
-              <ul className="space-y-3">
-                {comenzi.map((o) => (
-                  <li key={o.id} className="rounded-3xl border border-border bg-surface p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div>
-                        <p className="font-display font-semibold">Comanda {o.number}</p>
-                        <p className="text-xs text-muted-foreground">{formatDate(o.createdAt)}</p>
-                      </div>
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLE[o.status]}`}>
-                        {ORDER_STATUS_LABELS[o.status]}
-                      </span>
-                    </div>
-                    <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
-                      {o.items.map((item) => (
-                        <li key={item.id}>
-                          {item.name}
-                          {item.variantLabel ? ` — ${item.variantLabel}` : ""} × {item.quantity} ·{" "}
-                          {formatPrice(item.total)}
+            (() => {
+              const platite = comenzi.filter((o) => o.paymentStatus === "paid");
+              const lista = filtruComenzi === "platite" ? platite : comenzi;
+              return (
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(
+                      [
+                        { id: "platite" as const, label: `Comenzi plătite (${platite.length})` },
+                        { id: "toate" as const, label: `Toate comenzile (${comenzi.length})` },
+                      ]
+                    ).map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setFiltruComenzi(f.id)}
+                        className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${
+                          filtruComenzi === f.id
+                            ? "bg-foreground text-background"
+                            : "border border-border bg-surface text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {lista.length === 0 ? (
+                    <EmptyState
+                      title={
+                        filtruComenzi === "platite"
+                          ? "Nu ai comenzi plătite"
+                          : "Nu ai comenzi încă"
+                      }
+                      description="Comenzile plasate apar aici, cu statusul plății, starea livrării și adresa de livrare."
+                      action={
+                        <Link to="/bijuterii" className="btn-dark">
+                          Începe cumpărăturile
+                        </Link>
+                      }
+                    />
+                  ) : (
+                    <ul className="space-y-3">
+                      {lista.map((o) => (
+                        <li key={o.id} className="rounded-3xl border border-border bg-surface p-4">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <p className="font-display font-semibold">Comanda {o.number}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatDate(o.createdAt)}
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span
+                                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                                  o.paymentStatus === "paid"
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "border border-border text-muted-foreground"
+                                }`}
+                              >
+                                {PAYMENT_STATUS_LABELS[o.paymentStatus] ?? "Stare plată necunoscută"}
+                              </span>
+                              <span
+                                className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLE[o.status]}`}
+                              >
+                                {ORDER_STATUS_LABELS[o.status]}
+                              </span>
+                            </div>
+                          </div>
+
+                          <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+                            {o.items.map((item) => (
+                              <li key={item.id}>
+                                {item.name}
+                                {item.variantLabel ? ` — ${item.variantLabel}` : ""} × {item.quantity}{" "}
+                                · {formatPrice(item.total)}
+                              </li>
+                            ))}
+                          </ul>
+
+                          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                            <div className="rounded-2xl border border-border/70 p-3">
+                              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                                Adresa de livrare
+                              </p>
+                              {o.shippingAddress ? (
+                                <>
+                                  <p className="mt-1 text-sm font-medium">
+                                    {o.shippingAddress.recipient || "—"}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {formatShippingAddress(o.shippingAddress)}
+                                  </p>
+                                  {o.shippingAddress.phone && (
+                                    <p className="text-xs text-muted-foreground">
+                                      Telefon: {o.shippingAddress.phone}
+                                    </p>
+                                  )}
+                                </>
+                              ) : (
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                  Adresa nu este disponibilă.
+                                </p>
+                              )}
+                            </div>
+                            <div className="rounded-2xl border border-border/70 p-3 text-sm text-muted-foreground">
+                              <p className="font-mono text-[11px] uppercase tracking-[0.16em]">
+                                Plată și livrare
+                              </p>
+                              <p className="mt-1">
+                                Metodă: {PAYMENT_METHOD_LABELS[o.paymentMethod] ?? o.paymentMethod}
+                              </p>
+                              {o.paidAt && <p>Plătită la {formatDate(o.paidAt)}</p>}
+                              <p>
+                                Transport:{" "}
+                                {o.shipping === 0 ? "Gratuit" : formatPrice(o.shipping)}
+                              </p>
+                              {o.awb && <p>AWB: {o.awb}</p>}
+                              <p className="mt-1 font-display font-semibold text-foreground">
+                                Total: {formatPrice(o.total)}
+                              </p>
+                            </div>
+                          </div>
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-3 text-xs text-muted-foreground">
-                      Transport: {o.shipping === 0 ? "Gratuit" : formatPrice(o.shipping)}
-                      {o.awb ? ` · AWB: ${o.awb}` : ""}
-                    </p>
-                    <p className="mt-1 font-display font-semibold">Total: {formatPrice(o.total)}</p>
-                  </li>
-                ))}
-              </ul>
-            ))}
+                  )}
+                </div>
+              );
+            })()}
+
 
           {tab === "adrese" && (
             <div className="space-y-4">
