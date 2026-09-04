@@ -48,6 +48,21 @@ export interface CustomerOrderItem {
   total: number;
 }
 
+export interface OrderShippingAddress {
+  recipient: string;
+  phone: string;
+  county: string;
+  city: string;
+  address: string;
+  number: string;
+  building: string;
+  entrance: string;
+  floor: string;
+  apartment: string;
+  postalCode: string;
+  deliveryMethod: string;
+}
+
 export interface CustomerOrder {
   id: string;
   number: string;
@@ -59,9 +74,25 @@ export interface CustomerOrder {
   total: number;
   paymentMethod: string;
   paymentStatus: string;
+  paidAt: string | null;
+  shippingAddress: OrderShippingAddress | null;
   awb: string | null;
   items: CustomerOrderItem[];
 }
+
+export const PAYMENT_STATUS_LABELS: Record<string, string> = {
+  pending: "În așteptarea plății",
+  paid: "Plătită",
+  failed: "Plată eșuată",
+  refunded: "Rambursată",
+  cancelled: "Plată anulată",
+};
+
+export const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  ramburs: "Ramburs la livrare",
+  card: "Card online",
+};
+
 
 /** Mesaj prietenos în română; nu expune erori brute din baza de date. */
 export function mesajEroare(err: unknown, implicit = "Nu am putut finaliza operațiunea. Te rugăm să încerci din nou."): string {
@@ -238,7 +269,42 @@ type OrderItemRow = {
   total: number | string;
 };
 
+function mapShippingAddress(value: unknown): OrderShippingAddress | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const a = value as Record<string, unknown>;
+  const txt = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : "");
+  const adresa: OrderShippingAddress = {
+    recipient: txt("recipient"),
+    phone: txt("phone"),
+    county: txt("county"),
+    city: txt("city"),
+    address: txt("address") || txt("street"),
+    number: txt("number") || txt("street_number"),
+    building: txt("building"),
+    entrance: txt("entrance"),
+    floor: txt("floor"),
+    apartment: txt("apartment"),
+    postalCode: txt("postal_code"),
+    deliveryMethod: txt("delivery_method"),
+  };
+  return Object.values(adresa).some((v) => v !== "") ? adresa : null;
+}
+
+/** Rezumat pe o linie al adresei de livrare, în format românesc. */
+export function formatShippingAddress(a: OrderShippingAddress): string {
+  const strada = [a.address, a.number && `nr. ${a.number}`].filter(Boolean).join(" ");
+  const detalii = [
+    a.building && `bl. ${a.building}`,
+    a.entrance && `sc. ${a.entrance}`,
+    a.floor && `et. ${a.floor}`,
+    a.apartment && `ap. ${a.apartment}`,
+  ].filter(Boolean).join(", ");
+  const oras = [a.city, a.county && `jud. ${a.county}`, a.postalCode].filter(Boolean).join(", ");
+  return [strada, detalii, oras].filter(Boolean).join(", ");
+}
+
 export function mapCustomerOrder(row: Record<string, unknown>): CustomerOrder {
+
   const items = (Array.isArray(row["order_items"]) ? (row["order_items"] as OrderItemRow[]) : []).map(
     (i) => ({
       id: i.id,
@@ -263,8 +329,11 @@ export function mapCustomerOrder(row: Record<string, unknown>): CustomerOrder {
     total: Number(row["total"] ?? 0),
     paymentMethod: String(row["payment_method"] ?? "ramburs"),
     paymentStatus: String(row["payment_status"] ?? "pending"),
+    paidAt: (row["paid_at"] as string | null) ?? null,
+    shippingAddress: mapShippingAddress(row["shipping_address"]),
     awb: (row["awb"] as string | null) ?? null,
     items,
+
   };
 }
 

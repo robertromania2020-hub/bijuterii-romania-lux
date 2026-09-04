@@ -6,7 +6,9 @@ import { ORDER_STATUS_LABELS, type OrderStatus } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  formatShippingAddress,
   mapCustomerOrder,
+
   mesajEroare,
   ORDER_SELECT,
   type CustomerOrder,
@@ -44,8 +46,8 @@ interface ComandaAdmin extends CustomerOrder {
   county: string;
   adminNotes: string;
   customerNotes: string;
-  shippingAddress: Record<string, string>;
   paidAt: string | null;
+
   stripeSessionId: string | null;
   stripePaymentIntentId: string | null;
 }
@@ -60,22 +62,10 @@ function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
     county: String(row["county"] ?? ""),
     adminNotes: String(row["admin_notes"] ?? ""),
     customerNotes: String(row["customer_notes"] ?? ""),
-    shippingAddress: (row["shipping_address"] as Record<string, string>) ?? {},
     paidAt: (row["paid_at"] as string | null) ?? null,
     stripeSessionId: (row["stripe_checkout_session_id"] as string | null) ?? null,
     stripePaymentIntentId: (row["stripe_payment_intent_id"] as string | null) ?? null,
   };
-}
-
-function adresaText(a: Record<string, string>): string {
-  const parti = [
-    a["address"] ? `${a["address"]} nr. ${a["number"] ?? ""}` : "",
-    a["building"] ? `bl. ${a["building"]}` : "",
-    a["entrance"] ? `sc. ${a["entrance"]}` : "",
-    a["floor"] ? `et. ${a["floor"]}` : "",
-    a["apartment"] ? `ap. ${a["apartment"]}` : "",
-  ].filter(Boolean);
-  return parti.join(", ");
 }
 
 function AdminComenzi() {
@@ -266,12 +256,9 @@ function AdminComenzi() {
               </p>
               <h3 className="mt-4 font-semibold">Adresă de livrare</h3>
               <p className="mt-1 text-muted-foreground">
-                {adresaText(detaliu.shippingAddress)}
+                {detaliu.shippingAddress ? formatShippingAddress(detaliu.shippingAddress) : "—"}
                 <br />
                 {detaliu.city}, județul {detaliu.county}
-                {detaliu.shippingAddress["postal_code"]
-                  ? `, ${detaliu.shippingAddress["postal_code"]}`
-                  : ""}
               </p>
               <h3 className="mt-4 font-semibold">Plată</h3>
               <p className="mt-1 text-muted-foreground">
