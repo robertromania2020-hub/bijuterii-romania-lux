@@ -4,8 +4,8 @@
 - [x] Helpers server: `stripe.server.ts`, `stripe-checkout.functions.ts` (createCheckoutSession, getPaymentStatus)
 - [x] UI checkout: alegere „ramburs / card" + redirect către Stripe
 - [x] Pagină succes `/comanda/succes` cu verificare status plată
-- [x] Panou admin: metodă plată, status plată, dată plată, ID-uri Stripe
-- [x] Webhook endpoint `/api/public/stripe-webhook` (verificare semnătură, idempotent)
-- [ ] STRIPE_WEBHOOK_SECRET — utilizatorul îl creează în Stripe și îl salvează; URL: webhook endpoint (preview + producție)
-- [ ] Configurare evenimente în dashboard-ul Stripe (checkout.session.completed, .expired, async_payment_succeeded/failed, payment_intent.payment_failed)
-- [ ] Testare flux complet în mod TEST (card de test 4242…)
+- [x] Panou admin: produse (CRUD + imagini reale din bucket), metodă plată, status plată, dată plată, ID-uri Stripe
+- [x] Webhook endpoint `/api/public/stripe-webhook` (verificare semnătură, idempotent) — testat: semnătură invalidă → 401, eveniment valid → comandă „plătită/confirmată", eveniment repetat → ignorat
+- [x] Webhook înregistrat în Stripe pentru URL-ul de preview (mod LIVE)
+- [ ] Mod TEST: cheia conectată este `rk_live_…`; pentru testul cu cardul 4242 e nevoie de o cheie de test (`sk_test_…`) + endpoint webhook de test
+- [ ] Webhook pentru domeniul de producție (casaelegantei.ro) — necesită al doilea secret `whsec_`
