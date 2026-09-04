@@ -26,7 +26,7 @@ export const Route = createFileRoute("/livrare")({
         },
         {
           title: "Costuri de transport",
-          body: "Transportul prin curier costă 19,99 lei, iar livrarea în Easybox costă 14,99 lei. Pentru comenzile de peste 250 lei, transportul prin curier este gratuit.",
+          body: "Transportul standard costă 25 lei, indiferent de metoda de livrare aleasă. Pentru comenzile de peste 250 lei, transportul este gratuit.",
         },
         {
           title: "Urmărirea comenzii",
