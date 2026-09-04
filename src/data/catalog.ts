@@ -7,6 +7,7 @@
  * Tablourile exportate mai jos sunt referințe stabile, actualizate pe loc,
  * astfel încât toate paginile existente continuă să funcționeze.
  */
+import { useSyncExternalStore } from "react";
 import type {
   AttributeDefinition,
   AttributeValue,
