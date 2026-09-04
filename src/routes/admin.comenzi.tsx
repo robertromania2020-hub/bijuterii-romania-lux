@@ -6,7 +6,9 @@ import { ORDER_STATUS_LABELS, type OrderStatus } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  formatShippingAddress,
   mapCustomerOrder,
+
   mesajEroare,
   ORDER_SELECT,
   type CustomerOrder,
