@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products as catalog, variantPrice } from "@/data/catalog";
+import { products as catalog, useCatalogVersion, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
 
 export interface CartLine {
@@ -100,13 +100,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => setCart([]), []);
 
-  const toggleWishlist = useCallback((productId: string) => {
+const toggleWishlist = useCallback((productId: string) => {
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
     );
   }, []);
 
+  const catalogVersion = useCatalogVersion();
+
   const value = useMemo<StoreValue>(() => {
+    void catalogVersion;
     const cartLines = cart
       .map((line) => {
         const product = catalog.find((p) => p.id === line.productId);
@@ -136,11 +139,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       cartCount: cart.reduce((sum, l) => sum + l.quantity, 0),
       cartLines,
       totals: { subtotal, discount, shipping, total: subtotal + shipping },
-    };
+};
   }, [
     cart,
     wishlist,
     hydrated,
+    catalogVersion,
     addToCart,
     updateQuantity,
     removeFromCart,

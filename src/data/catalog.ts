@@ -7,6 +7,7 @@
  * Tablourile exportate mai jos sunt referințe stabile, actualizate pe loc,
  * astfel încât toate paginile existente continuă să funcționeze.
  */
+import { useSyncExternalStore } from "react";
 import type {
   AttributeDefinition,
   AttributeValue,
@@ -45,6 +46,34 @@ function replace<T>(target: T[], next: T[]) {
   target.splice(0, target.length, ...next);
 }
 
+/* Reactivitate: componentele care depind de catalog (ex. coșul) trebuie
+   să se re-randare când `hydrateCatalog` înlocuiește datele. */
+let catalogVersion = 0;
+const catalogSubscribers = new Set<() => void>();
+
+function bumpCatalogVersion() {
+  catalogVersion += 1;
+  for (const listener of catalogSubscribers) listener();
+}
+
+/** Versiunea curentă a catalogului (crește la fiecare hidratare). */
+export function getCatalogVersion(): number {
+  return catalogVersion;
+}
+
+/** Abonare la modificările catalogului; returnează funcția de dezabonare. */
+export function subscribeCatalog(listener: () => void): () => void {
+  catalogSubscribers.add(listener);
+  return () => {
+    catalogSubscribers.delete(listener);
+  };
+}
+
+/** Hook React: versiunea reactivă a catalogului. */
+export function useCatalogVersion(): number {
+  return useSyncExternalStore(subscribeCatalog, getCatalogVersion, getCatalogVersion);
+}
+
 /** Înlocuiește conținutul catalogului cu datele venite din baza de date. */
 export function hydrateCatalog(snapshot: CatalogSnapshot) {
   replace(departments, snapshot.departments);
@@ -53,6 +82,7 @@ export function hydrateCatalog(snapshot: CatalogSnapshot) {
   replace(collections, snapshot.collections);
   replace(attributeDefinitions, snapshot.attributeDefinitions);
   replace(products, snapshot.products);
+  bumpCatalogVersion();
 }
 
 /* ------------------------------------------------------------------ */
