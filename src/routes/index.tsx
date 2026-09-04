@@ -10,7 +10,6 @@ import {
 import heroImage from "@/assets/hero-beauty.jpg";
 import { departmentPath } from "@/lib/department-link";
 import {
-  COMPANY_ADDRESS,
   EMAIL,
   LEGAL_NAME,
   PHONE,
@@ -45,7 +44,6 @@ const JSON_LD = JSON.stringify({
     availableLanguage: "Romanian",
   },
 });
-void COMPANY_ADDRESS;
 
 export const Route = createFileRoute("/")({
   head: () => ({
