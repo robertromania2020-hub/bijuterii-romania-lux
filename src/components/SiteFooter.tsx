@@ -1,7 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Facebook, Instagram, Mail, Phone } from "lucide-react";
+import { Building2, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
+import {
+  COMPANY_ADDRESS,
+  CUI,
+  EMAIL,
+  EMAIL_HREF,
+  LEGAL_NAME,
+  PHONE,
+  PHONE_HREF,
+  REG_COM,
+  SHOP_NAME,
+  WORKING_HOURS,
+} from "@/data/company";
 
 export function SiteFooter() {
   const [email, setEmail] = useState("");
@@ -55,11 +67,26 @@ export function SiteFooter() {
 
         <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-base font-semibold text-background">Casa Elegantei</p>
+            <p className="font-display text-base font-semibold text-background">{SHOP_NAME}</p>
             <p className="mt-2 text-sm leading-relaxed text-background/60">
-              Bijuterii din oțel inoxidabil și bijuterii placate cu aur, create pentru purtare
-              zilnică.
+              Bijuterii, ceasuri, parfumuri și machiaj, alese cu grijă pentru purtare zilnică.
             </p>
+            <ul className="mt-3 space-y-1 text-xs leading-relaxed text-background/55">
+              <li className="flex items-start gap-2">
+                <Building2 className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+                <span>
+                  {LEGAL_NAME}
+                  <br />
+                  CUI: {CUI}
+                  <br />
+                  Nr. Reg. Com.: {REG_COM}
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+                <span>Sediu: {COMPANY_ADDRESS}</span>
+              </li>
+            </ul>
           </div>
           <nav aria-label="Informații">
             <p className="text-sm font-semibold text-background">Informații</p>
@@ -100,6 +127,16 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link to="/politica-de-retur" className="hover:underline">
+                  Politica de retur
+                </Link>
+              </li>
+              <li>
+                <Link to="/livrare" className="hover:underline">
+                  Politica de livrare
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="hover:underline">
                   Contact
                 </Link>
@@ -110,12 +147,18 @@ export function SiteFooter() {
             <p className="text-sm font-semibold text-background">Contact</p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-background/70">
               <li className="flex items-center gap-2">
-                <Phone className="size-4" aria-hidden="true" /> 0774 570 743
+                <Phone className="size-4" aria-hidden="true" />
+                <a href={PHONE_HREF} className="hover:underline">
+                  {PHONE}
+                </a>
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="size-4" aria-hidden="true" /> eleganteicasa10@gmail.com
+                <Mail className="size-4 shrink-0" aria-hidden="true" />
+                <a href={EMAIL_HREF} className="break-all hover:underline">
+                  {EMAIL}
+                </a>
               </li>
-              <li>Program: Luni–Vineri, 09:00–18:00</li>
+              <li>Program: {WORKING_HOURS}</li>
             </ul>
             <div className="mt-3 flex gap-3">
               <a href="#" aria-label="Instagram" className="hover:text-background">
@@ -129,9 +172,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-background/15 pt-5">
-          <span className="font-display font-semibold text-background">Casa Elegantei</span>
+          <span className="font-display font-semibold text-background">{SHOP_NAME}</span>
           <span className="font-mono text-xs text-background/50">
-            © 2026 Casa Elegantei · Toate drepturile rezervate
+            © 2026 {LEGAL_NAME} · Toate drepturile rezervate
           </span>
         </div>
       </div>
