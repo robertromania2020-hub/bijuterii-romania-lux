@@ -928,6 +928,17 @@ export type Database = {
           user_id: string
         }[]
       }
+      admin_users: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          first_name: string
+          last_name: string
+          roles: string[]
+          user_id: string
+        }[]
+      }
       apply_stripe_payment_event: {
         Args: {
           p_event_id: string
@@ -959,6 +970,14 @@ export type Database = {
       }
       set_order_status: {
         Args: { p_note?: string; p_order_id: string; p_status: string }
+        Returns: undefined
+      }
+      set_user_role: {
+        Args: {
+          p_grant: boolean
+          p_role: Database["public"]["Enums"]["app_role"]
+          p_user_id: string
+        }
         Returns: undefined
       }
     }
