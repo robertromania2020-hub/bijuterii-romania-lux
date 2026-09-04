@@ -139,8 +139,8 @@ const catalogVersion = useCatalogVersion();
       cartCount: cart.reduce((sum, l) => sum + l.quantity, 0),
       cartLines,
       totals: { subtotal, discount, shipping, total: subtotal + shipping },
-    };
-}, [
+};
+  }, [
     cart,
     wishlist,
     hydrated,
