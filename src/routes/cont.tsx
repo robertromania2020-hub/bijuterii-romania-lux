@@ -275,6 +275,8 @@ function ContPage() {
   const [adrese, setAdrese] = useState<CustomerAddress[]>([]);
   const [editez, setEditez] = useState<CustomerAddress | null | "nou">(null);
   const [seSalveaza, setSeSalveaza] = useState(false);
+  const [filtruComenzi, setFiltruComenzi] = useState<"platite" | "toate">("platite");
+
 
   const incarca = useCallback(async () => {
     if (!userId) return;
