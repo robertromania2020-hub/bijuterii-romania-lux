@@ -3,6 +3,18 @@ import { useState } from "react";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeading, SiteLayout } from "@/components/SiteLayout";
+import {
+  COMPANY_ADDRESS,
+  CUI,
+  EMAIL,
+  EMAIL_HREF,
+  LEGAL_NAME,
+  PHONE,
+  PHONE_HREF,
+  REG_COM,
+  SHOP_NAME,
+  WORKING_HOURS,
+} from "@/data/company";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -99,21 +111,32 @@ function ContactPage() {
         </form>
 
         <aside className="rounded-3xl bg-mint p-5">
-          <h2 className="font-display text-lg font-semibold">Date de contact</h2>
+          <h2 className="font-display text-lg font-semibold">{SHOP_NAME}</h2>
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex items-center gap-2">
-              <Phone className="size-4" aria-hidden="true" /> 0774 570 743
+              <Phone className="size-4 shrink-0" aria-hidden="true" />
+              <a href={PHONE_HREF} className="hover:underline">
+                {PHONE}
+              </a>
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="size-4" aria-hidden="true" /> eleganteicasa10@gmail.com
+              <Mail className="size-4 shrink-0" aria-hidden="true" />
+              <a href={EMAIL_HREF} className="break-all hover:underline">
+                {EMAIL}
+              </a>
             </li>
             <li className="flex items-center gap-2">
-              <Clock className="size-4" aria-hidden="true" /> Luni–Vineri, 09:00–18:00
+              <Clock className="size-4 shrink-0" aria-hidden="true" /> {WORKING_HOURS}
             </li>
-            <li className="flex items-center gap-2">
-              <MapPin className="size-4" aria-hidden="true" /> București, România
+            <li className="flex items-start gap-2">
+              <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" /> {COMPANY_ADDRESS}
             </li>
           </ul>
+          <div className="mt-5 border-t border-foreground/10 pt-4 text-xs leading-relaxed text-muted-foreground">
+            <p className="font-semibold text-foreground">{LEGAL_NAME}</p>
+            <p className="mt-1">CUI: {CUI}</p>
+            <p>Nr. Registrul Comerțului: {REG_COM}</p>
+          </div>
         </aside>
       </div>
     </SiteLayout>
