@@ -7,6 +7,8 @@ const NAV = [
   { to: "/", label: "Acasă", exact: true },
   { to: "/bijuterii", label: "Bijuterii" },
   { to: "/machiaj", label: "Machiaj" },
+  { to: "/ceasuri", label: "Ceasuri" },
+  { to: "/parfumuri", label: "Parfumuri" },
   { to: "/noutati", label: "Noutăți" },
   { to: "/colectii", label: "Colecții" },
   { to: "/reduceri", label: "Reduceri" },
@@ -43,7 +45,7 @@ export function SiteHeader() {
           </button>
           <Link to="/" className="flex items-center gap-2" aria-label="Casa Elegantei — pagina principală">
             <span className="grid size-8 place-items-center rounded-full bg-gradient-to-br from-gold to-primary font-display text-sm font-semibold text-primary-foreground">
-              B
+              CE
             </span>
             <span className="font-display text-lg font-semibold tracking-tight">Casa Elegantei</span>
           </Link>

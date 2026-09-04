@@ -8,6 +8,7 @@ import {
   departments,
 } from "@/data/catalog";
 import heroImage from "@/assets/hero-beauty.jpg";
+import { departmentPath } from "@/lib/department-link";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -88,7 +89,7 @@ function HomePage() {
           {departments.map((d) => (
             <Link
               key={d.id}
-              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              to={departmentPath(d.slug)}
               className={`overflow-hidden rounded-[2rem] p-4 transition-transform hover:-translate-y-0.5 ${toneClass[d.tone]}`}
             >
               <img
@@ -117,7 +118,7 @@ function HomePage() {
               Categorii {d.name.toLowerCase()}
             </h2>
             <Link
-              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              to={departmentPath(d.slug)}
               className="text-sm font-semibold text-primary"
             >
               Vezi toate
@@ -129,7 +130,7 @@ function HomePage() {
               .map((cat) => (
                 <Link
                   key={cat.id}
-                  to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+                  to={departmentPath(d.slug)}
                   search={{ categorie: cat.slug }}
                   className={`w-36 shrink-0 rounded-3xl p-3 transition-transform hover:-translate-y-0.5 lg:w-auto ${toneClass[cat.tone]}`}
                 >
