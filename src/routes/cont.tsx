@@ -298,6 +298,25 @@ function ContPage() {
     void incarca();
   }, [incarca]);
 
+  // Sincronizare în timp real cu baza de date: orice schimbare de comandă se reflectă imediat.
+  useEffect(() => {
+    if (!userId) return;
+    const canal = supabase
+      .channel(`comenzile-mele-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders", filter: `user_id=eq.${userId}` },
+        () => {
+          void incarca();
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(canal);
+    };
+  }, [userId, incarca]);
+
+
   const favorite = products.filter((p) => wishlist.includes(p.id));
 
   if (sessionLoading) {
