@@ -48,6 +48,21 @@ export interface CustomerOrderItem {
   total: number;
 }
 
+export interface OrderShippingAddress {
+  recipient: string;
+  phone: string;
+  county: string;
+  city: string;
+  address: string;
+  number: string;
+  building: string;
+  entrance: string;
+  floor: string;
+  apartment: string;
+  postalCode: string;
+  deliveryMethod: string;
+}
+
 export interface CustomerOrder {
   id: string;
   number: string;
@@ -59,9 +74,25 @@ export interface CustomerOrder {
   total: number;
   paymentMethod: string;
   paymentStatus: string;
+  paidAt: string | null;
+  shippingAddress: OrderShippingAddress | null;
   awb: string | null;
   items: CustomerOrderItem[];
 }
+
+export const PAYMENT_STATUS_LABELS: Record<string, string> = {
+  pending: "În așteptarea plății",
+  paid: "Plătită",
+  failed: "Plată eșuată",
+  refunded: "Rambursată",
+  cancelled: "Plată anulată",
+};
+
+export const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  ramburs: "Ramburs la livrare",
+  card: "Card online",
+};
+
 
 /** Mesaj prietenos în română; nu expune erori brute din baza de date. */
 export function mesajEroare(err: unknown, implicit = "Nu am putut finaliza operațiunea. Te rugăm să încerci din nou."): string {
