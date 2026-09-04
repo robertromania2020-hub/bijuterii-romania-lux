@@ -127,16 +127,6 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/politica-de-retur" className="hover:underline">
-                  Politica de retur
-                </Link>
-              </li>
-              <li>
-                <Link to="/livrare" className="hover:underline">
-                  Politica de livrare
-                </Link>
-              </li>
-              <li>
                 <Link to="/contact" className="hover:underline">
                   Contact
                 </Link>
