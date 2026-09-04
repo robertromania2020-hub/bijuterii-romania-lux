@@ -269,7 +269,42 @@ type OrderItemRow = {
   total: number | string;
 };
 
+function mapShippingAddress(value: unknown): OrderShippingAddress | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const a = value as Record<string, unknown>;
+  const txt = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : "");
+  const adresa: OrderShippingAddress = {
+    recipient: txt("recipient"),
+    phone: txt("phone"),
+    county: txt("county"),
+    city: txt("city"),
+    address: txt("address") || txt("street"),
+    number: txt("number") || txt("street_number"),
+    building: txt("building"),
+    entrance: txt("entrance"),
+    floor: txt("floor"),
+    apartment: txt("apartment"),
+    postalCode: txt("postal_code"),
+    deliveryMethod: txt("delivery_method"),
+  };
+  return Object.values(adresa).some((v) => v !== "") ? adresa : null;
+}
+
+/** Rezumat pe o linie al adresei de livrare, în format românesc. */
+export function formatShippingAddress(a: OrderShippingAddress): string {
+  const strada = [a.address, a.number && `nr. ${a.number}`].filter(Boolean).join(" ");
+  const detalii = [
+    a.building && `bl. ${a.building}`,
+    a.entrance && `sc. ${a.entrance}`,
+    a.floor && `et. ${a.floor}`,
+    a.apartment && `ap. ${a.apartment}`,
+  ].filter(Boolean).join(", ");
+  const oras = [a.city, a.county && `jud. ${a.county}`, a.postalCode].filter(Boolean).join(", ");
+  return [strada, detalii, oras].filter(Boolean).join(", ");
+}
+
 export function mapCustomerOrder(row: Record<string, unknown>): CustomerOrder {
+
   const items = (Array.isArray(row["order_items"]) ? (row["order_items"] as OrderItemRow[]) : []).map(
     (i) => ({
       id: i.id,
