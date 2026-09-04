@@ -12,9 +12,9 @@ export const Route = createFileRoute("/comanda/succes")({
   }),
   head: () => ({
     meta: [
-      { title: "Confirmare plată | BIJUTERII" },
-      { name: "description", content: "Confirmarea plății comenzii tale în magazinul BIJUTERII." },
-      { property: "og:title", content: "Confirmare plată | BIJUTERII" },
+      { title: "Confirmare plată | Casa Elegantei" },
+      { name: "description", content: "Confirmarea plății comenzii tale în magazinul Casa Elegantei." },
+      { property: "og:title", content: "Confirmare plată | Casa Elegantei" },
       { property: "og:description", content: "Statusul plății comenzii tale." },
       { name: "robots", content: "noindex" },
     ],

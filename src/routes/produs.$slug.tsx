@@ -28,15 +28,15 @@ export const Route = createFileRoute("/produs/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Produs indisponibil | BIJUTERII" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Produs indisponibil | Casa Elegantei" }, { name: "robots", content: "noindex" }],
       };
     }
     const { product } = loaderData;
     return {
       meta: [
-        { title: `${product.name} | BIJUTERII` },
+        { title: `${product.name} | Casa Elegantei` },
         { name: "description", content: product.description.slice(0, 155) },
-        { property: "og:title", content: `${product.name} | BIJUTERII` },
+        { property: "og:title", content: `${product.name} | Casa Elegantei` },
         { property: "og:description", content: product.description.slice(0, 155) },
       ],
     };
@@ -312,7 +312,7 @@ function ProductPage() {
           <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-3">
               <Truck className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              Livrare prin curier în 1–3 zile lucrătoare. Transport gratuit la comenzi peste 250 lei.
+              Livrare prin curier în 1–3 zile lucrătoare. Transport 25 lei, gratuit la comenzi peste 250 lei.
             </li>
             <li className="flex items-start gap-3">
               <RotateCcw className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

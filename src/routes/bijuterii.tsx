@@ -7,13 +7,13 @@ export const Route = createFileRoute("/bijuterii")({
   validateSearch: validateListingSearch,
   head: () => ({
     meta: [
-      { title: "Bijuterii — inele, brățări, coliere, cercei | BIJUTERII" },
+      { title: "Bijuterii — inele, brățări, coliere, cercei | Casa Elegantei" },
       {
         name: "description",
         content:
           "Toate bijuteriile noastre: filtrează după categorie, material, culoare, preț și disponibilitate. Livrare rapidă în toată România.",
       },
-      { property: "og:title", content: "Bijuterii — catalog complet | BIJUTERII" },
+      { property: "og:title", content: "Bijuterii — catalog complet | Casa Elegantei" },
       {
         property: "og:description",
         content: "Inele, brățări, coliere și cercei din oțel inoxidabil și placate cu aur.",

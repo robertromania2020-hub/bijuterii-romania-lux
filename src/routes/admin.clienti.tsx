@@ -10,9 +10,9 @@ import { mapCustomerOrder, mesajEroare, ORDER_SELECT, type CustomerOrder } from 
 export const Route = createFileRoute("/admin/clienti")({
   head: () => ({
     meta: [
-      { title: "Clienți — Administrare | BIJUTERII" },
+      { title: "Clienți — Administrare | Casa Elegantei" },
       { name: "description", content: "Lista clienților magazinului." },
-      { property: "og:title", content: "Clienți — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Clienți — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Clienții magazinului." },
       { name: "robots", content: "noindex, nofollow" },
     ],

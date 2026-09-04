@@ -5,14 +5,14 @@ import heroImage from "@/assets/hero.jpg";
 export const Route = createFileRoute("/despre-noi")({
   head: () => ({
     meta: [
-      { title: "Despre noi — povestea BIJUTERII" },
+      { title: "Despre noi — povestea Casa Elegantei" },
       {
         name: "description",
         content:
           "Suntem un magazin românesc de bijuterii din oțel inoxidabil și bijuterii placate cu aur, create pentru purtare zilnică.",
       },
-      { property: "og:title", content: "Despre noi | BIJUTERII" },
-      { property: "og:description", content: "Povestea din spatele magazinului BIJUTERII." },
+      { property: "og:title", content: "Despre noi | Casa Elegantei" },
+      { property: "og:description", content: "Povestea din spatele magazinului Casa Elegantei." },
     ],
   }),
   component: DesprePage,
@@ -37,7 +37,7 @@ function DesprePage() {
         />
         <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
           <p>
-            BIJUTERII este un magazin online românesc dedicat bijuteriilor din oțel inoxidabil și
+            Casa Elegantei este un magazin online românesc dedicat bijuteriilor din oțel inoxidabil și
             bijuteriilor placate cu aur de 18K. Selectăm fiecare model astfel încât să reziste
             purtării zilnice: nu se decolorează, nu provoacă alergii și își păstrează strălucirea.
           </p>

@@ -9,6 +9,10 @@ import {
 } from "react";
 import { products as catalog, useCatalogVersion, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
+import {
+  SHIPPING_COST as COMPANY_SHIPPING,
+  FREE_SHIPPING_THRESHOLD as COMPANY_FREE_SHIPPING,
+} from "@/data/company";
 
 export interface CartLine {
   productId: string;
@@ -33,8 +37,8 @@ interface StoreValue {
 
 const CART_KEY = "bijuterii.cart";
 const WISHLIST_KEY = "bijuterii.wishlist";
-const FREE_SHIPPING_THRESHOLD = 250;
-const SHIPPING_COST = 19.99;
+const FREE_SHIPPING_THRESHOLD = COMPANY_FREE_SHIPPING;
+const SHIPPING_COST = COMPANY_SHIPPING;
 
 const StoreContext = createContext<StoreValue | null>(null);
 

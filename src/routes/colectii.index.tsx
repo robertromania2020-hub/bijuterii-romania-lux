@@ -5,13 +5,13 @@ import { collections } from "@/data/catalog";
 export const Route = createFileRoute("/colectii/")({
   head: () => ({
     meta: [
-      { title: "Colecții de bijuterii și machiaj | BIJUTERII" },
+      { title: "Colecții de bijuterii și machiaj | Casa Elegantei" },
       {
         name: "description",
         content:
           "Colecțiile noastre de bijuterii și machiaj: Gold Collection, Stainless Steel, Minimal, Elegance, Cadouri, Nude Essentials și Glam Night.",
       },
-      { property: "og:title", content: "Colecții de bijuterii și machiaj | BIJUTERII" },
+      { property: "og:title", content: "Colecții de bijuterii și machiaj | Casa Elegantei" },
       { property: "og:description", content: "Gold Collection, Stainless Steel, Minimal, Elegance, Cadouri, Nude Essentials, Glam Night." },
     ],
   }),

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/colectii/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Colecție indisponibilă | BIJUTERII" },
+          { title: "Colecție indisponibilă | Casa Elegantei" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -23,9 +23,9 @@ export const Route = createFileRoute("/colectii/$slug")({
     const { collection } = loaderData;
     return {
       meta: [
-        { title: `Colecția ${collection.name} | BIJUTERII` },
+        { title: `Colecția ${collection.name} | Casa Elegantei` },
         { name: "description", content: collection.description },
-        { property: "og:title", content: `Colecția ${collection.name} | BIJUTERII` },
+        { property: "og:title", content: `Colecția ${collection.name} | Casa Elegantei` },
         { property: "og:description", content: collection.description },
       ],
     };

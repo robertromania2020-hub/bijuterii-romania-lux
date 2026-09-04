@@ -8,9 +8,9 @@ import { deleteRow, mapBrand, slugify, updateRow, upsertRow, useLiveTable } from
 export const Route = createFileRoute("/admin/branduri")({
   head: () => ({
     meta: [
-      { title: "Branduri — Administrare | BIJUTERII" },
+      { title: "Branduri — Administrare | Casa Elegantei" },
       { name: "description", content: "Gestionarea brandurilor din catalog." },
-      { property: "og:title", content: "Branduri — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Branduri — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Brandurile magazinului." },
       { name: "robots", content: "noindex, nofollow" },
     ],

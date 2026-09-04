@@ -16,9 +16,9 @@ import {
 export const Route = createFileRoute("/admin/departamente")({
   head: () => ({
     meta: [
-      { title: "Departamente — Administrare | BIJUTERII" },
+      { title: "Departamente — Administrare | Casa Elegantei" },
       { name: "description", content: "Gestionarea departamentelor magazinului." },
-      { property: "og:title", content: "Departamente — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Departamente — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Departamentele magazinului." },
       { name: "robots", content: "noindex, nofollow" },
     ],

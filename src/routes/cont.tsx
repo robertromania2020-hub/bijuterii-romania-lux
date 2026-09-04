@@ -37,12 +37,12 @@ export const Route = createFileRoute("/cont")({
   }),
   head: () => ({
     meta: [
-      { title: "Contul meu | BIJUTERII" },
+      { title: "Contul meu | Casa Elegantei" },
       {
         name: "description",
         content: "Datele tale personale, comenzile, adresele salvate și produsele favorite.",
       },
-      { property: "og:title", content: "Contul meu | BIJUTERII" },
+      { property: "og:title", content: "Contul meu | Casa Elegantei" },
       { property: "og:description", content: "Comenzi, adrese și produse favorite." },
       { name: "robots", content: "noindex" },
     ],

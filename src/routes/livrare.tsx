@@ -1,16 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { InfoPage } from "@/components/InfoPage";
+import { MERCHANT_SECTION } from "@/data/company";
 
 export const Route = createFileRoute("/livrare")({
   head: () => ({
     meta: [
-      { title: "Livrare — costuri și termene | BIJUTERII" },
+      { title: "Livrare — costuri și termene | Casa Elegantei" },
       {
         name: "description",
         content:
           "Informații despre livrarea comenzilor: curier rapid, Easybox, costuri și termene de livrare în România.",
       },
-      { property: "og:title", content: "Livrare | BIJUTERII" },
+      { property: "og:title", content: "Livrare | Casa Elegantei" },
       { property: "og:description", content: "Costuri și termene de livrare în România." },
     ],
   }),
@@ -26,12 +27,13 @@ export const Route = createFileRoute("/livrare")({
         },
         {
           title: "Costuri de transport",
-          body: "Transportul prin curier costă 19,99 lei, iar livrarea în Easybox costă 14,99 lei. Pentru comenzile de peste 250 lei, transportul prin curier este gratuit.",
+          body: "Transportul standard costă 25 lei, indiferent de metoda de livrare aleasă. Pentru comenzile de peste 250 lei, transportul este gratuit.",
         },
         {
           title: "Urmărirea comenzii",
           body: "După expediere primești pe email numărul AWB și un link de urmărire a coletului. Poți verifica statusul și din secțiunea „Comenzile mele” din contul tău.",
         },
+        MERCHANT_SECTION,
       ]}
     />
   ),

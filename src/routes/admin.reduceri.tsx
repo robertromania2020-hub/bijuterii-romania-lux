@@ -8,9 +8,9 @@ import { mapDiscount, updateDiscountActive, useLiveTable } from "@/lib/admin-dat
 export const Route = createFileRoute("/admin/reduceri")({
   head: () => ({
     meta: [
-      { title: "Reduceri — Administrare | BIJUTERII" },
+      { title: "Reduceri — Administrare | Casa Elegantei" },
       { name: "description", content: "Campanii de reduceri pe produse, categorii și colecții." },
-      { property: "og:title", content: "Reduceri — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Reduceri — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Campanii de reduceri." },
       { name: "robots", content: "noindex, nofollow" },
     ],

@@ -74,14 +74,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BIJUTERII — Bijuterii placate cu aur și din oțel" },
+      { title: "Casa Elegantei — Bijuterii placate cu aur și din oțel" },
       {
         name: "description",
         content:
           "Magazin online de bijuterii: inele, brățări, coliere și cercei din oțel inoxidabil și placate cu aur.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "BIJUTERII" },
+      { property: "og:site_name", content: "Casa Elegantei" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

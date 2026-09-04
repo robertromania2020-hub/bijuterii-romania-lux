@@ -7,13 +7,13 @@ export const Route = createFileRoute("/machiaj")({
   validateSearch: validateListingSearch,
   head: () => ({
     meta: [
-      { title: "Machiaj — fond de ten, farduri, rujuri, mascara | BIJUTERII" },
+      { title: "Machiaj — fond de ten, farduri, rujuri, mascara | Casa Elegantei" },
       {
         name: "description",
         content:
           "Produse de machiaj de la branduri cunoscute: fond de ten, palete de farduri, rujuri, mascara și fixatoare. Filtrează după brand, nuanță și finish.",
       },
-      { property: "og:title", content: "Machiaj — catalog complet | BIJUTERII" },
+      { property: "og:title", content: "Machiaj — catalog complet | Casa Elegantei" },
       {
         property: "og:description",
         content: "Fond de ten, farduri, rujuri și mascara de la branduri cunoscute.",

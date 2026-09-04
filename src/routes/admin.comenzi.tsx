@@ -18,9 +18,9 @@ import { setOrderStatus, updateOrderFields } from "@/lib/admin-data";
 export const Route = createFileRoute("/admin/comenzi")({
   head: () => ({
     meta: [
-      { title: "Comenzi — Administrare | BIJUTERII" },
+      { title: "Comenzi — Administrare | Casa Elegantei" },
       { name: "description", content: "Gestionarea comenzilor și a statusurilor de livrare." },
-      { property: "og:title", content: "Comenzi — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Comenzi — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Comenzile magazinului." },
       { name: "robots", content: "noindex, nofollow" },
     ],

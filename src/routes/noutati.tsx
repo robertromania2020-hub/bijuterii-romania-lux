@@ -6,12 +6,12 @@ import { products } from "@/data/catalog";
 export const Route = createFileRoute("/noutati")({
   head: () => ({
     meta: [
-      { title: "Noutăți — cele mai noi produse | BIJUTERII" },
+      { title: "Noutăți — cele mai noi produse | Casa Elegantei" },
       {
         name: "description",
         content: "Cele mai noi bijuterii și produse de machiaj adăugate în magazin.",
       },
-      { property: "og:title", content: "Noutăți | BIJUTERII" },
+      { property: "og:title", content: "Noutăți | Casa Elegantei" },
       { property: "og:description", content: "Cele mai noi bijuterii și produse de machiaj adăugate în magazin." },
     ],
   }),

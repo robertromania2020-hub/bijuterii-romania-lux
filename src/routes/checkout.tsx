@@ -11,12 +11,12 @@ import { createCheckoutSession } from "@/lib/stripe-checkout.functions";
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Finalizare comandă | BIJUTERII" },
+      { title: "Finalizare comandă | Casa Elegantei" },
       {
         name: "description",
         content: "Completează datele de contact și de livrare pentru a finaliza comanda.",
       },
-      { property: "og:title", content: "Finalizare comandă | BIJUTERII" },
+      { property: "og:title", content: "Finalizare comandă | Casa Elegantei" },
       { property: "og:description", content: "Date de contact, livrare și plată." },
       { name: "robots", content: "noindex" },
     ],

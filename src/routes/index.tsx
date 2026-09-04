@@ -8,25 +8,63 @@ import {
   departments,
 } from "@/data/catalog";
 import heroImage from "@/assets/hero-beauty.jpg";
+import { departmentPath } from "@/lib/department-link";
+import {
+  EMAIL,
+  LEGAL_NAME,
+  PHONE,
+  SHOP_NAME,
+  SHOP_TAGLINE,
+} from "@/data/company";
+
+const SITE_URL = "https://casaelegantei.ro";
+
+const JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Store",
+  name: SHOP_NAME,
+  legalName: LEGAL_NAME,
+  url: SITE_URL,
+  email: EMAIL,
+  telephone: PHONE,
+  description: `${SHOP_TAGLINE} de bijuterii, ceasuri, parfumuri și machiaj.`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Principală nr. 87",
+    addressLocality: "sat Băbeni, comuna Topliceni",
+    addressRegion: "Buzău",
+    addressCountry: "RO",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    telephone: PHONE,
+    email: EMAIL,
+    areaServed: "RO",
+    availableLanguage: "Romanian",
+  },
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BIJUTERII — bijuterii și machiaj, eleganță în fiecare zi" },
+      { title: "Casa Elegantei — bijuterii, ceasuri, parfumuri și machiaj" },
       {
         name: "description",
         content:
-          "Magazin online de bijuterii și machiaj: inele, brățări, coliere, cercei, fond de ten, farduri, rujuri și mascara. Livrare rapidă în toată România.",
+          "Casa Elegantei – magazin online de bijuterii, ceasuri, parfumuri și machiaj. Livrare rapidă în toată România, transport 25 lei și gratuit peste 250 lei.",
       },
-      { property: "og:title", content: "BIJUTERII — bijuterii și machiaj" },
+      { property: "og:title", content: "Casa Elegantei — bijuterii, ceasuri, parfumuri și machiaj" },
+      { property: "og:site_name", content: "Casa Elegantei" },
       {
         property: "og:description",
         content:
-          "Bijuterii din oțel și placate cu aur, alături de produse de machiaj de la branduri cunoscute.",
+          "Casa Elegantei – magazin online cu bijuterii, ceasuri, parfumuri și produse de machiaj.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    scripts: [{ type: "application/ld+json", children: JSON_LD }],
   }),
   component: HomePage,
 });
@@ -49,14 +87,14 @@ function HomePage() {
       <section className="pt-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-10 lg:pt-12">
         <div>
           <p className="animate-rise font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Bijuterii & Machiaj — 2026
+            Casa Elegantei — 2026
           </p>
           <h1 className="animate-rise mt-3 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-balance lg:text-6xl">
             Frumusețe pe care o <span className="text-primary">porți</span> în fiecare zi
           </h1>
           <p className="animate-rise mt-3 max-w-[42ch] text-sm text-muted-foreground text-pretty lg:text-base">
-            Două departamente, o singură comandă: bijuterii din oțel și placate cu aur, plus
-            produse de machiaj de la branduri cunoscute.
+            Bijuterii, ceasuri, parfumuri și machiaj — toate într-o singură comandă, alese cu
+            grijă pentru eleganța de zi cu zi.
           </p>
           <div className="animate-rise mt-5 flex flex-wrap gap-3">
             <Link to="/bijuterii" className="btn-dark">
@@ -88,7 +126,7 @@ function HomePage() {
           {departments.map((d) => (
             <Link
               key={d.id}
-              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              to={departmentPath(d.slug)}
               className={`overflow-hidden rounded-[2rem] p-4 transition-transform hover:-translate-y-0.5 ${toneClass[d.tone]}`}
             >
               <img
@@ -117,7 +155,7 @@ function HomePage() {
               Categorii {d.name.toLowerCase()}
             </h2>
             <Link
-              to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+              to={departmentPath(d.slug)}
               className="text-sm font-semibold text-primary"
             >
               Vezi toate
@@ -129,7 +167,7 @@ function HomePage() {
               .map((cat) => (
                 <Link
                   key={cat.id}
-                  to={d.slug === "machiaj" ? "/machiaj" : "/bijuterii"}
+                  to={departmentPath(d.slug)}
                   search={{ categorie: cat.slug }}
                   className={`w-36 shrink-0 rounded-3xl p-3 transition-transform hover:-translate-y-0.5 lg:w-auto ${toneClass[cat.tone]}`}
                 >

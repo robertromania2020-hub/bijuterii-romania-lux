@@ -6,9 +6,9 @@ import { formatDate, formatPrice } from "@/lib/format";
 export const Route = createFileRoute("/admin/coduri-promotionale")({
   head: () => ({
     meta: [
-      { title: "Coduri promoționale — Administrare | BIJUTERII" },
+      { title: "Coduri promoționale — Administrare | Casa Elegantei" },
       { name: "description", content: "Gestionarea codurilor de reducere." },
-      { property: "og:title", content: "Coduri promoționale — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Coduri promoționale — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Coduri de reducere." },
       { name: "robots", content: "noindex, nofollow" },
     ],
