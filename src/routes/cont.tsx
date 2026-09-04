@@ -14,14 +14,18 @@ import {
   fetchAddresses,
   fetchMyOrders,
   fetchProfile,
+  formatShippingAddress,
   mesajEroare,
   saveAddress,
   saveProfile,
   useSession,
+  PAYMENT_METHOD_LABELS,
+  PAYMENT_STATUS_LABELS,
   type CustomerAddress,
   type CustomerOrder,
   type Profile,
 } from "@/lib/shop-data";
+
 
 type Tab = "date" | "comenzi" | "adrese" | "favorite";
 
