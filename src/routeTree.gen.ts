@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BijuteriiRouteImport } from './routes/bijuterii'
+import { Route as CeasuriRouteImport } from './routes/ceasuri'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContRouteImport } from './routes/cont'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -59,6 +60,11 @@ const AdminRoute = AdminRouteImport.update({
 const BijuteriiRoute = BijuteriiRouteImport.update({
   id: '/bijuterii',
   path: '/bijuterii',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CeasuriRoute = CeasuriRouteImport.update({
+  id: '/ceasuri',
+  path: '/ceasuri',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/bijuterii': typeof BijuteriiRoute
+  '/ceasuri': typeof CeasuriRoute
   '/checkout': typeof CheckoutRoute
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
@@ -270,6 +277,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bijuterii': typeof BijuteriiRoute
+  '/ceasuri': typeof CeasuriRoute
   '/checkout': typeof CheckoutRoute
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
@@ -309,6 +317,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/bijuterii': typeof BijuteriiRoute
+  '/ceasuri': typeof CeasuriRoute
   '/checkout': typeof CheckoutRoute
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/bijuterii'
+    | '/ceasuri'
     | '/checkout'
     | '/cont'
     | '/contact'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bijuterii'
+    | '/ceasuri'
     | '/checkout'
     | '/cont'
     | '/contact'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/bijuterii'
+    | '/ceasuri'
     | '/checkout'
     | '/cont'
     | '/contact'
@@ -463,6 +475,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   BijuteriiRoute: typeof BijuteriiRoute
+  CeasuriRoute: typeof CeasuriRoute
   CheckoutRoute: typeof CheckoutRoute
   ContRoute: typeof ContRoute
   ContactRoute: typeof ContactRoute
@@ -506,6 +519,13 @@ declare module '@tanstack/react-router' {
       path: '/bijuterii'
       fullPath: '/bijuterii'
       preLoaderRoute: typeof BijuteriiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ceasuri': {
+      id: '/ceasuri'
+      path: '/ceasuri'
+      fullPath: '/ceasuri'
+      preLoaderRoute: typeof CeasuriRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -780,6 +800,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   BijuteriiRoute: BijuteriiRoute,
+  CeasuriRoute: CeasuriRoute,
   CheckoutRoute: CheckoutRoute,
   ContRoute: ContRoute,
   ContactRoute: ContactRoute,
