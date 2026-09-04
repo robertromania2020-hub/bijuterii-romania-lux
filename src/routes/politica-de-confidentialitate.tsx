@@ -4,13 +4,13 @@ import { InfoPage } from "@/components/InfoPage";
 export const Route = createFileRoute("/politica-de-confidentialitate")({
   head: () => ({
     meta: [
-      { title: "Politica de confidențialitate | BIJUTERII" },
+      { title: "Politica de confidențialitate | Casa Elegantei" },
       {
         name: "description",
         content:
           "Cum colectăm, folosim și protejăm datele tale personale, conform Regulamentului GDPR.",
       },
-      { property: "og:title", content: "Politica de confidențialitate | BIJUTERII" },
+      { property: "og:title", content: "Politica de confidențialitate | Casa Elegantei" },
       { property: "og:description", content: "Protecția datelor personale conform GDPR." },
     ],
   }),
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/politica-de-confidentialitate")({
         },
         {
           title: "Drepturile tale",
-          body: "Ai dreptul de acces, rectificare, ștergere, restricționare și portabilitate a datelor. Ne poți scrie oricând la contact@bijuterii.ro.",
+          body: "Ai dreptul de acces, rectificare, ștergere, restricționare și portabilitate a datelor. Ne poți scrie oricând la eleganteicasa10@gmail.com.",
         },
       ]}
     />

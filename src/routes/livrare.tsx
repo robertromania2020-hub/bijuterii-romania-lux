@@ -4,13 +4,13 @@ import { InfoPage } from "@/components/InfoPage";
 export const Route = createFileRoute("/livrare")({
   head: () => ({
     meta: [
-      { title: "Livrare — costuri și termene | BIJUTERII" },
+      { title: "Livrare — costuri și termene | Casa Elegantei" },
       {
         name: "description",
         content:
           "Informații despre livrarea comenzilor: curier rapid, Easybox, costuri și termene de livrare în România.",
       },
-      { property: "og:title", content: "Livrare | BIJUTERII" },
+      { property: "og:title", content: "Livrare | Casa Elegantei" },
       { property: "og:description", content: "Costuri și termene de livrare în România." },
     ],
   }),

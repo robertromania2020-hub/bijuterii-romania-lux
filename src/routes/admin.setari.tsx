@@ -5,9 +5,9 @@ import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
 export const Route = createFileRoute("/admin/setari")({
   head: () => ({
     meta: [
-      { title: "Setări — Administrare | BIJUTERII" },
+      { title: "Setări — Administrare | Casa Elegantei" },
       { name: "description", content: "Setările magazinului: livrare, plată și contact." },
-      { property: "og:title", content: "Setări — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Setări — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Setările magazinului." },
       { name: "robots", content: "noindex, nofollow" },
     ],
@@ -30,11 +30,11 @@ function AdminSetari() {
           <div className="mt-4 space-y-4">
             <div>
               <label htmlFor="s-nume" className="text-sm font-semibold">Nume magazin</label>
-              <input id="s-nume" className="field mt-1.5" defaultValue="BIJUTERII" />
+              <input id="s-nume" className="field mt-1.5" defaultValue="Casa Elegantei" />
             </div>
             <div>
               <label htmlFor="s-email" className="text-sm font-semibold">Email contact</label>
-              <input id="s-email" type="email" className="field mt-1.5" defaultValue="contact@bijuterii.ro" />
+              <input id="s-email" type="email" className="field mt-1.5" defaultValue="eleganteicasa10@gmail.com" />
             </div>
             <div>
               <label htmlFor="s-telefon" className="text-sm font-semibold">Telefon</label>

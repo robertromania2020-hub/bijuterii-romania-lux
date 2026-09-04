@@ -55,7 +55,7 @@ export function SiteFooter() {
 
         <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-base font-semibold text-background">BIJUTERII</p>
+            <p className="font-display text-base font-semibold text-background">Casa Elegantei</p>
             <p className="mt-2 text-sm leading-relaxed text-background/60">
               Bijuterii din oțel inoxidabil și bijuterii placate cu aur, create pentru purtare
               zilnică.
@@ -110,10 +110,10 @@ export function SiteFooter() {
             <p className="text-sm font-semibold text-background">Contact</p>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-background/70">
               <li className="flex items-center gap-2">
-                <Phone className="size-4" aria-hidden="true" /> 0700 000 000
+                <Phone className="size-4" aria-hidden="true" /> 0774 570 743
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="size-4" aria-hidden="true" /> contact@bijuterii.ro
+                <Mail className="size-4" aria-hidden="true" /> eleganteicasa10@gmail.com
               </li>
               <li>Program: Luni–Vineri, 09:00–18:00</li>
             </ul>
@@ -129,9 +129,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-background/15 pt-5">
-          <span className="font-display font-semibold text-background">BIJUTERII</span>
+          <span className="font-display font-semibold text-background">Casa Elegantei</span>
           <span className="font-mono text-xs text-background/50">
-            © 2026 BIJUTERII · Toate drepturile rezervate
+            © 2026 Casa Elegantei · Toate drepturile rezervate
           </span>
         </div>
       </div>

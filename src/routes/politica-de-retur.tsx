@@ -4,13 +4,13 @@ import { InfoPage } from "@/components/InfoPage";
 export const Route = createFileRoute("/politica-de-retur")({
   head: () => ({
     meta: [
-      { title: "Politica de retur — 14 zile | BIJUTERII" },
+      { title: "Politica de retur — 14 zile | Casa Elegantei" },
       {
         name: "description",
         content:
           "Returnezi produsele în 14 zile calendaristice, fără justificare. Află pașii și condițiile de retur.",
       },
-      { property: "og:title", content: "Politica de retur | BIJUTERII" },
+      { property: "og:title", content: "Politica de retur | Casa Elegantei" },
       { property: "og:description", content: "Retur în 14 zile, fără justificare." },
     ],
   }),
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/politica-de-retur")({
         },
         {
           title: "Cum returnezi",
-          body: "Ne trimiți o solicitare pe contact@bijuterii.ro cu numărul comenzii, iar noi îți transmitem formularul de retur și adresa de expediere.",
+          body: "Ne trimiți o solicitare pe eleganteicasa10@gmail.com cu numărul comenzii, iar noi îți transmitem formularul de retur și adresa de expediere.",
         },
         {
           title: "Rambursarea sumei",

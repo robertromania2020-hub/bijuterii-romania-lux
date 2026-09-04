@@ -4,13 +4,13 @@ import { InfoPage } from "@/components/InfoPage";
 export const Route = createFileRoute("/intrebari-frecvente")({
   head: () => ({
     meta: [
-      { title: "Întrebări frecvente | BIJUTERII" },
+      { title: "Întrebări frecvente | Casa Elegantei" },
       {
         name: "description",
         content:
           "Răspunsuri la cele mai frecvente întrebări despre materiale, îngrijirea bijuteriilor, livrare și retur.",
       },
-      { property: "og:title", content: "Întrebări frecvente | BIJUTERII" },
+      { property: "og:title", content: "Întrebări frecvente | Casa Elegantei" },
       { property: "og:description", content: "Materiale, îngrijire, livrare și retur." },
     ],
   }),

@@ -7,9 +7,9 @@ import { mapOrder, mapProduct, useLiveTable } from "@/lib/admin-data";
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Prezentare generală — Administrare | BIJUTERII" },
-      { name: "description", content: "Panoul de administrare al magazinului BIJUTERII." },
-      { property: "og:title", content: "Administrare | BIJUTERII" },
+      { title: "Prezentare generală — Administrare | Casa Elegantei" },
+      { name: "description", content: "Panoul de administrare al magazinului Casa Elegantei." },
+      { property: "og:title", content: "Administrare | Casa Elegantei" },
       { property: "og:description", content: "Panou de administrare." },
       { name: "robots", content: "noindex, nofollow" },
     ],

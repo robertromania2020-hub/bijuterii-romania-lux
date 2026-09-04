@@ -7,13 +7,13 @@ import { PageHeading, SiteLayout } from "@/components/SiteLayout";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — echipa BIJUTERII" },
+      { title: "Contact — echipa Casa Elegantei" },
       {
         name: "description",
         content:
-          "Ia legătura cu echipa BIJUTERII: telefon, email, program de lucru și formular de contact.",
+          "Ia legătura cu echipa Casa Elegantei: telefon, email, program de lucru și formular de contact.",
       },
-      { property: "og:title", content: "Contact | BIJUTERII" },
+      { property: "og:title", content: "Contact | Casa Elegantei" },
       { property: "og:description", content: "Telefon, email și formular de contact." },
     ],
   }),
@@ -102,10 +102,10 @@ function ContactPage() {
           <h2 className="font-display text-lg font-semibold">Date de contact</h2>
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex items-center gap-2">
-              <Phone className="size-4" aria-hidden="true" /> 0700 000 000
+              <Phone className="size-4" aria-hidden="true" /> 0774 570 743
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="size-4" aria-hidden="true" /> contact@bijuterii.ro
+              <Mail className="size-4" aria-hidden="true" /> eleganteicasa10@gmail.com
             </li>
             <li className="flex items-center gap-2">
               <Clock className="size-4" aria-hidden="true" /> Luni–Vineri, 09:00–18:00

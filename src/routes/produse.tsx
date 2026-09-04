@@ -7,13 +7,13 @@ export const Route = createFileRoute("/produse")({
   validateSearch: validateListingSearch,
   head: () => ({
     meta: [
-      { title: "Toate produsele — bijuterii și machiaj | BIJUTERII" },
+      { title: "Toate produsele — bijuterii și machiaj | Casa Elegantei" },
       {
         name: "description",
         content:
           "Caută în întregul catalog: bijuterii și produse de machiaj, filtrate după categorie, brand, preț și disponibilitate.",
       },
-      { property: "og:title", content: "Toate produsele | BIJUTERII" },
+      { property: "og:title", content: "Toate produsele | Casa Elegantei" },
       {
         property: "og:description",
         content: "Catalogul complet de bijuterii și machiaj, într-o singură pagină.",

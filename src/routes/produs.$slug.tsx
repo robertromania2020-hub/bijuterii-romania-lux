@@ -28,15 +28,15 @@ export const Route = createFileRoute("/produs/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Produs indisponibil | BIJUTERII" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Produs indisponibil | Casa Elegantei" }, { name: "robots", content: "noindex" }],
       };
     }
     const { product } = loaderData;
     return {
       meta: [
-        { title: `${product.name} | BIJUTERII` },
+        { title: `${product.name} | Casa Elegantei` },
         { name: "description", content: product.description.slice(0, 155) },
-        { property: "og:title", content: `${product.name} | BIJUTERII` },
+        { property: "og:title", content: `${product.name} | Casa Elegantei` },
         { property: "og:description", content: product.description.slice(0, 155) },
       ],
     };

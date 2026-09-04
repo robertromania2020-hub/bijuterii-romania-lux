@@ -4,13 +4,13 @@ import { InfoPage } from "@/components/InfoPage";
 export const Route = createFileRoute("/termeni-si-conditii")({
   head: () => ({
     meta: [
-      { title: "Termeni și condiții | BIJUTERII" },
+      { title: "Termeni și condiții | Casa Elegantei" },
       {
         name: "description",
         content:
-          "Termenii și condițiile de utilizare a magazinului online BIJUTERII: comenzi, prețuri, garanție.",
+          "Termenii și condițiile de utilizare a magazinului online Casa Elegantei: comenzi, prețuri, garanție.",
       },
-      { property: "og:title", content: "Termeni și condiții | BIJUTERII" },
+      { property: "og:title", content: "Termeni și condiții | Casa Elegantei" },
       { property: "og:description", content: "Reguli de utilizare a magazinului online." },
     ],
   }),

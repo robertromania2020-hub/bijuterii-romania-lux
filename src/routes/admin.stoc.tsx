@@ -9,9 +9,9 @@ import { mesajEroare } from "@/lib/shop-data";
 export const Route = createFileRoute("/admin/stoc")({
   head: () => ({
     meta: [
-      { title: "Stoc — Administrare | BIJUTERII" },
+      { title: "Stoc — Administrare | Casa Elegantei" },
       { name: "description", content: "Gestionarea stocurilor și avertizări pentru stoc redus." },
-      { property: "og:title", content: "Stoc — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Stoc — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Stocuri și alerte." },
       { name: "robots", content: "noindex, nofollow" },
     ],

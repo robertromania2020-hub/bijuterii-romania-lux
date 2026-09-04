@@ -16,9 +16,9 @@ import {
 export const Route = createFileRoute("/admin/atribute")({
   head: () => ({
     meta: [
-      { title: "Atribute — Administrare | BIJUTERII" },
+      { title: "Atribute — Administrare | Casa Elegantei" },
       { name: "description", content: "Definirea atributelor dinamice pentru produse." },
-      { property: "og:title", content: "Atribute — Administrare | BIJUTERII" },
+      { property: "og:title", content: "Atribute — Administrare | Casa Elegantei" },
       { property: "og:description", content: "Atributele produselor." },
       { name: "robots", content: "noindex, nofollow" },
     ],

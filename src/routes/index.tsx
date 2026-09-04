@@ -12,13 +12,13 @@ import heroImage from "@/assets/hero-beauty.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BIJUTERII — bijuterii și machiaj, eleganță în fiecare zi" },
+      { title: "Casa Elegantei — bijuterii și machiaj, eleganță în fiecare zi" },
       {
         name: "description",
         content:
           "Magazin online de bijuterii și machiaj: inele, brățări, coliere, cercei, fond de ten, farduri, rujuri și mascara. Livrare rapidă în toată România.",
       },
-      { property: "og:title", content: "BIJUTERII — bijuterii și machiaj" },
+      { property: "og:title", content: "Casa Elegantei — bijuterii și machiaj" },
       {
         property: "og:description",
         content:

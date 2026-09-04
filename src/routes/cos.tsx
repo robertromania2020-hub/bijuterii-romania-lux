@@ -7,12 +7,12 @@ import { FREE_SHIPPING_THRESHOLD, useStore } from "@/lib/store";
 export const Route = createFileRoute("/cos")({
   head: () => ({
     meta: [
-      { title: "Coșul meu | BIJUTERII" },
+      { title: "Coșul meu | Casa Elegantei" },
       {
         name: "description",
         content: "Verifică produsele din coș, actualizează cantitățile și finalizează comanda.",
       },
-      { property: "og:title", content: "Coșul meu | BIJUTERII" },
+      { property: "og:title", content: "Coșul meu | Casa Elegantei" },
       { property: "og:description", content: "Produsele selectate pentru comandă." },
       { name: "robots", content: "noindex" },
     ],

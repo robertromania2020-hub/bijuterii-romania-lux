@@ -6,13 +6,13 @@ import { products } from "@/data/catalog";
 export const Route = createFileRoute("/reduceri")({
   head: () => ({
     meta: [
-      { title: "Reduceri — până la -30% la bijuterii și machiaj | BIJUTERII" },
+      { title: "Reduceri — până la -30% la bijuterii și machiaj | Casa Elegantei" },
       {
         name: "description",
         content:
           "Descoperă reducerile la bijuterii și la produsele de machiaj. Oferte limitate, până la -30%.",
       },
-      { property: "og:title", content: "Descoperă reducerile | BIJUTERII" },
+      { property: "og:title", content: "Descoperă reducerile | Casa Elegantei" },
       { property: "og:description", content: "Oferte limitate la bijuterii și machiaj, până la -30%." },
     ],
   }),

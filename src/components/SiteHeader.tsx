@@ -41,11 +41,11 @@ export function SiteHeader() {
           >
             {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
-          <Link to="/" className="flex items-center gap-2" aria-label="BIJUTERII — pagina principală">
+          <Link to="/" className="flex items-center gap-2" aria-label="Casa Elegantei — pagina principală">
             <span className="grid size-8 place-items-center rounded-full bg-gradient-to-br from-gold to-primary font-display text-sm font-semibold text-primary-foreground">
               B
             </span>
-            <span className="font-display text-lg font-semibold tracking-tight">BIJUTERII</span>
+            <span className="font-display text-lg font-semibold tracking-tight">Casa Elegantei</span>
           </Link>
         </div>
 
