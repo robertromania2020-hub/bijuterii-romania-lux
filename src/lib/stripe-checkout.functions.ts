@@ -84,8 +84,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     }
 
     const session = await stripeRequest<StripeSession>("/checkout/sessions", {
-      body: {
+body: {
         mode: "payment",
+        payment_method_types: ["card"],
         line_items: lineItems,
         currency: "ron",
         client_reference_id: order.id,
