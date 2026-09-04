@@ -33,3 +33,9 @@ export const MERCHANT_DETAILS = [
   `Telefon: ${PHONE}`,
   `E-mail: ${EMAIL}`,
 ].join(" · ");
+
+/** Secțiune reutilizabilă pentru paginile legale. */
+export const MERCHANT_SECTION = {
+  title: "Datele comerciantului",
+  body: `${SHOP_NAME} este numele comercial al societății ${LEGAL_NAME}, CUI ${CUI}, înregistrată la Registrul Comerțului cu nr. ${REG_COM}, cu sediul social în ${COMPANY_ADDRESS}. Ne poți contacta la telefon ${PHONE} sau pe e-mail la ${EMAIL}.`,
+};

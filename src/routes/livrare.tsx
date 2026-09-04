@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { InfoPage } from "@/components/InfoPage";
+import { MERCHANT_SECTION } from "@/data/company";
 
 export const Route = createFileRoute("/livrare")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/livrare")({
           title: "Urmărirea comenzii",
           body: "După expediere primești pe email numărul AWB și un link de urmărire a coletului. Poți verifica statusul și din secțiunea „Comenzile mele” din contul tău.",
         },
+        MERCHANT_SECTION,
       ]}
     />
   ),

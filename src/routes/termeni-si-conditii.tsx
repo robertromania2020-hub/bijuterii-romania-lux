@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { InfoPage } from "@/components/InfoPage";
+import { MERCHANT_SECTION } from "@/data/company";
 
 export const Route = createFileRoute("/termeni-si-conditii")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/termeni-si-conditii")({
           title: "Răspundere",
           body: "Ne asumăm responsabilitatea pentru conformitatea produselor livrate. Diferențele minore de nuanță ale imaginilor pot apărea din cauza setărilor ecranului.",
         },
+        MERCHANT_SECTION,
       ]}
     />
   ),

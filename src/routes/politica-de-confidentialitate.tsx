@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { InfoPage } from "@/components/InfoPage";
+import { MERCHANT_SECTION } from "@/data/company";
 
 export const Route = createFileRoute("/politica-de-confidentialitate")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/politica-de-confidentialitate")({
           title: "Drepturile tale",
           body: "Ai dreptul de acces, rectificare, ștergere, restricționare și portabilitate a datelor. Ne poți scrie oricând la eleganteicasa10@gmail.com.",
         },
+        MERCHANT_SECTION,
       ]}
     />
   ),

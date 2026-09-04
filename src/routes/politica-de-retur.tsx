@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { InfoPage } from "@/components/InfoPage";
+import { MERCHANT_SECTION } from "@/data/company";
 
 export const Route = createFileRoute("/politica-de-retur")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/politica-de-retur")({
           title: "Rambursarea sumei",
           body: "Returnăm contravaloarea produselor în maximum 14 zile de la primirea coletului, folosind aceeași metodă de plată.",
         },
+        MERCHANT_SECTION,
       ]}
     />
   ),
