@@ -44,8 +44,8 @@ interface ComandaAdmin extends CustomerOrder {
   county: string;
   adminNotes: string;
   customerNotes: string;
-  shippingAddress: Record<string, string>;
   paidAt: string | null;
+
   stripeSessionId: string | null;
   stripePaymentIntentId: string | null;
 }
