@@ -94,7 +94,21 @@ function AdminBranduri() {
       <AdminTable head={["Brand", "Slug", "Produse", "Status", "Acțiuni"]} caption="Branduri">
         {list.map((b) => (
           <tr key={b.id}>
-            <td className="px-4 py-3 font-semibold">{b.name}</td>
+            <td className="px-4 py-3">
+              <div className="flex items-center gap-3">
+                {b.logo ? (
+                  <img
+                    src={resolveImage(b.logo)}
+                    alt=""
+                    loading="lazy"
+                    width={80}
+                    height={80}
+                    className="size-10 rounded-xl object-cover"
+                  />
+                ) : null}
+                <span className="font-semibold">{b.name}</span>
+              </div>
+            </td>
             <td className="px-4 py-3 font-mono text-xs">{b.slug}</td>
             <td className="px-4 py-3">{products.filter((p) => p.brandSlug === b.slug).length}</td>
             <td className="px-4 py-3">
