@@ -163,7 +163,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
 
 /** Ecran de așteptare pentru paginile care depind de catalog. */
 export function CatalogGate({ children }: { children: ReactNode }) {
-  const { ready, error, version } = useCatalog();
+  const { ready, error } = useCatalog();
 
   if (!ready) {
     return (
@@ -184,5 +184,8 @@ export function CatalogGate({ children }: { children: ReactNode }) {
     );
   }
 
-  return <div key={version}>{children}</div>;
+  /* Fără `key={version}`: o reîncărcare a catalogului (ex. după salvarea unui
+     produs) nu mai remontează întreaga aplicație, deci formularele și
+     încărcările de imagini din administrare nu mai sunt distruse la mijloc. */
+  return <>{children}</>;
 }

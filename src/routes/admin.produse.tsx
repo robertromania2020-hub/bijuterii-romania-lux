@@ -60,28 +60,30 @@ type Draft = {
   isBestseller: boolean;
 };
 
-const firstDepartment = departments[0]!;
-
-const emptyDraft: Draft = {
-  id: null,
-  name: "",
-  sku: "",
-  description: "",
-  price: "",
-  oldPrice: "",
-  departmentSlug: firstDepartment.slug,
-  categorySlug: categoriesOf(firstDepartment.slug)[0]!.slug,
-  brandSlug: "",
-  collectionSlug: "",
-  stock: "0",
-  minStock: "5",
-  images: [],
-  attributes: {},
-  status: "activ",
-  isNew: false,
-  isFeatured: false,
-  isBestseller: false,
-};
+/** Draft gol calculat la cerere: catalogul poate fi încă gol la încărcare. */
+function makeEmptyDraft(): Draft {
+  const dep = departments[0]?.slug ?? "";
+  return {
+    id: null,
+    name: "",
+    sku: "",
+    description: "",
+    price: "",
+    oldPrice: "",
+    departmentSlug: dep,
+    categorySlug: categoriesOf(dep)[0]?.slug ?? "",
+    brandSlug: "",
+    collectionSlug: "",
+    stock: "0",
+    minStock: "5",
+    images: [],
+    attributes: {},
+    status: "activ",
+    isNew: false,
+    isFeatured: false,
+    isBestseller: false,
+  };
+}
 
 function slugify(value: string) {
   return value
@@ -218,7 +220,7 @@ function AdminProduse() {
       title="Produse"
       description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
-        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft({ ...emptyDraft, id: null, images: [] })}>
+        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(makeEmptyDraft())}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
@@ -466,9 +468,13 @@ function AdminProduse() {
         {vizibile.map((p) => {
           const defs = attributesFor(p.departmentSlug, p.categorySlug);
           const rezumat = defs
-            .filter((d) => d.showOnProduct && p.attributes[d.key] !== undefined)
+            .filter((d) => {
+              const v = p.attributes[d.key];
+              return d.showOnProduct && v !== undefined && v !== null;
+            })
             .slice(0, 2)
-            .map((d) => formatAttributeValue(d, p.attributes[d.key]!))
+            .map((d) => String(formatAttributeValue(d, p.attributes[d.key]!) ?? ""))
+            .filter(Boolean)
             .join(" · ");
           return (
             <tr key={p.id}>
