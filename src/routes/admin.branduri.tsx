@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { products } from "@/data/catalog";
+import { resolveImage } from "@/lib/asset-map";
 import { deleteRow, mapBrand, slugify, updateRow, upsertRow, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/branduri")({
