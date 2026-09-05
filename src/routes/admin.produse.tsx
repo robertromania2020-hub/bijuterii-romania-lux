@@ -60,28 +60,30 @@ type Draft = {
   isBestseller: boolean;
 };
 
-const firstDepartment = departments[0]!;
-
-const emptyDraft: Draft = {
-  id: null,
-  name: "",
-  sku: "",
-  description: "",
-  price: "",
-  oldPrice: "",
-  departmentSlug: firstDepartment.slug,
-  categorySlug: categoriesOf(firstDepartment.slug)[0]!.slug,
-  brandSlug: "",
-  collectionSlug: "",
-  stock: "0",
-  minStock: "5",
-  images: [],
-  attributes: {},
-  status: "activ",
-  isNew: false,
-  isFeatured: false,
-  isBestseller: false,
-};
+/** Draft gol calculat la cerere: catalogul poate fi încă gol la încărcare. */
+function makeEmptyDraft(): Draft {
+  const dep = departments[0]?.slug ?? "";
+  return {
+    id: null,
+    name: "",
+    sku: "",
+    description: "",
+    price: "",
+    oldPrice: "",
+    departmentSlug: dep,
+    categorySlug: categoriesOf(dep)[0]?.slug ?? "",
+    brandSlug: "",
+    collectionSlug: "",
+    stock: "0",
+    minStock: "5",
+    images: [],
+    attributes: {},
+    status: "activ",
+    isNew: false,
+    isFeatured: false,
+    isBestseller: false,
+  };
+}
 
 function slugify(value: string) {
   return value

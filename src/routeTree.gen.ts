@@ -17,7 +17,6 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContRouteImport } from './routes/cont'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CosRouteImport } from './routes/cos'
-import { Route as DebugProduseRouteImport } from './routes/debug-produse'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
 import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
 import { Route as LivrareRouteImport } from './routes/livrare'
@@ -89,11 +88,6 @@ const ContactRoute = ContactRouteImport.update({
 const CosRoute = CosRouteImport.update({
   id: '/cos',
   path: '/cos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DebugProduseRoute = DebugProduseRouteImport.update({
-  id: '/debug-produse',
-  path: '/debug-produse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DespreNoiRoute = DespreNoiRouteImport.update({
@@ -268,7 +262,6 @@ export interface FileRoutesByFullPath {
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
-  '/debug-produse': typeof DebugProduseRoute
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
@@ -310,7 +303,6 @@ export interface FileRoutesByTo {
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
-  '/debug-produse': typeof DebugProduseRoute
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
@@ -354,7 +346,6 @@ export interface FileRoutesById {
   '/cont': typeof ContRoute
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
-  '/debug-produse': typeof DebugProduseRoute
   '/despre-noi': typeof DespreNoiRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
@@ -399,7 +390,6 @@ export interface FileRouteTypes {
     | '/cont'
     | '/contact'
     | '/cos'
-    | '/debug-produse'
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
@@ -441,7 +431,6 @@ export interface FileRouteTypes {
     | '/cont'
     | '/contact'
     | '/cos'
-    | '/debug-produse'
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
@@ -484,7 +473,6 @@ export interface FileRouteTypes {
     | '/cont'
     | '/contact'
     | '/cos'
-    | '/debug-produse'
     | '/despre-noi'
     | '/intrebari-frecvente'
     | '/livrare'
@@ -528,7 +516,6 @@ export interface RootRouteChildren {
   ContRoute: typeof ContRoute
   ContactRoute: typeof ContactRoute
   CosRoute: typeof CosRoute
-  DebugProduseRoute: typeof DebugProduseRoute
   DespreNoiRoute: typeof DespreNoiRoute
   IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
   LivrareRoute: typeof LivrareRoute
@@ -605,13 +592,6 @@ declare module '@tanstack/react-router' {
       path: '/cos'
       fullPath: '/cos'
       preLoaderRoute: typeof CosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/debug-produse': {
-      id: '/debug-produse'
-      path: '/debug-produse'
-      fullPath: '/debug-produse'
-      preLoaderRoute: typeof DebugProduseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/despre-noi': {
@@ -886,7 +866,6 @@ const rootRouteChildren: RootRouteChildren = {
   ContRoute: ContRoute,
   ContactRoute: ContactRoute,
   CosRoute: CosRoute,
-  DebugProduseRoute: DebugProduseRoute,
   DespreNoiRoute: DespreNoiRoute,
   IntrebariFrecventeRoute: IntrebariFrecventeRoute,
   LivrareRoute: LivrareRoute,
