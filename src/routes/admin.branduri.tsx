@@ -44,11 +44,12 @@ function AdminBranduri() {
         id: `b-${slug}`,
         slug,
         name: trimmed,
-        logo: null,
+        logo: logo.trim() || null,
         active: true,
         position: list.length + 1,
       });
       setName("");
+      setLogo("");
       toast.success("Brand adăugat");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Salvare eșuată.");
