@@ -468,9 +468,13 @@ function AdminProduse() {
         {vizibile.map((p) => {
           const defs = attributesFor(p.departmentSlug, p.categorySlug);
           const rezumat = defs
-            .filter((d) => d.showOnProduct && p.attributes[d.key] !== undefined)
+            .filter((d) => {
+              const v = p.attributes[d.key];
+              return d.showOnProduct && v !== undefined && v !== null;
+            })
             .slice(0, 2)
-            .map((d) => formatAttributeValue(d, p.attributes[d.key]!))
+            .map((d) => String(formatAttributeValue(d, p.attributes[d.key]!) ?? ""))
+            .filter(Boolean)
             .join(" · ");
           return (
             <tr key={p.id}>
