@@ -9,10 +9,7 @@ import {
 } from "react";
 import { products as catalog, useCatalogVersion, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
-import {
-  SHIPPING_COST as COMPANY_SHIPPING,
-  FREE_SHIPPING_THRESHOLD as COMPANY_FREE_SHIPPING,
-} from "@/data/company";
+import { SHIPPING_COST } from "@/data/company";
 
 export interface CartLine {
   productId: string;
