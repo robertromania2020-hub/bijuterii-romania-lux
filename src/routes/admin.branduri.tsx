@@ -26,6 +26,7 @@ function AdminBranduri() {
     ascending: true,
   });
   const [name, setName] = useState("");
+  const [logo, setLogo] = useState("");
 
   async function add() {
     const trimmed = name.trim();
