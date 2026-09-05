@@ -220,7 +220,7 @@ function AdminProduse() {
       title="Produse"
       description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
-        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft({ ...emptyDraft, id: null, images: [] })}>
+        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(makeEmptyDraft())}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
