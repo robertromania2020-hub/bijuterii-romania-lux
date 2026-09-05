@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable } from "@/components/admin/AdminShell";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { departments, products } from "@/data/catalog";
 import { resolveImage } from "@/lib/asset-map";
 import {
