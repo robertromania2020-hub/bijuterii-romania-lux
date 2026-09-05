@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable, Pill } from "@/components/admin/AdminShell";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { products } from "@/data/catalog";
+import { resolveImage } from "@/lib/asset-map";
 import { deleteRow, mapBrand, slugify, updateRow, upsertRow, useLiveTable } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin/branduri")({
@@ -24,6 +26,7 @@ function AdminBranduri() {
     ascending: true,
   });
   const [name, setName] = useState("");
+  const [logo, setLogo] = useState("");
 
   async function add() {
     const trimmed = name.trim();
@@ -41,11 +44,12 @@ function AdminBranduri() {
         id: `b-${slug}`,
         slug,
         name: trimmed,
-        logo: null,
+        logo: logo.trim() || null,
         active: true,
         position: list.length + 1,
       });
       setName("");
+      setLogo("");
       toast.success("Brand adăugat");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Salvare eșuată.");
@@ -70,6 +74,15 @@ function AdminBranduri() {
             placeholder="ex. Rimmel"
           />
         </div>
+        <div className="min-w-[240px] flex-1">
+          <ImageUploadField
+            id="brand-logo"
+            label="Logo"
+            kind="brands"
+            value={logo}
+            onChange={setLogo}
+          />
+        </div>
         <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă brand
         </button>
@@ -81,7 +94,21 @@ function AdminBranduri() {
       <AdminTable head={["Brand", "Slug", "Produse", "Status", "Acțiuni"]} caption="Branduri">
         {list.map((b) => (
           <tr key={b.id}>
-            <td className="px-4 py-3 font-semibold">{b.name}</td>
+            <td className="px-4 py-3">
+              <div className="flex items-center gap-3">
+                {b.logo ? (
+                  <img
+                    src={resolveImage(b.logo)}
+                    alt=""
+                    loading="lazy"
+                    width={80}
+                    height={80}
+                    className="size-10 rounded-xl object-cover"
+                  />
+                ) : null}
+                <span className="font-semibold">{b.name}</span>
+              </div>
+            </td>
             <td className="px-4 py-3 font-mono text-xs">{b.slug}</td>
             <td className="px-4 py-3">{products.filter((p) => p.brandSlug === b.slug).length}</td>
             <td className="px-4 py-3">

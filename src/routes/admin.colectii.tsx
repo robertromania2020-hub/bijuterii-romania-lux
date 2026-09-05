@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminShell, AdminTable } from "@/components/admin/AdminShell";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { departments, products } from "@/data/catalog";
 import { resolveImage } from "@/lib/asset-map";
 import {
@@ -100,18 +101,13 @@ function AdminColectii() {
             ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="col-imagine" className="text-sm font-semibold">
-            Imagine (nume fișier sau URL)
-          </label>
-          <input
-            id="col-imagine"
-            className="field mt-1.5"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            placeholder="ex. col-gold.jpg"
-          />
-        </div>
+        <ImageUploadField
+          id="col-imagine"
+          label="Imagine"
+          kind="collections"
+          value={image}
+          onChange={setImage}
+        />
         <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă colecție
         </button>
