@@ -102,18 +102,13 @@ function AdminCategorii() {
             ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="cat-imagine" className="text-sm font-semibold">
-            Imagine (nume fișier sau URL)
-          </label>
-          <input
-            id="cat-imagine"
-            className="field mt-1.5"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            placeholder="ex. cat-bratari.jpg"
-          />
-        </div>
+        <ImageUploadField
+          id="cat-imagine"
+          label="Imagine"
+          kind="categories"
+          value={image}
+          onChange={setImage}
+        />
         <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă categorie
         </button>
