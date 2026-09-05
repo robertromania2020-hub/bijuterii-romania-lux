@@ -74,6 +74,15 @@ function AdminBranduri() {
             placeholder="ex. Rimmel"
           />
         </div>
+        <div className="min-w-[240px] flex-1">
+          <ImageUploadField
+            id="brand-logo"
+            label="Logo"
+            kind="brands"
+            value={logo}
+            onChange={setLogo}
+          />
+        </div>
         <button type="button" className="btn-dark" onClick={() => void add()}>
           Adaugă brand
         </button>
