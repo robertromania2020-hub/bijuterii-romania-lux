@@ -34,7 +34,6 @@ interface StoreValue {
 
 const CART_KEY = "bijuterii.cart";
 const WISHLIST_KEY = "bijuterii.wishlist";
-const FREE_SHIPPING_THRESHOLD = COMPANY_FREE_SHIPPING;
 const SHIPPING_COST = COMPANY_SHIPPING;
 
 const StoreContext = createContext<StoreValue | null>(null);
