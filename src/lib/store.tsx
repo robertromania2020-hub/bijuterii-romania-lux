@@ -160,5 +160,3 @@ export function useStore(): StoreValue {
   if (!ctx) throw new Error("useStore trebuie folosit în interiorul StoreProvider");
   return ctx;
 }
-
-export { FREE_SHIPPING_THRESHOLD };

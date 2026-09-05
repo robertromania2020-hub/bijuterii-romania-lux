@@ -27,7 +27,7 @@ export const Route = createFileRoute("/livrare")({
         },
         {
           title: "Costuri de transport",
-          body: "Transportul standard costă 25 lei, indiferent de metoda de livrare aleasă. Pentru comenzile de peste 250 lei, transportul este gratuit.",
+          body: "Transportul standard costă 25 lei, indiferent de metoda de livrare aleasă sau de valoarea comenzii.",
         },
         {
           title: "Urmărirea comenzii",

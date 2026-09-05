@@ -5,7 +5,6 @@ import {
   CUI,
   EMAIL,
   EMAIL_HREF,
-  FREE_SHIPPING_THRESHOLD,
   LEGAL_NAME,
   PHONE,
   PHONE_HREF,
@@ -73,7 +72,6 @@ function AdminSetari() {
             </Rand>
             <Rand eticheta="Program">{WORKING_HOURS}</Rand>
             <Rand eticheta="Cost livrare standard">{formatPrice(SHIPPING_COST)}</Rand>
-            <Rand eticheta="Prag livrare gratuită">{formatPrice(FREE_SHIPPING_THRESHOLD)}</Rand>
             <Rand eticheta="Metode de plată">Card online, ramburs la livrare</Rand>
           </dl>
         </AdminCard>
