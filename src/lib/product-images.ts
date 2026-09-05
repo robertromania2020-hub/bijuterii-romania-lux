@@ -83,3 +83,28 @@ export async function removeAllProductFiles(productId: string) {
   const paths = (data ?? []).map((f) => `products/${productId}/${f.name}`);
   if (paths.length > 0) await supabase.storage.from(BUCKET).remove(paths);
 }
+
+/** Încarcă o imagine de catalog (categorie, colecție, brand) și întoarce URL-ul public. */
+export async function uploadCatalogImage(kind: "categories" | "collections" | "brands", file: File) {
+  const message = validateImageFile(file);
+  if (message) throw new Error(message);
+
+  const unique =
+    (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`) +
+    "." +
+    extensionFor(file);
+  const storagePath = `catalog/${kind}/${unique}`;
+
+  const { error } = await supabase.storage.from(BUCKET).upload(storagePath, file, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (error) {
+    if (/row-level security|not authorized|Unauthorized/i.test(error.message)) {
+      throw new Error("Nu ai permisiunea de a încărca imagini.");
+    }
+    throw new Error("Nu am putut încărca imaginea.");
+  }
+
+  return { storagePath, url: publicPathFor(storagePath) };
+}
