@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { formatPrice } from "@/lib/format";
-import { FREE_SHIPPING_THRESHOLD, useStore } from "@/lib/store";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/cos")({
   head: () => ({
@@ -140,12 +140,6 @@ function CosPage() {
                 <dd className="font-display">{formatPrice(totals.total)}</dd>
               </div>
             </dl>
-            {totals.shipping > 0 && (
-              <p className="mt-3 rounded-2xl bg-mint p-3 text-xs">
-                Mai adaugă {formatPrice(FREE_SHIPPING_THRESHOLD - totals.subtotal)} pentru transport
-                gratuit.
-              </p>
-            )}
             <Link to="/checkout" className="btn-dark mt-5 block text-center">
               Finalizează comanda
             </Link>

@@ -52,7 +52,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Casa Elegantei – magazin online de bijuterii, ceasuri, parfumuri și machiaj. Livrare rapidă în toată România, transport 25 lei și gratuit peste 250 lei.",
+          "Casa Elegantei – magazin online de bijuterii, ceasuri, parfumuri și machiaj. Livrare rapidă în toată România, transport 25 lei.",
       },
       { property: "og:title", content: "Casa Elegantei — bijuterii, ceasuri, parfumuri și machiaj" },
       { property: "og:site_name", content: "Casa Elegantei" },

@@ -9,10 +9,7 @@ import {
 } from "react";
 import { products as catalog, useCatalogVersion, variantPrice } from "@/data/catalog";
 import type { Product } from "@/data/types";
-import {
-  SHIPPING_COST as COMPANY_SHIPPING,
-  FREE_SHIPPING_THRESHOLD as COMPANY_FREE_SHIPPING,
-} from "@/data/company";
+import { SHIPPING_COST as COMPANY_SHIPPING } from "@/data/company";
 
 export interface CartLine {
   productId: string;
@@ -37,7 +34,6 @@ interface StoreValue {
 
 const CART_KEY = "bijuterii.cart";
 const WISHLIST_KEY = "bijuterii.wishlist";
-const FREE_SHIPPING_THRESHOLD = COMPANY_FREE_SHIPPING;
 const SHIPPING_COST = COMPANY_SHIPPING;
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -127,8 +123,7 @@ const toggleWishlist = useCallback((productId: string) => {
       (sum, l) => sum + (l.product.oldPrice ? (l.product.oldPrice - l.unitPrice) * l.quantity : 0),
       0,
     );
-    const shipping =
-      subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const shipping = subtotal === 0 ? 0 : SHIPPING_COST;
 
     return {
       cart,
@@ -164,5 +159,3 @@ export function useStore(): StoreValue {
   if (!ctx) throw new Error("useStore trebuie folosit în interiorul StoreProvider");
   return ctx;
 }
-
-export { FREE_SHIPPING_THRESHOLD };

@@ -312,7 +312,7 @@ function ProductPage() {
           <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-3">
               <Truck className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              Livrare prin curier în 1–3 zile lucrătoare. Transport 25 lei, gratuit la comenzi peste 250 lei.
+              Livrare prin curier în 1–3 zile lucrătoare. Transport 25 lei.
             </li>
             <li className="flex items-start gap-3">
               <RotateCcw className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

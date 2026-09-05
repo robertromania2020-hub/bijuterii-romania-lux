@@ -27,7 +27,7 @@ export const Route = createFileRoute("/politica-de-retur")({
         },
         {
           title: "Cum returnezi",
-          body: "Ne trimiți o solicitare pe eleganteicasa10@gmail.com cu numărul comenzii, iar noi îți transmitem formularul de retur și adresa de expediere.",
+          body: "Ne suni la 0774 570 743 și ne comunici numărul comenzii, iar noi îți transmitem formularul de retur și adresa de expediere.",
         },
         {
           title: "Rambursarea sumei",
