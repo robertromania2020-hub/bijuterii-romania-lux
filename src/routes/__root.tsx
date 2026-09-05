@@ -50,6 +50,16 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           A apărut o problemă. Poți reîncerca sau te poți întoarce la pagina principală.
         </p>
+        <details className="mt-4 text-left">
+          <summary className="cursor-pointer text-xs text-muted-foreground">
+            Detalii tehnice (pentru raportare)
+          </summary>
+          <pre className="mt-2 max-h-48 overflow-auto rounded-xl bg-muted p-3 text-left text-[11px] whitespace-pre-wrap">
+            {error?.message}
+            {error?.stack ? `\n\n${error.stack}` : ""}
+          </pre>
+        </details>
+
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
