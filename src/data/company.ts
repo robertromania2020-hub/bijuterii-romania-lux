@@ -18,10 +18,8 @@ export const EMAIL = "eleganteicasa10@gmail.com";
 export const EMAIL_HREF = `mailto:${EMAIL}`;
 export const WORKING_HOURS = "Luni–Vineri, 09:00–18:00";
 
-/** Tarif standard de transport (lei). */
+/** Tarif standard de transport (lei), aplicat la fiecare comandă. */
 export const SHIPPING_COST = 25;
-/** Prag pentru transport gratuit (lei). */
-export const FREE_SHIPPING_THRESHOLD = 250;
 
 /** Bloc reutilizabil cu datele comerciantului, pentru pagini legale. */
 export const MERCHANT_DETAILS = [

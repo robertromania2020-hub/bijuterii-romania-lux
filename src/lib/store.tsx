@@ -127,8 +127,7 @@ const toggleWishlist = useCallback((productId: string) => {
       (sum, l) => sum + (l.product.oldPrice ? (l.product.oldPrice - l.unitPrice) * l.quantity : 0),
       0,
     );
-    const shipping =
-      subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const shipping = subtotal === 0 ? 0 : SHIPPING_COST;
 
     return {
       cart,
