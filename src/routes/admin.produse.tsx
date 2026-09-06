@@ -141,6 +141,7 @@ function AdminProduse() {
       minStock: String(p.minStock),
       images: p.images.map((url) => ({ id: null, url, storagePath: null, isPrimary: false })),
       attributes: { ...p.attributes },
+      variants: p.variants.map((v) => ({ ...v })),
       status: p.status,
       isNew: p.isNew,
       isFeatured: p.isFeatured,
@@ -155,6 +156,12 @@ function AdminProduse() {
     setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
+  function lipsesteValoarea(def: AttributeDefinition, d: Draft): boolean {
+    const v = d.attributes[def.key];
+    if (v === undefined || v === null || v === "") return true;
+    return Array.isArray(v) && v.length === 0;
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!draft) return;
@@ -162,12 +169,42 @@ function AdminProduse() {
       toast.error("Completează numele, SKU-ul și prețul.");
       return;
     }
+
+    const defs = attributesFor(draft.departmentSlug, draft.categorySlug);
+    const lipsa = defs.filter((d) => d.required && lipsesteValoarea(d, draft));
+    const lipsaVariante = defs.filter(
+      (d) => d.required && d.isVariant && !draft.variants.some((v) => v.attributeKey === d.key),
+    );
+    if (lipsa.length > 0 || lipsaVariante.length > 0) {
+      const nume = [...new Set([...lipsa, ...lipsaVariante].map((d) => d.label))].join(", ");
+      toast.error(`Completează câmpurile obligatorii: ${nume}.`);
+      return;
+    }
+
+    const skuri = draft.variants.map((v) => v.sku.trim());
+    if (skuri.some((s) => !s)) {
+      toast.error("Fiecare variantă are nevoie de un SKU.");
+      return;
+    }
+    if (new Set(skuri).size !== skuri.length) {
+      toast.error("Există variante cu același SKU. Fă-le unice.");
+      return;
+    }
+
     const existent = draft.id ? rows.find((p) => p.id === draft.id) : undefined;
     const imagini = draft.images;
+    const stocVariante = draft.variants
+      .filter((v) => v.active)
+      .reduce((sum, v) => sum + (Number.isFinite(v.stock) ? v.stock : 0), 0);
 
     const produs: Product = {
       id: existent?.id ?? idNou,
-      slug: existent?.slug ?? slugify(draft.name),
+      slug:
+        existent?.slug ??
+        uniqueSlug(
+          draft.name,
+          rows.map((p) => p.slug),
+        ),
       sku: draft.sku,
       name: draft.name,
       description: draft.description,
@@ -177,10 +214,10 @@ function AdminProduse() {
       categorySlug: draft.categorySlug,
       collectionSlug: draft.collectionSlug || null,
       brandSlug: draft.brandSlug || null,
-      stock: Number(draft.stock),
+      stock: draft.variants.length > 0 ? stocVariante : Number(draft.stock),
       minStock: Number(draft.minStock),
       images: imagini.map((i) => i.url),
-      variants: existent?.variants ?? [],
+      variants: draft.variants,
       attributes: draft.attributes,
       status: draft.status,
       isNew: draft.isNew,
@@ -194,6 +231,7 @@ function AdminProduse() {
     try {
       await saveProduct(produs, imagini);
       setDraft(null);
+      setIdNou(newProductId());
       toast.success(existent ? "Produs actualizat." : "Produs adăugat.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Produsul nu a putut fi salvat.");
@@ -201,6 +239,7 @@ function AdminProduse() {
       setSeSalveaza(false);
     }
   }
+
 
   async function comutaStatus(p: Product) {
     try {
