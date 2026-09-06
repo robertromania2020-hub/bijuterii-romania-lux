@@ -452,7 +452,7 @@ function AdminProduse() {
             {draftAttributes.length > 0 && (
               <fieldset className="grid gap-4 rounded-2xl border border-border p-4 sm:col-span-2 sm:grid-cols-2">
                 <legend className="px-1 text-sm font-semibold">
-                  Atribute specifice ({draft.departmentSlug})
+                  Detalii specifice categoriei „{getCategory(draft.categorySlug)?.name ?? draft.categorySlug}”
                 </legend>
                 {draftAttributes.map((a) => {
                   const id = `attr-${a.key}`;
@@ -476,7 +476,9 @@ function AdminProduse() {
                       <label htmlFor={id} className="text-sm font-semibold">
                         {a.label}
                         {a.unit ? ` (${a.unit})` : ""}
+                        {a.required ? " *" : ""}
                       </label>
+
                       {a.type === "select" ? (
                         <select
                           id={id}
