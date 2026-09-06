@@ -202,11 +202,12 @@ function ProductPage() {
             >
               {formatPrice(price)}
             </span>
-            {product.oldPrice && (
+            {oldPrice && (
               <span className="text-base text-muted-foreground line-through">
-                {formatPrice(product.oldPrice)}
+                {formatPrice(oldPrice)}
               </span>
             )}
+
           </div>
 
           <p
