@@ -64,6 +64,7 @@ type Draft = {
   minStock: string;
   images: ProductImage[];
   attributes: AttributeValues;
+  variants: ProductVariant[];
   status: "activ" | "inactiv";
   isNew: boolean;
   isFeatured: boolean;
@@ -88,20 +89,12 @@ function makeEmptyDraft(): Draft {
     minStock: "5",
     images: [],
     attributes: {},
+    variants: [],
     status: "activ",
     isNew: false,
     isFeatured: false,
     isBestseller: false,
   };
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function AdminProduse() {
@@ -113,7 +106,13 @@ function AdminProduse() {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [filter, setFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
-  const [idNou] = useState(() => `p-${Date.now()}`);
+  const [idNou, setIdNou] = useState(() => newProductId());
+
+  function openNew() {
+    setIdNou(newProductId());
+    setDraft(makeEmptyDraft());
+  }
+
 
   const vizibile = rows.filter((p) => {
     const term = filter.trim().toLowerCase();
