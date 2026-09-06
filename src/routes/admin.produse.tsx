@@ -13,18 +13,28 @@ import {
   getBrand,
   getCategory,
 } from "@/data/catalog";
-import type { AttributeValue, AttributeValues, Product } from "@/data/types";
+import type {
+  AttributeDefinition,
+  AttributeValue,
+  AttributeValues,
+  Product,
+  ProductVariant,
+} from "@/data/types";
 import { formatPrice } from "@/lib/format";
 import { resolveImage } from "@/lib/asset-map";
 import { ProductImagesEditor } from "@/components/admin/ProductImagesEditor";
+import { ProductVariantsEditor } from "@/components/admin/ProductVariantsEditor";
 import { fetchProductImages, type ProductImage } from "@/lib/product-images";
 import {
   deleteProduct,
   mapProduct,
+  newProductId,
   saveProduct,
+  uniqueSlug,
   updateProductFields,
   useLiveTable,
 } from "@/lib/admin-data";
+
 
 export const Route = createFileRoute("/admin/produse")({
   head: () => ({
