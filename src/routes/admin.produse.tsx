@@ -261,17 +261,20 @@ function AdminProduse() {
 
 
   const productIdCurent = draft?.id ?? idNou;
-  const draftAttributes = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
+  const toateAtributele = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
+  const variantDefs = toateAtributele.filter((a) => a.isVariant);
+  const draftAttributes = toateAtributele.filter((a) => !a.isVariant);
 
   return (
     <AdminShell
       title="Produse"
       description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
-        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(makeEmptyDraft())}>
+        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={openNew}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
+
     >
       <div className="mb-4 flex flex-wrap gap-3">
         <div className="max-w-sm flex-1">
