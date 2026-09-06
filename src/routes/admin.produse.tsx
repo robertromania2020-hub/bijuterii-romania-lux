@@ -398,7 +398,20 @@ function AdminProduse() {
             </div>
             <div>
               <label htmlFor="p-stoc" className="text-sm font-semibold">Stoc</label>
-              <input id="p-stoc" type="number" min={0} className="field mt-1.5" value={draft.stock} onChange={(e) => setDraft({ ...draft, stock: e.target.value })} />
+              <input
+                id="p-stoc"
+                type="number"
+                min={0}
+                className="field mt-1.5"
+                value={draft.variants.length > 0 ? String(draft.variants.reduce((s, v) => s + (v.active ? v.stock : 0), 0)) : draft.stock}
+                disabled={draft.variants.length > 0}
+                onChange={(e) => setDraft({ ...draft, stock: e.target.value })}
+              />
+              {draft.variants.length > 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Calculat automat din stocul variantelor.
+                </p>
+              )}
             </div>
             <div>
               <label htmlFor="p-stoc-minim" className="text-sm font-semibold">Prag stoc redus</label>
@@ -415,6 +428,26 @@ function AdminProduse() {
                 />
               </div>
             </div>
+
+            <div className="sm:col-span-2">
+              <span className="text-sm font-semibold">Variante (mărimi, nuanțe, lungimi…)</span>
+              <div className="mt-1.5">
+                <ProductVariantsEditor
+                  productId={productIdCurent}
+                  baseSku={draft.sku}
+                  variantDefs={variantDefs}
+                  attributes={draft.attributes}
+                  variants={draft.variants}
+                  images={draft.images.map((i) => i.url)}
+                  disabled={seSalveaza}
+                  onAttributeChange={(key, values) => setAttr(key, values)}
+                  onVariantsChange={(variants) =>
+                    setDraft((d) => (d ? { ...d, variants } : d))
+                  }
+                />
+              </div>
+            </div>
+
 
             {draftAttributes.length > 0 && (
               <fieldset className="grid gap-4 rounded-2xl border border-border p-4 sm:col-span-2 sm:grid-cols-2">
