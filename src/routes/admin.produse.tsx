@@ -13,18 +13,28 @@ import {
   getBrand,
   getCategory,
 } from "@/data/catalog";
-import type { AttributeValue, AttributeValues, Product } from "@/data/types";
+import type {
+  AttributeDefinition,
+  AttributeValue,
+  AttributeValues,
+  Product,
+  ProductVariant,
+} from "@/data/types";
 import { formatPrice } from "@/lib/format";
 import { resolveImage } from "@/lib/asset-map";
 import { ProductImagesEditor } from "@/components/admin/ProductImagesEditor";
+import { ProductVariantsEditor } from "@/components/admin/ProductVariantsEditor";
 import { fetchProductImages, type ProductImage } from "@/lib/product-images";
 import {
   deleteProduct,
   mapProduct,
+  newProductId,
   saveProduct,
+  uniqueSlug,
   updateProductFields,
   useLiveTable,
 } from "@/lib/admin-data";
+
 
 export const Route = createFileRoute("/admin/produse")({
   head: () => ({
@@ -54,6 +64,7 @@ type Draft = {
   minStock: string;
   images: ProductImage[];
   attributes: AttributeValues;
+  variants: ProductVariant[];
   status: "activ" | "inactiv";
   isNew: boolean;
   isFeatured: boolean;
@@ -78,20 +89,12 @@ function makeEmptyDraft(): Draft {
     minStock: "5",
     images: [],
     attributes: {},
+    variants: [],
     status: "activ",
     isNew: false,
     isFeatured: false,
     isBestseller: false,
   };
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function AdminProduse() {
@@ -103,7 +106,13 @@ function AdminProduse() {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [filter, setFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
-  const [idNou] = useState(() => `p-${Date.now()}`);
+  const [idNou, setIdNou] = useState(() => newProductId());
+
+  function openNew() {
+    setIdNou(newProductId());
+    setDraft(makeEmptyDraft());
+  }
+
 
   const vizibile = rows.filter((p) => {
     const term = filter.trim().toLowerCase();
@@ -132,6 +141,7 @@ function AdminProduse() {
       minStock: String(p.minStock),
       images: p.images.map((url) => ({ id: null, url, storagePath: null, isPrimary: false })),
       attributes: { ...p.attributes },
+      variants: p.variants.map((v) => ({ ...v })),
       status: p.status,
       isNew: p.isNew,
       isFeatured: p.isFeatured,
@@ -146,6 +156,12 @@ function AdminProduse() {
     setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
+  function lipsesteValoarea(def: AttributeDefinition, d: Draft): boolean {
+    const v = d.attributes[def.key];
+    if (v === undefined || v === null || v === "") return true;
+    return Array.isArray(v) && v.length === 0;
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!draft) return;
@@ -153,12 +169,42 @@ function AdminProduse() {
       toast.error("Completează numele, SKU-ul și prețul.");
       return;
     }
+
+    const defs = attributesFor(draft.departmentSlug, draft.categorySlug);
+    const lipsa = defs.filter((d) => d.required && lipsesteValoarea(d, draft));
+    const lipsaVariante = defs.filter(
+      (d) => d.required && d.isVariant && !draft.variants.some((v) => v.attributeKey === d.key),
+    );
+    if (lipsa.length > 0 || lipsaVariante.length > 0) {
+      const nume = [...new Set([...lipsa, ...lipsaVariante].map((d) => d.label))].join(", ");
+      toast.error(`Completează câmpurile obligatorii: ${nume}.`);
+      return;
+    }
+
+    const skuri = draft.variants.map((v) => v.sku.trim());
+    if (skuri.some((s) => !s)) {
+      toast.error("Fiecare variantă are nevoie de un SKU.");
+      return;
+    }
+    if (new Set(skuri).size !== skuri.length) {
+      toast.error("Există variante cu același SKU. Fă-le unice.");
+      return;
+    }
+
     const existent = draft.id ? rows.find((p) => p.id === draft.id) : undefined;
     const imagini = draft.images;
+    const stocVariante = draft.variants
+      .filter((v) => v.active)
+      .reduce((sum, v) => sum + (Number.isFinite(v.stock) ? v.stock : 0), 0);
 
     const produs: Product = {
       id: existent?.id ?? idNou,
-      slug: existent?.slug ?? slugify(draft.name),
+      slug:
+        existent?.slug ??
+        uniqueSlug(
+          draft.name,
+          rows.map((p) => p.slug),
+        ),
       sku: draft.sku,
       name: draft.name,
       description: draft.description,
@@ -168,10 +214,10 @@ function AdminProduse() {
       categorySlug: draft.categorySlug,
       collectionSlug: draft.collectionSlug || null,
       brandSlug: draft.brandSlug || null,
-      stock: Number(draft.stock),
+      stock: draft.variants.length > 0 ? stocVariante : Number(draft.stock),
       minStock: Number(draft.minStock),
       images: imagini.map((i) => i.url),
-      variants: existent?.variants ?? [],
+      variants: draft.variants,
       attributes: draft.attributes,
       status: draft.status,
       isNew: draft.isNew,
@@ -185,6 +231,7 @@ function AdminProduse() {
     try {
       await saveProduct(produs, imagini);
       setDraft(null);
+      setIdNou(newProductId());
       toast.success(existent ? "Produs actualizat." : "Produs adăugat.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Produsul nu a putut fi salvat.");
@@ -192,6 +239,7 @@ function AdminProduse() {
       setSeSalveaza(false);
     }
   }
+
 
   async function comutaStatus(p: Product) {
     try {
@@ -213,17 +261,20 @@ function AdminProduse() {
 
 
   const productIdCurent = draft?.id ?? idNou;
-  const draftAttributes = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
+  const toateAtributele = draft ? attributesFor(draft.departmentSlug, draft.categorySlug) : [];
+  const variantDefs = toateAtributele.filter((a) => a.isVariant);
+  const draftAttributes = toateAtributele.filter((a) => !a.isVariant);
 
   return (
     <AdminShell
       title="Produse"
       description="Adaugă, editează, activează sau șterge produse din orice departament."
       actions={
-        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={() => setDraft(makeEmptyDraft())}>
+        <button type="button" className="btn-dark inline-flex items-center gap-2" onClick={openNew}>
           <Plus className="size-4" aria-hidden="true" /> Adaugă produs
         </button>
       }
+
     >
       <div className="mb-4 flex flex-wrap gap-3">
         <div className="max-w-sm flex-1">
@@ -297,6 +348,7 @@ function AdminProduse() {
                     departmentSlug: dep,
                     categorySlug: categoriesOf(dep)[0]?.slug ?? "",
                     attributes: {},
+                    variants: [],
                   });
                 }}
               >
@@ -307,12 +359,25 @@ function AdminProduse() {
             </div>
             <div>
               <label htmlFor="p-categorie" className="text-sm font-semibold">Categorie</label>
-              <select id="p-categorie" className="field mt-1.5" value={draft.categorySlug} onChange={(e) => setDraft({ ...draft, categorySlug: e.target.value })}>
+              <select
+                id="p-categorie"
+                className="field mt-1.5"
+                value={draft.categorySlug}
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    categorySlug: e.target.value,
+                    attributes: {},
+                    variants: [],
+                  })
+                }
+              >
                 {categoriesOf(draft.departmentSlug).map((c) => (
                   <option key={c.id} value={c.slug}>{c.name}</option>
                 ))}
               </select>
             </div>
+
             <div>
               <label htmlFor="p-brand" className="text-sm font-semibold">Brand</label>
               <select id="p-brand" className="field mt-1.5" value={draft.brandSlug} onChange={(e) => setDraft({ ...draft, brandSlug: e.target.value })}>
@@ -333,7 +398,20 @@ function AdminProduse() {
             </div>
             <div>
               <label htmlFor="p-stoc" className="text-sm font-semibold">Stoc</label>
-              <input id="p-stoc" type="number" min={0} className="field mt-1.5" value={draft.stock} onChange={(e) => setDraft({ ...draft, stock: e.target.value })} />
+              <input
+                id="p-stoc"
+                type="number"
+                min={0}
+                className="field mt-1.5"
+                value={draft.variants.length > 0 ? String(draft.variants.reduce((s, v) => s + (v.active ? v.stock : 0), 0)) : draft.stock}
+                disabled={draft.variants.length > 0}
+                onChange={(e) => setDraft({ ...draft, stock: e.target.value })}
+              />
+              {draft.variants.length > 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Calculat automat din stocul variantelor.
+                </p>
+              )}
             </div>
             <div>
               <label htmlFor="p-stoc-minim" className="text-sm font-semibold">Prag stoc redus</label>
@@ -351,10 +429,30 @@ function AdminProduse() {
               </div>
             </div>
 
+            <div className="sm:col-span-2">
+              <span className="text-sm font-semibold">Variante (mărimi, nuanțe, lungimi…)</span>
+              <div className="mt-1.5">
+                <ProductVariantsEditor
+                  productId={productIdCurent}
+                  baseSku={draft.sku}
+                  variantDefs={variantDefs}
+                  attributes={draft.attributes}
+                  variants={draft.variants}
+                  images={draft.images.map((i) => i.url)}
+                  disabled={seSalveaza}
+                  onAttributeChange={(key, values) => setAttr(key, values)}
+                  onVariantsChange={(variants) =>
+                    setDraft((d) => (d ? { ...d, variants } : d))
+                  }
+                />
+              </div>
+            </div>
+
+
             {draftAttributes.length > 0 && (
               <fieldset className="grid gap-4 rounded-2xl border border-border p-4 sm:col-span-2 sm:grid-cols-2">
                 <legend className="px-1 text-sm font-semibold">
-                  Atribute specifice ({draft.departmentSlug})
+                  Detalii specifice categoriei „{getCategory(draft.categorySlug)?.name ?? draft.categorySlug}”
                 </legend>
                 {draftAttributes.map((a) => {
                   const id = `attr-${a.key}`;
@@ -378,7 +476,9 @@ function AdminProduse() {
                       <label htmlFor={id} className="text-sm font-semibold">
                         {a.label}
                         {a.unit ? ` (${a.unit})` : ""}
+                        {a.required ? " *" : ""}
                       </label>
+
                       {a.type === "select" ? (
                         <select
                           id={id}

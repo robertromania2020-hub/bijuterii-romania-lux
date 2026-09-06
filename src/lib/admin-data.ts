@@ -98,6 +98,10 @@ export function mapAttributeDefinition(row: Row): AttributeDefinition {
     categorySlugs: (row["category_slugs"] as string[] | null) ?? [],
     filterable: Boolean(row["filterable"]),
     showOnProduct: Boolean(row["show_on_product"]),
+    required: Boolean(row["required"]),
+    isVariant: Boolean(row["is_variant"]),
+    swatches: (row["swatches"] as Record<string, string> | null) ?? {},
+    active: row["active"] === undefined ? true : Boolean(row["active"]),
     ...(row["unit"] ? { unit: str(row["unit"]) } : {}),
     position: num(row["position"]),
   };
@@ -107,14 +111,20 @@ function mapVariant(row: Row): ProductVariant {
   return {
     id: str(row["id"]),
     attributeLabel: str(row["attribute_label"]),
+    attributeKey: (row["attribute_key"] as string | null) ?? null,
     label: str(row["label"]),
     sku: str(row["sku"]),
+    barcode: (row["barcode"] as string | null) ?? null,
     price: row["price"] === null || row["price"] === undefined ? null : num(row["price"]),
+    oldPrice:
+      row["old_price"] === null || row["old_price"] === undefined ? null : num(row["old_price"]),
     stock: num(row["stock"]),
+    minStock: num(row["min_stock"]),
     image: (row["image"] as string | null) ?? null,
     active: Boolean(row["active"]),
   };
 }
+
 
 export function mapProduct(row: Row): Product {
   const images = rows(row["product_images"])
@@ -334,10 +344,14 @@ async function saveProductVariants(product: Product) {
     id: v.id,
     product_id: product.id,
     attribute_label: v.attributeLabel,
+    attribute_key: v.attributeKey,
     label: v.label,
     sku: v.sku,
+    barcode: v.barcode,
     price: v.price,
+    old_price: v.oldPrice,
     stock: v.stock,
+    min_stock: v.minStock,
     image: v.image,
     active: v.active,
     position: index,
@@ -345,6 +359,7 @@ async function saveProductVariants(product: Product) {
   const { error } = await supabase.from("product_variants").insert(payload as never);
   if (error) throw new Error(error.message);
 }
+
 
 async function saveProductAttributes(product: Product) {
   const del = await supabase
@@ -438,4 +453,23 @@ export function slugify(value: string, separator = "-"): string {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, separator)
     .replace(new RegExp(`^${separator}|${separator}$`, "g"), "");
+}
+
+/** Identificator unic pentru produse noi (fără coliziuni la adăugări succesive). */
+export function newProductId(): string {
+  const rand =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+  return `p-${Date.now().toString(36)}-${rand}`;
+}
+
+/** Slug unic în catalog: adaugă un sufix numeric dacă slug-ul este deja folosit. */
+export function uniqueSlug(base: string, taken: Iterable<string>): string {
+  const root = slugify(base) || "produs";
+  const used = new Set(taken);
+  if (!used.has(root)) return root;
+  let i = 2;
+  while (used.has(`${root}-${i}`)) i += 1;
+  return `${root}-${i}`;
 }

@@ -87,25 +87,34 @@ function ProductPage() {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [imageIndex, setImageIndex] = useState(0);
   const activeVariants = product.variants.filter((v) => v.active);
-  const [variantId, setVariantId] = useState<string | null>(activeVariants[0]?.id ?? null);
+  const defs = attributesFor(product.departmentSlug, product.categorySlug);
+  const variantDef = defs.find((d) => activeVariants.some((v) => v.attributeKey === d.key));
+  const alegereObligatorie = activeVariants.length > 0 && (variantDef?.required ?? false);
+  const [variantId, setVariantId] = useState<string | null>(
+    alegereObligatorie ? null : (activeVariants[0]?.id ?? null),
+  );
   const [quantity, setQuantity] = useState(1);
 
   const selected = activeVariants.find((v) => v.id === variantId) ?? null;
   const price = selected?.price ?? product.price;
+  const oldPrice = selected?.oldPrice ?? product.oldPrice;
   const stoc = selected ? selected.stock : product.stock;
-  const status = stockStatus({ stock: stoc, minStock: product.minStock });
+  const status = stockStatus({ stock: stoc, minStock: selected?.minStock ?? product.minStock });
   const outOfStock = status === "stoc_epuizat";
-  const percent = discountPercent(price, product.oldPrice);
+  const trebuieAles = alegereObligatorie && !selected;
+  const percent = discountPercent(price, oldPrice);
   const favorite = isInWishlist(product.id);
   const brand = getBrand(product.brandSlug);
   const department = getDepartment(product.departmentSlug);
   const category = getCategory(product.categorySlug);
-  const specs = attributesFor(product.departmentSlug, product.categorySlug).filter(
-    (def) => def.showOnProduct && product.attributes[def.key] !== undefined,
+  const specs = defs.filter(
+    (def) =>
+      def.showOnProduct && !def.isVariant && product.attributes[def.key] !== undefined,
   );
   const similare = activeProducts()
     .filter((p) => p.id !== product.id && p.categorySlug === product.categorySlug)
     .slice(0, 4);
+
 
   return (
     <SiteLayout>
@@ -193,11 +202,12 @@ function ProductPage() {
             >
               {formatPrice(price)}
             </span>
-            {product.oldPrice && (
+            {oldPrice && (
               <span className="text-base text-muted-foreground line-through">
-                {formatPrice(product.oldPrice)}
+                {formatPrice(oldPrice)}
               </span>
             )}
+
           </div>
 
           <p
@@ -239,31 +249,50 @@ function ProductPage() {
             <fieldset className="mt-5">
               <legend className="text-sm font-semibold">
                 {activeVariants[0]!.attributeLabel}
+                {alegereObligatorie ? " *" : ""}
+                {selected ? <span className="text-muted-foreground"> — {selected.label}</span> : null}
               </legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                {activeVariants.map((v) => (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={() => {
-                      setVariantId(v.id);
-                      setQuantity(1);
-                    }}
-                    disabled={v.stock <= 0}
-                    aria-pressed={variantId === v.id}
-                    className={`rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
-                      variantId === v.id
-                        ? "border-transparent bg-foreground text-background"
-                        : "border-border bg-surface"
-                    }`}
-                  >
-                    {v.label}
-                    {v.stock <= 0 && " — epuizat"}
-                  </button>
-                ))}
+                {activeVariants.map((v) => {
+                  const swatch = variantDef?.swatches?.[v.label];
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => {
+                        setVariantId(v.id);
+                        setQuantity(1);
+                      }}
+                      disabled={v.stock <= 0}
+                      aria-pressed={variantId === v.id}
+                      title={v.label}
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
+                        variantId === v.id
+                          ? "border-transparent bg-foreground text-background"
+                          : "border-border bg-surface"
+                      }`}
+                    >
+                      {swatch ? (
+                        <span
+                          aria-hidden="true"
+                          className="size-4 rounded-full border border-border"
+                          style={{ backgroundColor: swatch }}
+                        />
+                      ) : null}
+                      {v.label}
+                      {v.stock <= 0 && " — epuizat"}
+                    </button>
+                  );
+                })}
               </div>
+              {trebuieAles ? (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Alege o opțiune pentru a continua.
+                </p>
+              ) : null}
             </fieldset>
           )}
+
 
           <div className="mt-5 flex items-center gap-3">
             <div className="flex items-center gap-2 rounded-full border border-border bg-surface p-1">
@@ -290,13 +319,18 @@ function ProductPage() {
             <button
               type="button"
               className="btn-dark flex-1"
-              disabled={outOfStock}
+              disabled={outOfStock || trebuieAles}
               onClick={() => {
                 addToCart(product.id, quantity, selected?.label ?? null);
                 toast.success("Produs adăugat în coș");
               }}
             >
-              {outOfStock ? "Stoc epuizat" : "Adaugă în coș"}
+              {outOfStock
+                ? "Stoc epuizat"
+                : trebuieAles
+                  ? `Alege ${activeVariants[0]!.attributeLabel.toLowerCase()}`
+                  : "Adaugă în coș"}
+
             </button>
             <button
               type="button"
