@@ -87,25 +87,34 @@ function ProductPage() {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [imageIndex, setImageIndex] = useState(0);
   const activeVariants = product.variants.filter((v) => v.active);
-  const [variantId, setVariantId] = useState<string | null>(activeVariants[0]?.id ?? null);
+  const defs = attributesFor(product.departmentSlug, product.categorySlug);
+  const variantDef = defs.find((d) => activeVariants.some((v) => v.attributeKey === d.key));
+  const alegereObligatorie = activeVariants.length > 0 && (variantDef?.required ?? false);
+  const [variantId, setVariantId] = useState<string | null>(
+    alegereObligatorie ? null : (activeVariants[0]?.id ?? null),
+  );
   const [quantity, setQuantity] = useState(1);
 
   const selected = activeVariants.find((v) => v.id === variantId) ?? null;
   const price = selected?.price ?? product.price;
+  const oldPrice = selected?.oldPrice ?? product.oldPrice;
   const stoc = selected ? selected.stock : product.stock;
-  const status = stockStatus({ stock: stoc, minStock: product.minStock });
+  const status = stockStatus({ stock: stoc, minStock: selected?.minStock ?? product.minStock });
   const outOfStock = status === "stoc_epuizat";
-  const percent = discountPercent(price, product.oldPrice);
+  const trebuieAles = alegereObligatorie && !selected;
+  const percent = discountPercent(price, oldPrice);
   const favorite = isInWishlist(product.id);
   const brand = getBrand(product.brandSlug);
   const department = getDepartment(product.departmentSlug);
   const category = getCategory(product.categorySlug);
-  const specs = attributesFor(product.departmentSlug, product.categorySlug).filter(
-    (def) => def.showOnProduct && product.attributes[def.key] !== undefined,
+  const specs = defs.filter(
+    (def) =>
+      def.showOnProduct && !def.isVariant && product.attributes[def.key] !== undefined,
   );
   const similare = activeProducts()
     .filter((p) => p.id !== product.id && p.categorySlug === product.categorySlug)
     .slice(0, 4);
+
 
   return (
     <SiteLayout>
