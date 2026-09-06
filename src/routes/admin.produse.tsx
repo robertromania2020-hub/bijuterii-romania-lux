@@ -348,6 +348,7 @@ function AdminProduse() {
                     departmentSlug: dep,
                     categorySlug: categoriesOf(dep)[0]?.slug ?? "",
                     attributes: {},
+                    variants: [],
                   });
                 }}
               >
@@ -358,12 +359,25 @@ function AdminProduse() {
             </div>
             <div>
               <label htmlFor="p-categorie" className="text-sm font-semibold">Categorie</label>
-              <select id="p-categorie" className="field mt-1.5" value={draft.categorySlug} onChange={(e) => setDraft({ ...draft, categorySlug: e.target.value })}>
+              <select
+                id="p-categorie"
+                className="field mt-1.5"
+                value={draft.categorySlug}
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    categorySlug: e.target.value,
+                    attributes: {},
+                    variants: [],
+                  })
+                }
+              >
                 {categoriesOf(draft.departmentSlug).map((c) => (
                   <option key={c.id} value={c.slug}>{c.name}</option>
                 ))}
               </select>
             </div>
+
             <div>
               <label htmlFor="p-brand" className="text-sm font-semibold">Brand</label>
               <select id="p-brand" className="field mt-1.5" value={draft.brandSlug} onChange={(e) => setDraft({ ...draft, brandSlug: e.target.value })}>
