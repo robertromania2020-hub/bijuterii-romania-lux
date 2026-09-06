@@ -249,31 +249,50 @@ function ProductPage() {
             <fieldset className="mt-5">
               <legend className="text-sm font-semibold">
                 {activeVariants[0]!.attributeLabel}
+                {alegereObligatorie ? " *" : ""}
+                {selected ? <span className="text-muted-foreground"> — {selected.label}</span> : null}
               </legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                {activeVariants.map((v) => (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={() => {
-                      setVariantId(v.id);
-                      setQuantity(1);
-                    }}
-                    disabled={v.stock <= 0}
-                    aria-pressed={variantId === v.id}
-                    className={`rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
-                      variantId === v.id
-                        ? "border-transparent bg-foreground text-background"
-                        : "border-border bg-surface"
-                    }`}
-                  >
-                    {v.label}
-                    {v.stock <= 0 && " — epuizat"}
-                  </button>
-                ))}
+                {activeVariants.map((v) => {
+                  const swatch = variantDef?.swatches?.[v.label];
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => {
+                        setVariantId(v.id);
+                        setQuantity(1);
+                      }}
+                      disabled={v.stock <= 0}
+                      aria-pressed={variantId === v.id}
+                      title={v.label}
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm disabled:opacity-40 ${
+                        variantId === v.id
+                          ? "border-transparent bg-foreground text-background"
+                          : "border-border bg-surface"
+                      }`}
+                    >
+                      {swatch ? (
+                        <span
+                          aria-hidden="true"
+                          className="size-4 rounded-full border border-border"
+                          style={{ backgroundColor: swatch }}
+                        />
+                      ) : null}
+                      {v.label}
+                      {v.stock <= 0 && " — epuizat"}
+                    </button>
+                  );
+                })}
               </div>
+              {trebuieAles ? (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Alege o opțiune pentru a continua.
+                </p>
+              ) : null}
             </fieldset>
           )}
+
 
           <div className="mt-5 flex items-center gap-3">
             <div className="flex items-center gap-2 rounded-full border border-border bg-surface p-1">
