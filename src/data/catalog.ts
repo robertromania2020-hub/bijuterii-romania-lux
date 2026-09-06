@@ -121,6 +121,7 @@ export function attributesFor(
   categorySlug?: string | null,
 ): AttributeDefinition[] {
   return attributeDefinitions
+    .filter((a) => a.active !== false)
     .filter((a) => a.departmentSlug === null || a.departmentSlug === departmentSlug)
     .filter(
       (a) =>
@@ -130,6 +131,7 @@ export function attributesFor(
     )
     .sort((a, b) => a.position - b.position);
 }
+
 
 export function formatAttributeValue(def: AttributeDefinition, value: AttributeValue): string {
   if (typeof value === "boolean") return value ? "Da" : "Nu";
