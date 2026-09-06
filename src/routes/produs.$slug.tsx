@@ -319,13 +319,18 @@ function ProductPage() {
             <button
               type="button"
               className="btn-dark flex-1"
-              disabled={outOfStock}
+              disabled={outOfStock || trebuieAles}
               onClick={() => {
                 addToCart(product.id, quantity, selected?.label ?? null);
                 toast.success("Produs adăugat în coș");
               }}
             >
-              {outOfStock ? "Stoc epuizat" : "Adaugă în coș"}
+              {outOfStock
+                ? "Stoc epuizat"
+                : trebuieAles
+                  ? `Alege ${activeVariants[0]!.attributeLabel.toLowerCase()}`
+                  : "Adaugă în coș"}
+
             </button>
             <button
               type="button"
