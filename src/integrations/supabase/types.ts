@@ -88,46 +88,58 @@ export type Database = {
       }
       attribute_definitions: {
         Row: {
+          active: boolean
           category_slugs: Json
           created_at: string
           department_slug: string | null
           filterable: boolean
           id: string
+          is_variant: boolean
           key: string
           label: string
           options: Json
           position: number
+          required: boolean
           show_on_product: boolean
+          swatches: Json
           type: string
           unit: string | null
           updated_at: string
         }
         Insert: {
+          active?: boolean
           category_slugs?: Json
           created_at?: string
           department_slug?: string | null
           filterable?: boolean
           id: string
+          is_variant?: boolean
           key: string
           label: string
           options?: Json
           position?: number
+          required?: boolean
           show_on_product?: boolean
+          swatches?: Json
           type?: string
           unit?: string | null
           updated_at?: string
         }
         Update: {
+          active?: boolean
           category_slugs?: Json
           created_at?: string
           department_slug?: string | null
           filterable?: boolean
           id?: string
+          is_variant?: boolean
           key?: string
           label?: string
           options?: Json
           position?: number
+          required?: boolean
           show_on_product?: boolean
+          swatches?: Json
           type?: string
           unit?: string | null
           updated_at?: string
@@ -668,12 +680,16 @@ export type Database = {
       product_variants: {
         Row: {
           active: boolean
+          attribute_key: string | null
           attribute_label: string
+          barcode: string | null
           created_at: string
           id: string
           image: string | null
           label: string
           min_stock: number
+          old_price: number | null
+          option_values: Json
           position: number
           price: number | null
           product_id: string
@@ -683,12 +699,16 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          attribute_key?: string | null
           attribute_label?: string
+          barcode?: string | null
           created_at?: string
           id: string
           image?: string | null
           label: string
           min_stock?: number
+          old_price?: number | null
+          option_values?: Json
           position?: number
           price?: number | null
           product_id: string
@@ -698,12 +718,16 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          attribute_key?: string | null
           attribute_label?: string
+          barcode?: string | null
           created_at?: string
           id?: string
           image?: string | null
           label?: string
           min_stock?: number
+          old_price?: number | null
+          option_values?: Json
           position?: number
           price?: number | null
           product_id?: string

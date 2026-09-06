@@ -82,6 +82,13 @@ export interface AttributeDefinition {
   filterable: boolean;
   /** Apare în fișa produsului. */
   showOnProduct: boolean;
+  /** Completarea este obligatorie la salvarea produsului. */
+  required: boolean;
+  /** Valorile selectate generează variante cu SKU și stoc propriu. */
+  isVariant: boolean;
+  /** Culoare afișată pentru fiecare opțiune (pastile colorate). */
+  swatches: Record<string, string>;
+  active: boolean;
   unit?: string;
   position: number;
 }
@@ -93,15 +100,22 @@ export interface ProductVariant {
   id: string;
   /** Numele atributului care generează varianta: „Nuanță", „Mărime" etc. */
   attributeLabel: string;
+  /** Cheia atributului care generează varianta. */
+  attributeKey: string | null;
   /** Valoarea variantei, afișată clientului. */
   label: string;
   sku: string;
+  barcode: string | null;
   /** Preț propriu; null = folosește prețul produsului. */
   price: number | null;
+  /** Preț întreg propriu, pentru afișarea reducerii. */
+  oldPrice: number | null;
   stock: number;
+  minStock: number;
   image: string | null;
   active: boolean;
 }
+
 
 export type ProductStatus = "activ" | "inactiv";
 
