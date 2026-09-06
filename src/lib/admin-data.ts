@@ -454,3 +454,22 @@ export function slugify(value: string, separator = "-"): string {
     .replace(/[^a-z0-9]+/g, separator)
     .replace(new RegExp(`^${separator}|${separator}$`, "g"), "");
 }
+
+/** Identificator unic pentru produse noi (fără coliziuni la adăugări succesive). */
+export function newProductId(): string {
+  const rand =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+  return `p-${Date.now().toString(36)}-${rand}`;
+}
+
+/** Slug unic în catalog: adaugă un sufix numeric dacă slug-ul este deja folosit. */
+export function uniqueSlug(base: string, taken: Iterable<string>): string {
+  const root = slugify(base) || "produs";
+  const used = new Set(taken);
+  if (!used.has(root)) return root;
+  let i = 2;
+  while (used.has(`${root}-${i}`)) i += 1;
+  return `${root}-${i}`;
+}
