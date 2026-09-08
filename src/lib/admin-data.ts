@@ -418,6 +418,39 @@ export async function updateOrderStatus(id: string, status: OrderStatus) {
 
 export const setOrderStatus = updateOrderStatus;
 
+/* ------------------------------------------------------------------ */
+/* Comenzi înregistrate manual (WhatsApp / telefon)                    */
+/* ------------------------------------------------------------------ */
+
+export interface ManualOrderInput {
+  items: Array<{ product_id: string; variant_id: string | null; quantity: number }>;
+  customer: { name: string; phone: string; email?: string };
+  shipping: Record<string, string>;
+  paymentMethod: "ramburs" | "card" | "transfer";
+  shippingCost: number;
+  adminNotes?: string;
+  source: "whatsapp" | "telefon" | "online";
+}
+
+/**
+ * Creează manual o comandă primită pe WhatsApp/telefon. Prețurile și
+ * reducerile sunt luate din baza de date de funcția securizată — nu pot fi
+ * modificate din interfață.
+ */
+export async function createManualOrder(input: ManualOrderInput) {
+  const { data, error } = await supabase.rpc("create_manual_order", {
+    p_items: input.items as never,
+    p_customer: input.customer as never,
+    p_shipping: input.shipping as never,
+    p_payment_method: input.paymentMethod,
+    p_shipping_cost: input.shippingCost,
+    p_admin_notes: input.adminNotes ?? "",
+    p_source: input.source,
+  });
+  if (error) throw new Error(error.message);
+  return data as unknown as { order_id: string; number: string; total: number };
+}
+
 export async function updateOrderFields(id: string, fields: Row) {
   const { error } = await supabase.from("orders").update(fields as never).eq("id", id);
   if (error) throw new Error(error.message);
