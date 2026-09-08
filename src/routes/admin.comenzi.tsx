@@ -307,6 +307,7 @@ function AdminComenzi() {
   const [selected, setSelected] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [awb, setAwb] = useState("");
+  const [formularWa, setFormularWa] = useState(false);
 
   async function incarca() {
     const { data, error: err } = await supabase
