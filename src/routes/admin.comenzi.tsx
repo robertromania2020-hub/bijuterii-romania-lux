@@ -118,10 +118,18 @@ function FormularComandaWhatsApp({
   const stoc = varianta ? varianta.stock : (produs?.stock ?? 0);
 
   async function salveaza() {
-    if (!produs) return toast.error("Alege un produs.");
-    if (variante.length > 0 && !varianta) return toast.error("Alege varianta produsului.");
-    if (cantitate < 1 || cantitate > stoc)
-      return toast.error(`Stoc disponibil: ${stoc} bucăți.`);
+    if (!produs) {
+      toast.error("Alege un produs.");
+      return;
+    }
+    if (variante.length > 0 && !varianta) {
+      toast.error("Alege varianta produsului.");
+      return;
+    }
+    if (cantitate < 1 || cantitate > stoc) {
+      toast.error(`Stoc disponibil: ${stoc} bucăți.`);
+      return;
+    }
     setSaving(true);
     try {
       const rezultat = await createManualOrder({
