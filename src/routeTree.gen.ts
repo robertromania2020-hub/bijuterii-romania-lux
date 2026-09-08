@@ -18,6 +18,7 @@ import { Route as ContRouteImport } from './routes/cont'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CosRouteImport } from './routes/cos'
 import { Route as DespreNoiRouteImport } from './routes/despre-noi'
+import { Route as GhidMarimiIneleRouteImport } from './routes/ghid-marimi-inele'
 import { Route as IntrebariFrecventeRouteImport } from './routes/intrebari-frecvente'
 import { Route as LivrareRouteImport } from './routes/livrare'
 import { Route as MachiajRouteImport } from './routes/machiaj'
@@ -93,6 +94,11 @@ const CosRoute = CosRouteImport.update({
 const DespreNoiRoute = DespreNoiRouteImport.update({
   id: '/despre-noi',
   path: '/despre-noi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GhidMarimiIneleRoute = GhidMarimiIneleRouteImport.update({
+  id: '/ghid-marimi-inele',
+  path: '/ghid-marimi-inele',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IntrebariFrecventeRoute = IntrebariFrecventeRouteImport.update({
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/ghid-marimi-inele': typeof GhidMarimiIneleRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/ghid-marimi-inele': typeof GhidMarimiIneleRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/cos': typeof CosRoute
   '/despre-noi': typeof DespreNoiRoute
+  '/ghid-marimi-inele': typeof GhidMarimiIneleRoute
   '/intrebari-frecvente': typeof IntrebariFrecventeRoute
   '/livrare': typeof LivrareRoute
   '/machiaj': typeof MachiajRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/ghid-marimi-inele'
     | '/intrebari-frecvente'
     | '/livrare'
     | '/machiaj'
@@ -432,6 +442,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/ghid-marimi-inele'
     | '/intrebari-frecvente'
     | '/livrare'
     | '/machiaj'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cos'
     | '/despre-noi'
+    | '/ghid-marimi-inele'
     | '/intrebari-frecvente'
     | '/livrare'
     | '/machiaj'
@@ -517,6 +529,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CosRoute: typeof CosRoute
   DespreNoiRoute: typeof DespreNoiRoute
+  GhidMarimiIneleRoute: typeof GhidMarimiIneleRoute
   IntrebariFrecventeRoute: typeof IntrebariFrecventeRoute
   LivrareRoute: typeof LivrareRoute
   MachiajRoute: typeof MachiajRoute
@@ -599,6 +612,13 @@ declare module '@tanstack/react-router' {
       path: '/despre-noi'
       fullPath: '/despre-noi'
       preLoaderRoute: typeof DespreNoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ghid-marimi-inele': {
+      id: '/ghid-marimi-inele'
+      path: '/ghid-marimi-inele'
+      fullPath: '/ghid-marimi-inele'
+      preLoaderRoute: typeof GhidMarimiIneleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/intrebari-frecvente': {
@@ -867,6 +887,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CosRoute: CosRoute,
   DespreNoiRoute: DespreNoiRoute,
+  GhidMarimiIneleRoute: GhidMarimiIneleRoute,
   IntrebariFrecventeRoute: IntrebariFrecventeRoute,
   LivrareRoute: LivrareRoute,
   MachiajRoute: MachiajRoute,
