@@ -19,7 +19,15 @@ import {
   ORDER_SELECT,
   type CustomerOrder,
 } from "@/lib/shop-data";
-import { setOrderStatus, updateOrderFields } from "@/lib/admin-data";
+import {
+  createManualOrder,
+  mapProduct,
+  setOrderStatus,
+  updateOrderFields,
+  useLiveTable,
+} from "@/lib/admin-data";
+import { formatPrice as lei } from "@/lib/format";
+import type { Product } from "@/data/types";
 
 export const Route = createFileRoute("/admin/comenzi")({
   head: () => ({
