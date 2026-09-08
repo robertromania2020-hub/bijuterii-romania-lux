@@ -156,12 +156,6 @@ function AdminProduse() {
     setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
-  function lipsesteValoarea(def: AttributeDefinition, d: Draft): boolean {
-    const v = d.attributes[def.key];
-    if (v === undefined || v === null || v === "") return true;
-    return Array.isArray(v) && v.length === 0;
-  }
-
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!draft) return;
