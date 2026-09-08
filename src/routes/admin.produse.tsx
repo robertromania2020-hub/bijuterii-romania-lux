@@ -170,16 +170,9 @@ function AdminProduse() {
       return;
     }
 
-    const defs = attributesFor(draft.departmentSlug, draft.categorySlug);
-    const lipsa = defs.filter((d) => d.required && lipsesteValoarea(d, draft));
-    const lipsaVariante = defs.filter(
-      (d) => d.required && d.isVariant && !draft.variants.some((v) => v.attributeKey === d.key),
-    );
-    if (lipsa.length > 0 || lipsaVariante.length > 0) {
-      const nume = [...new Set([...lipsa, ...lipsaVariante].map((d) => d.label))].join(", ");
-      toast.error(`Completează câmpurile obligatorii: ${nume}.`);
-      return;
-    }
+    // Toate atributele sunt opționale: se salvează doar ce a fost completat.
+
+
 
     const skuri = draft.variants.map((v) => v.sku.trim());
     if (skuri.some((s) => !s)) {
