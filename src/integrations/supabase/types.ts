@@ -519,6 +519,7 @@ export type Database = {
           items: Json
           notes: string | null
           number: string
+          order_source: string
           paid_at: string | null
           payment_method: string
           payment_status: string
@@ -551,6 +552,7 @@ export type Database = {
           items?: Json
           notes?: string | null
           number: string
+          order_source?: string
           paid_at?: string | null
           payment_method?: string
           payment_status?: string
@@ -583,6 +585,7 @@ export type Database = {
           items?: Json
           notes?: string | null
           number?: string
+          order_source?: string
           paid_at?: string | null
           payment_method?: string
           payment_status?: string
@@ -971,6 +974,18 @@ export type Database = {
           p_outcome: string
           p_payment_intent_id?: string
           p_session_id?: string
+        }
+        Returns: Json
+      }
+      create_manual_order: {
+        Args: {
+          p_admin_notes?: string
+          p_customer: Json
+          p_items: Json
+          p_payment_method?: string
+          p_shipping: Json
+          p_shipping_cost?: number
+          p_source?: string
         }
         Returns: Json
       }
