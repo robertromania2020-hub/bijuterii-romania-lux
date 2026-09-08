@@ -127,7 +127,6 @@ export function ProductVariantsEditor({
           <fieldset key={def.id} className="rounded-2xl border border-border p-4">
             <legend className="px-1 text-sm font-semibold">
               {def.label}
-              {def.required ? " *" : ""}
             </legend>
             <div className="mb-3 flex gap-2">
               <button
@@ -188,7 +187,6 @@ export function ProductVariantsEditor({
           <div>
             <p className="text-sm font-semibold">
               {def.label}
-              {def.required ? " *" : ""}
             </p>
             <p className="text-xs text-muted-foreground">
               Adaugă manual fiecare valoare (are SKU, stoc și imagine proprie).

@@ -156,12 +156,6 @@ function AdminProduse() {
     setDraft((d) => (d ? { ...d, attributes: { ...d.attributes, [key]: value } } : d));
   }
 
-  function lipsesteValoarea(def: AttributeDefinition, d: Draft): boolean {
-    const v = d.attributes[def.key];
-    if (v === undefined || v === null || v === "") return true;
-    return Array.isArray(v) && v.length === 0;
-  }
-
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!draft) return;
@@ -170,16 +164,9 @@ function AdminProduse() {
       return;
     }
 
-    const defs = attributesFor(draft.departmentSlug, draft.categorySlug);
-    const lipsa = defs.filter((d) => d.required && lipsesteValoarea(d, draft));
-    const lipsaVariante = defs.filter(
-      (d) => d.required && d.isVariant && !draft.variants.some((v) => v.attributeKey === d.key),
-    );
-    if (lipsa.length > 0 || lipsaVariante.length > 0) {
-      const nume = [...new Set([...lipsa, ...lipsaVariante].map((d) => d.label))].join(", ");
-      toast.error(`Completează câmpurile obligatorii: ${nume}.`);
-      return;
-    }
+    // Toate atributele sunt opționale: se salvează doar ce a fost completat.
+
+
 
     const skuri = draft.variants.map((v) => v.sku.trim());
     if (skuri.some((s) => !s)) {
@@ -476,7 +463,6 @@ function AdminProduse() {
                       <label htmlFor={id} className="text-sm font-semibold">
                         {a.label}
                         {a.unit ? ` (${a.unit})` : ""}
-                        {a.required ? " *" : ""}
                       </label>
 
                       {a.type === "select" ? (
