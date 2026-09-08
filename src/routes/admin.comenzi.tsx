@@ -64,6 +64,7 @@ interface ComandaAdmin extends CustomerOrder {
 
   stripeSessionId: string | null;
   stripePaymentIntentId: string | null;
+  orderSource: OrderSource;
 }
 
 function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
@@ -79,7 +80,220 @@ function mapAdminOrder(row: Record<string, unknown>): ComandaAdmin {
     paidAt: (row["paid_at"] as string | null) ?? null,
     stripeSessionId: (row["stripe_checkout_session_id"] as string | null) ?? null,
     stripePaymentIntentId: (row["stripe_payment_intent_id"] as string | null) ?? null,
+    orderSource: (String(row["order_source"] ?? "online") as OrderSource) ?? "online",
   };
+}
+
+/** Formular pentru înregistrarea manuală a unei comenzi primite pe WhatsApp. */
+function FormularComandaWhatsApp({
+  onClose,
+  onSaved,
+}: {
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { rows: produse, loading } = useLiveTable<Product>("products", mapProduct, {
+    column: "name",
+    ascending: true,
+  });
+  const [productId, setProductId] = useState("");
+  const [variantId, setVariantId] = useState("");
+  const [cantitate, setCantitate] = useState(1);
+  const [nume, setNume] = useState("");
+  const [telefon, setTelefon] = useState("");
+  const [email, setEmail] = useState("");
+  const [judet, setJudet] = useState("");
+  const [oras, setOras] = useState("");
+  const [adresa, setAdresa] = useState("");
+  const [metoda, setMetoda] = useState<"ramburs" | "card" | "transfer">("ramburs");
+  const [sursa, setSursa] = useState<"whatsapp" | "telefon">("whatsapp");
+  const [transport, setTransport] = useState(String(SHIPPING_COST));
+  const [observatii, setObservatii] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const produs = useMemo(() => produse.find((p) => p.id === productId) ?? null, [produse, productId]);
+  const variante = produs?.variants.filter((v) => v.active) ?? [];
+  const varianta = variante.find((v) => v.id === variantId) ?? null;
+  const pret = varianta?.price ?? produs?.price ?? 0;
+  const stoc = varianta ? varianta.stock : (produs?.stock ?? 0);
+
+  async function salveaza() {
+    if (!produs) return toast.error("Alege un produs.");
+    if (variante.length > 0 && !varianta) return toast.error("Alege varianta produsului.");
+    if (cantitate < 1 || cantitate > stoc)
+      return toast.error(`Stoc disponibil: ${stoc} bucăți.`);
+    setSaving(true);
+    try {
+      const rezultat = await createManualOrder({
+        items: [{ product_id: produs.id, variant_id: varianta?.id ?? null, quantity: cantitate }],
+        customer: { name: nume.trim(), phone: telefon.trim(), email: email.trim() },
+        shipping: { county: judet.trim(), city: oras.trim(), address: adresa.trim(), recipient: nume.trim(), phone: telefon.trim() },
+        paymentMethod: metoda,
+        shippingCost: Number(transport) || 0,
+        adminNotes: observatii.trim(),
+        source: sursa,
+      });
+      toast.success(`Comanda ${rezultat.number} a fost înregistrată.`);
+      onSaved();
+      onClose();
+    } catch (err) {
+      toast.error(mesajEroare(err, "Nu am putut înregistra comanda."));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <AdminCard className="mb-6">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-display text-lg font-semibold">Comandă nouă din WhatsApp</h2>
+        <button type="button" className="btn-soft" onClick={onClose}>
+          Închide
+        </button>
+      </div>
+      {loading && <p className="mt-3 text-sm text-muted-foreground">Se încarcă produsele…</p>}
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <div>
+          <label htmlFor="wa-produs" className="text-sm font-semibold">Produs</label>
+          <select
+            id="wa-produs"
+            className="field mt-1.5"
+            value={productId}
+            onChange={(e) => {
+              setProductId(e.target.value);
+              setVariantId("");
+              setCantitate(1);
+            }}
+          >
+            <option value="">Alege produsul…</option>
+            {produse.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} — {p.sku}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="wa-varianta" className="text-sm font-semibold">Variantă</label>
+          <select
+            id="wa-varianta"
+            className="field mt-1.5"
+            value={variantId}
+            disabled={variante.length === 0}
+            onChange={(e) => {
+              setVariantId(e.target.value);
+              setCantitate(1);
+            }}
+          >
+            <option value="">{variante.length === 0 ? "Fără variante" : "Alege varianta…"}</option>
+            {variante.map((v) => (
+              <option key={v.id} value={v.id} disabled={v.stock <= 0}>
+                {v.attributeLabel}: {v.label} — stoc {v.stock}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="wa-cantitate" className="text-sm font-semibold">
+            Cantitate (stoc disponibil: {stoc})
+          </label>
+          <input
+            id="wa-cantitate"
+            type="number"
+            min={1}
+            max={Math.max(1, stoc)}
+            className="field mt-1.5"
+            value={cantitate}
+            onChange={(e) => setCantitate(Math.max(1, Number(e.target.value) || 1))}
+          />
+        </div>
+        <div>
+          <span className="text-sm font-semibold">Preț din catalog</span>
+          <p className="field mt-1.5 bg-muted">
+            {lei(pret)} × {cantitate} = {lei(pret * cantitate)}
+          </p>
+        </div>
+        <div>
+          <label htmlFor="wa-nume" className="text-sm font-semibold">Client</label>
+          <input id="wa-nume" className="field mt-1.5" value={nume} onChange={(e) => setNume(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-telefon" className="text-sm font-semibold">Telefon</label>
+          <input id="wa-telefon" className="field mt-1.5" value={telefon} onChange={(e) => setTelefon(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-email" className="text-sm font-semibold">E-mail (opțional)</label>
+          <input id="wa-email" type="email" className="field mt-1.5" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-judet" className="text-sm font-semibold">Județ</label>
+          <input id="wa-judet" className="field mt-1.5" value={judet} onChange={(e) => setJudet(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-oras" className="text-sm font-semibold">Localitate</label>
+          <input id="wa-oras" className="field mt-1.5" value={oras} onChange={(e) => setOras(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-adresa" className="text-sm font-semibold">Adresă</label>
+          <input id="wa-adresa" className="field mt-1.5" value={adresa} onChange={(e) => setAdresa(e.target.value)} />
+        </div>
+        <div>
+          <label htmlFor="wa-plata" className="text-sm font-semibold">Metodă de plată</label>
+          <select
+            id="wa-plata"
+            className="field mt-1.5"
+            value={metoda}
+            onChange={(e) => setMetoda(e.target.value as typeof metoda)}
+          >
+            <option value="ramburs">Ramburs la livrare</option>
+            <option value="card">Card online</option>
+            <option value="transfer">Transfer bancar</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="wa-sursa" className="text-sm font-semibold">Sursa comenzii</label>
+          <select
+            id="wa-sursa"
+            className="field mt-1.5"
+            value={sursa}
+            onChange={(e) => setSursa(e.target.value as typeof sursa)}
+          >
+            <option value="whatsapp">WhatsApp</option>
+            <option value="telefon">Telefon</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="wa-transport" className="text-sm font-semibold">Cost transport (lei)</label>
+          <input
+            id="wa-transport"
+            type="number"
+            min={0}
+            className="field mt-1.5"
+            value={transport}
+            onChange={(e) => setTransport(e.target.value)}
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label htmlFor="wa-obs" className="text-sm font-semibold">Observații</label>
+          <textarea
+            id="wa-obs"
+            rows={2}
+            className="field mt-1.5"
+            value={observatii}
+            onChange={(e) => setObservatii(e.target.value)}
+          />
+        </div>
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">
+        Prețul este preluat automat din catalog și nu poate fi modificat manual. Comanda se salvează
+        cu statusul „{ORDER_STATUS_LABELS.whatsapp_asteptare}" și scade stocul.
+      </p>
+      <button type="button" className="btn-dark mt-4" disabled={saving} onClick={() => void salveaza()}>
+        {saving ? "Se salvează…" : "Înregistrează comanda"}
+      </button>
+    </AdminCard>
+  );
 }
 
 function AdminComenzi() {
