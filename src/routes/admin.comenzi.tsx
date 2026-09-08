@@ -381,6 +381,19 @@ function AdminComenzi() {
       {error && <p className="mb-4 rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
       {loading && <p className="mb-4 text-sm text-muted-foreground">Se încarcă comenzile…</p>}
 
+      <div className="mb-4">
+        <button type="button" className="btn-dark" onClick={() => setFormularWa((v) => !v)}>
+          + Comandă WhatsApp
+        </button>
+      </div>
+      {formularWa && (
+        <FormularComandaWhatsApp
+          onClose={() => setFormularWa(false)}
+          onSaved={() => void incarca()}
+        />
+      )}
+
+
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
         <div>
           <label className="sr-only" htmlFor="cautare">Caută comandă</label>
@@ -418,7 +431,7 @@ function AdminComenzi() {
       </div>
 
       <AdminTable
-        head={["Comandă", "Client", "Dată", "Produse", "Total", "Plată", "Status", "Acțiuni"]}
+        head={["Comandă", "Client", "Dată", "Sursă", "Produse", "Total", "Plată", "Status", "Acțiuni"]}
         caption="Lista comenzilor"
       >
         {vizibile.map((o) => (
@@ -430,6 +443,7 @@ function AdminComenzi() {
               <p className="text-xs text-muted-foreground">{o.customerPhone}</p>
             </td>
             <td className="px-4 py-3 text-muted-foreground">{formatDate(o.createdAt)}</td>
+            <td className="px-4 py-3 text-xs">{ORDER_SOURCE_LABELS[o.orderSource] ?? "Online"}</td>
             <td className="px-4 py-3">{o.items.length}</td>
             <td className="px-4 py-3">{formatPrice(o.total)}</td>
             <td className="px-4 py-3 text-xs text-muted-foreground">
