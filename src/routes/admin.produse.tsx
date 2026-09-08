@@ -469,7 +469,6 @@ function AdminProduse() {
                       <label htmlFor={id} className="text-sm font-semibold">
                         {a.label}
                         {a.unit ? ` (${a.unit})` : ""}
-                        {a.required ? " *" : ""}
                       </label>
 
                       {a.type === "select" ? (
