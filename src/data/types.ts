@@ -173,6 +173,7 @@ export interface InventoryEntry {
 }
 
 export type OrderStatus =
+  | "whatsapp_asteptare"
   | "noua"
   | "confirmata"
   | "in_procesare"
@@ -181,7 +182,17 @@ export type OrderStatus =
   | "anulata"
   | "returnata";
 
+/** Canalul prin care a ajuns comanda. */
+export type OrderSource = "online" | "whatsapp" | "telefon";
+
+export const ORDER_SOURCE_LABELS: Record<OrderSource, string> = {
+  online: "Online",
+  whatsapp: "WhatsApp",
+  telefon: "Telefon",
+};
+
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  whatsapp_asteptare: "WhatsApp – Așteaptă confirmarea",
   noua: "Nouă",
   confirmata: "Confirmată",
   in_procesare: "În procesare",
