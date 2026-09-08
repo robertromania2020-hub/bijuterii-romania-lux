@@ -17,6 +17,7 @@ import { STOCK_LABELS, stockStatus } from "@/data/types";
 import { ensureCatalog } from "@/lib/catalog-live";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { whatsAppOrderLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/produs/$slug")({
   loader: async ({ params }) => {
@@ -342,6 +343,45 @@ function ProductPage() {
               <Heart className={`size-5 ${favorite ? "fill-primary text-primary" : ""}`} />
             </button>
           </div>
+
+          <a
+            href={
+              outOfStock || trebuieAles
+                ? undefined
+                : whatsAppOrderLink({
+                    productName: product.name,
+                    sku: selected?.sku ?? product.sku,
+                    variantLabel: selected ? activeVariants[0]!.attributeLabel : null,
+                    variantValue: selected?.label ?? null,
+                    quantity: Math.min(quantity, Math.max(1, stoc)),
+                    price,
+                    slug: product.slug,
+                  })
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled={outOfStock || trebuieAles}
+            onClick={(e) => {
+              if (outOfStock) {
+                e.preventDefault();
+                toast.error("Stoc epuizat");
+                return;
+              }
+              if (trebuieAles) {
+                e.preventDefault();
+                toast.error(
+                  `Te rugăm să selectezi mai întâi ${activeVariants[0]!.attributeLabel.toLowerCase()}.`,
+                );
+              }
+            }}
+            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-full border-2 border-success px-5 py-3 text-base font-semibold text-success transition ${
+              outOfStock || trebuieAles
+                ? "pointer-events-auto cursor-not-allowed opacity-50"
+                : "hover:bg-success hover:text-background"
+            }`}
+          >
+            💬 {outOfStock ? "Stoc epuizat" : "Comandă prin WhatsApp"}
+          </a>
 
           <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-3">

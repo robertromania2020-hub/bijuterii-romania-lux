@@ -18,6 +18,17 @@ export const EMAIL = "eleganteicasa10@gmail.com";
 export const EMAIL_HREF = `mailto:${EMAIL}`;
 export const WORKING_HOURS = "Luni–Vineri, 09:00–18:00";
 
+/**
+ * Numărul de WhatsApp al magazinului, în format internațional fără „+"
+ * și fără spații (cerut de linkurile oficiale wa.me).
+ * Acesta este SINGURUL loc unde se configurează numărul de WhatsApp.
+ */
+export const WHATSAPP_NUMBER = "40774570743";
+export const WHATSAPP_DISPLAY = "+40 774 570 743";
+
+/** Domeniul public al magazinului, folosit în linkurile trimise clienților. */
+export const SITE_URL = "https://casaelegantei.ro";
+
 /** Tarif standard de transport (lei), aplicat la fiecare comandă. */
 export const SHIPPING_COST = 25;
 

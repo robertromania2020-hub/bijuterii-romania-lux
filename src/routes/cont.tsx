@@ -58,6 +58,7 @@ const TABS: Array<{ id: Tab; label: string }> = [
 ];
 
 const STATUS_STYLE: Record<OrderStatus, string> = {
+  whatsapp_asteptare: "bg-peach",
   noua: "bg-lilac",
   confirmata: "bg-mint",
   in_procesare: "bg-peach",
