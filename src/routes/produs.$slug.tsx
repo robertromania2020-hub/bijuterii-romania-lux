@@ -252,6 +252,15 @@ function ProductPage() {
                 {activeVariants[0]!.attributeLabel}
                 {alegereObligatorie ? " *" : ""}
                 {selected ? <span className="text-muted-foreground"> — {selected.label}</span> : null}
+                {activeVariants[0]!.attributeKey?.includes("marime") && (
+                  <Link
+                    to="/ghid-marimi-inele"
+                    target="_blank"
+                    className="ml-2 text-xs font-semibold text-primary underline underline-offset-2"
+                  >
+                    Ghid mărimi
+                  </Link>
+                )}
               </legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {activeVariants.map((v) => {

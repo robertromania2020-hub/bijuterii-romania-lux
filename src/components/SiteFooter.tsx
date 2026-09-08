@@ -107,6 +107,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link to="/ghid-marimi-inele" className="hover:underline">
+                  Ghid mărimi inele
+                </Link>
+              </li>
+              <li>
                 <Link to="/intrebari-frecvente" className="hover:underline">
                   Întrebări frecvente
                 </Link>
