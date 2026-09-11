@@ -111,11 +111,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const GTAG_INLINE = `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'AW-18431616805');`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="ro">
       <head>
         <HeadContent />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18431616805" />
+        <script dangerouslySetInnerHTML={{ __html: GTAG_INLINE }} />
       </head>
       <body>
         {children}
