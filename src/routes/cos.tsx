@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { whatsAppCartLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/cos")({
   head: () => ({
@@ -131,18 +132,34 @@ function CosPage() {
                 <dt className="text-muted-foreground">Reducere</dt>
                 <dd className="text-primary">-{formatPrice(totals.discount)}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Transport</dt>
-                <dd>{totals.shipping === 0 ? "Gratuit" : formatPrice(totals.shipping)}</dd>
-              </div>
               <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
-                <dt>Total</dt>
-                <dd className="font-display">{formatPrice(totals.total)}</dd>
+                <dt>Total produse</dt>
+                <dd className="font-display">{formatPrice(totals.subtotal - totals.discount)}</dd>
               </div>
             </dl>
-            <Link to="/checkout" className="btn-dark mt-5 block text-center">
-              Finalizează comanda
-            </Link>
+            <a
+              href={whatsAppCartLink(
+                cartLines.map((line) => ({
+                  productName: line.product.name,
+                  sku:
+                    line.product.variants.find((v) => v.label === line.variant)?.sku ??
+                    line.product.sku,
+                  variantValue: line.variant ?? null,
+                  quantity: line.quantity,
+                  unitPrice: line.unitPrice,
+                  slug: line.product.slug,
+                })),
+                totals.subtotal - totals.discount,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-dark mt-5 block text-center"
+            >
+              💬 Comandă prin WhatsApp
+            </a>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Comanda se confirmă pe WhatsApp, împreună cu adresa de livrare și transportul.
+            </p>
             <Link to="/bijuterii" className="btn-soft mt-2 block text-center">
               Continuă cumpărăturile
             </Link>
