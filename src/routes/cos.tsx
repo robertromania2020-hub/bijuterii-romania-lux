@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { EmptyState, PageHeading, SiteLayout } from "@/components/SiteLayout";
 import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
+import { whatsAppCartLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/cos")({
   head: () => ({
@@ -131,13 +132,9 @@ function CosPage() {
                 <dt className="text-muted-foreground">Reducere</dt>
                 <dd className="text-primary">-{formatPrice(totals.discount)}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Transport</dt>
-                <dd>{totals.shipping === 0 ? "Gratuit" : formatPrice(totals.shipping)}</dd>
-              </div>
               <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
-                <dt>Total</dt>
-                <dd className="font-display">{formatPrice(totals.total)}</dd>
+                <dt>Total produse</dt>
+                <dd className="font-display">{formatPrice(totals.subtotal - totals.discount)}</dd>
               </div>
             </dl>
             <a
