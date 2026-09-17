@@ -27,7 +27,6 @@ import { Route as ParfumuriRouteImport } from './routes/parfumuri'
 import { Route as PoliticaDeConfidentialitateRouteImport } from './routes/politica-de-confidentialitate'
 import { Route as PoliticaDeReturRouteImport } from './routes/politica-de-retur'
 import { Route as ProduseRouteImport } from './routes/produse'
-import { Route as ReduceriRouteImport } from './routes/reduceri'
 import { Route as ResetareParolaRouteImport } from './routes/resetare-parola'
 import { Route as TermeniSiConditiiRouteImport } from './routes/termeni-si-conditii'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -140,11 +139,6 @@ const PoliticaDeReturRoute = PoliticaDeReturRouteImport.update({
 const ProduseRoute = ProduseRouteImport.update({
   id: '/produse',
   path: '/produse',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReduceriRoute = ReduceriRouteImport.update({
-  id: '/reduceri',
-  path: '/reduceri',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetareParolaRoute = ResetareParolaRouteImport.update({
@@ -278,7 +272,6 @@ export interface FileRoutesByFullPath {
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
-  '/reduceri': typeof ReduceriRoute
   '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
@@ -320,7 +313,6 @@ export interface FileRoutesByTo {
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
-  '/reduceri': typeof ReduceriRoute
   '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
@@ -364,7 +356,6 @@ export interface FileRoutesById {
   '/politica-de-confidentialitate': typeof PoliticaDeConfidentialitateRoute
   '/politica-de-retur': typeof PoliticaDeReturRoute
   '/produse': typeof ProduseRoute
-  '/reduceri': typeof ReduceriRoute
   '/resetare-parola': typeof ResetareParolaRoute
   '/termeni-si-conditii': typeof TermeniSiConditiiRoute
   '/admin/atribute': typeof AdminAtributeRoute
@@ -409,7 +400,6 @@ export interface FileRouteTypes {
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
-    | '/reduceri'
     | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
@@ -451,7 +441,6 @@ export interface FileRouteTypes {
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
-    | '/reduceri'
     | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
@@ -494,7 +483,6 @@ export interface FileRouteTypes {
     | '/politica-de-confidentialitate'
     | '/politica-de-retur'
     | '/produse'
-    | '/reduceri'
     | '/resetare-parola'
     | '/termeni-si-conditii'
     | '/admin/atribute'
@@ -538,7 +526,6 @@ export interface RootRouteChildren {
   PoliticaDeConfidentialitateRoute: typeof PoliticaDeConfidentialitateRoute
   PoliticaDeReturRoute: typeof PoliticaDeReturRoute
   ProduseRoute: typeof ProduseRoute
-  ReduceriRoute: typeof ReduceriRoute
   ResetareParolaRoute: typeof ResetareParolaRoute
   TermeniSiConditiiRoute: typeof TermeniSiConditiiRoute
   ColectiiSlugRoute: typeof ColectiiSlugRoute
@@ -675,13 +662,6 @@ declare module '@tanstack/react-router' {
       path: '/produse'
       fullPath: '/produse'
       preLoaderRoute: typeof ProduseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reduceri': {
-      id: '/reduceri'
-      path: '/reduceri'
-      fullPath: '/reduceri'
-      preLoaderRoute: typeof ReduceriRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/resetare-parola': {
@@ -896,7 +876,6 @@ const rootRouteChildren: RootRouteChildren = {
   PoliticaDeConfidentialitateRoute: PoliticaDeConfidentialitateRoute,
   PoliticaDeReturRoute: PoliticaDeReturRoute,
   ProduseRoute: ProduseRoute,
-  ReduceriRoute: ReduceriRoute,
   ResetareParolaRoute: ResetareParolaRoute,
   TermeniSiConditiiRoute: TermeniSiConditiiRoute,
   ColectiiSlugRoute: ColectiiSlugRoute,

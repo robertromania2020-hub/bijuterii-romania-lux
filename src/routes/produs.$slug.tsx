@@ -15,7 +15,7 @@ import {
 } from "@/data/catalog";
 import { STOCK_LABELS, stockStatus } from "@/data/types";
 import { ensureCatalog } from "@/lib/catalog-live";
-import { discountPercent, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 import { whatsAppOrderLink } from "@/lib/whatsapp";
 
@@ -98,12 +98,12 @@ function ProductPage() {
 
   const selected = activeVariants.find((v) => v.id === variantId) ?? null;
   const price = selected?.price ?? product.price;
-  const oldPrice = selected?.oldPrice ?? product.oldPrice;
+  
   const stoc = selected ? selected.stock : product.stock;
   const status = stockStatus({ stock: stoc, minStock: selected?.minStock ?? product.minStock });
   const outOfStock = status === "stoc_epuizat";
   const trebuieAles = alegereObligatorie && !selected;
-  const percent = discountPercent(price, oldPrice);
+  
   const favorite = isInWishlist(product.id);
   const brand = getBrand(product.brandSlug);
   const department = getDepartment(product.departmentSlug);
@@ -178,11 +178,6 @@ function ProductPage() {
             {product.isNew && (
               <span className="rounded-full bg-lilac px-3 py-1 text-xs font-bold">Nou</span>
             )}
-            {percent !== null && (
-              <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
-                Reducere -{percent}%
-              </span>
-            )}
           </div>
 
           {brand && (
@@ -198,17 +193,7 @@ function ProductPage() {
           </p>
 
           <div className="mt-4 flex items-baseline gap-3">
-            <span
-              className={`font-display text-3xl font-semibold ${percent !== null ? "text-primary" : ""}`}
-            >
-              {formatPrice(price)}
-            </span>
-            {oldPrice && (
-              <span className="text-base text-muted-foreground line-through">
-                {formatPrice(oldPrice)}
-              </span>
-            )}
-
+            <span className="font-display text-3xl font-semibold">{formatPrice(price)}</span>
           </div>
 
           <p

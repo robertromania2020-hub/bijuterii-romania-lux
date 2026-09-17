@@ -182,18 +182,6 @@ export function CatalogListing({
             </label>
           </div>
 
-          <div className="mt-3 flex items-center gap-2">
-            <input
-              id="filtru-reduceri"
-              type="checkbox"
-              className="size-4 accent-primary"
-              checked={search.reduceri ?? false}
-              onChange={(e) => onChange({ reduceri: e.target.checked || undefined })}
-            />
-            <label htmlFor="filtru-reduceri" className="text-sm">
-              Doar produse la reducere
-            </label>
-          </div>
 
           <button type="button" className="btn-soft mt-5 w-full" onClick={onReset}>
             Resetează filtrele
