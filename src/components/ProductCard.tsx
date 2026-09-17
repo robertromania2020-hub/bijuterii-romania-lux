@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
-import { discountPercent, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 import { useStore } from "@/lib/store";
 import { getBrand } from "@/data/catalog";
 import { STOCK_LABELS, stockStatus, type Product } from "@/data/types";
@@ -9,18 +9,13 @@ import { STOCK_LABELS, stockStatus, type Product } from "@/data/types";
 export function ProductCard({ product }: { product: Product }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const status = stockStatus(product);
-  const percent = discountPercent(product.price, product.oldPrice);
+  
   const favorite = isInWishlist(product.id);
   const outOfStock = status === "stoc_epuizat";
 
   return (
     <article className="relative rounded-3xl border border-border bg-surface p-2.5">
       <div className="absolute left-4 top-4 z-10 flex flex-col gap-1">
-        {percent !== null && (
-          <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] font-bold text-primary-foreground">
-            -{percent}%
-          </span>
-        )}
         {product.isNew && (
           <span className="rounded-full bg-lilac px-2.5 py-1 text-[11px] font-bold text-foreground">
             Nou
@@ -74,16 +69,7 @@ export function ProductCard({ product }: { product: Product }) {
           {STOCK_LABELS[status]}
         </p>
         <div className="mt-1 flex items-baseline gap-1.5">
-          <span
-            className={`font-display font-semibold ${percent !== null ? "text-primary" : ""}`}
-          >
-            {formatPrice(product.price)}
-          </span>
-          {product.oldPrice && (
-            <span className="text-xs text-muted-foreground line-through">
-              {formatPrice(product.oldPrice)}
-            </span>
-          )}
+          <span className="font-display font-semibold">{formatPrice(product.price)}</span>
         </div>
         <button
           type="button"

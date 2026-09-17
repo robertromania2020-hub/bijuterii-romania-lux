@@ -128,13 +128,9 @@ function CosPage() {
                 <dt className="text-muted-foreground">Subtotal</dt>
                 <dd>{formatPrice(totals.subtotal)}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Reducere</dt>
-                <dd className="text-primary">-{formatPrice(totals.discount)}</dd>
-              </div>
               <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
                 <dt>Total produse</dt>
-                <dd className="font-display">{formatPrice(totals.subtotal - totals.discount)}</dd>
+                <dd className="font-display">{formatPrice(totals.subtotal)}</dd>
               </div>
             </dl>
             <a
@@ -149,7 +145,7 @@ function CosPage() {
                   unitPrice: line.unitPrice,
                   slug: line.product.slug,
                 })),
-                totals.subtotal - totals.discount,
+                totals.subtotal,
               )}
               target="_blank"
               rel="noopener noreferrer"

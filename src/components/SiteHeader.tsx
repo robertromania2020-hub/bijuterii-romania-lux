@@ -11,7 +11,7 @@ const NAV = [
   { to: "/parfumuri", label: "Parfumuri" },
   { to: "/noutati", label: "Noutăți" },
   { to: "/colectii", label: "Colecții" },
-  { to: "/reduceri", label: "Reduceri" },
+  
   { to: "/despre-noi", label: "Despre noi" },
   { to: "/contact", label: "Contact" },
 ] as const;
