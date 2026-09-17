@@ -23,7 +23,7 @@ export interface ListingSearch {
   pretMin?: number | undefined;
   pretMax?: number | undefined;
   disponibil?: boolean | undefined;
-  reduceri?: boolean | undefined;
+  
   sortare?: Sortare | undefined;
   /** Filtre pe atribute, codificate: `material:Perle|finish:Mat`. */
   filtre?: string | undefined;
@@ -47,7 +47,7 @@ export function validateListingSearch(search: Record<string, unknown>): ListingS
     pretMin: num("pretMin"),
     pretMax: num("pretMax"),
     disponibil: search['disponibil'] === true || search['disponibil'] === "true" ? true : undefined,
-    reduceri: search['reduceri'] === true || search['reduceri'] === "true" ? true : undefined,
+    
     sortare: SORT_KEYS.includes(search['sortare'] as Sortare)
       ? (search['sortare'] as Sortare)
       : undefined,
@@ -109,7 +109,7 @@ export function filterProducts(
   if (search.pretMin !== undefined) list = list.filter((p) => p.price >= search.pretMin!);
   if (search.pretMax !== undefined) list = list.filter((p) => p.price <= search.pretMax!);
   if (search.disponibil) list = list.filter((p) => availableStock(p) > 0);
-  if (search.reduceri) list = list.filter((p) => p.oldPrice !== null);
+  
 
   const attrFilters = parseFiltre(search.filtre);
   for (const [key, values] of Object.entries(attrFilters)) {
