@@ -237,31 +237,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Reduceri */}
-      <section className="mt-12" aria-labelledby="titlu-reduceri">
-        <div className="relative overflow-hidden rounded-[2rem] bg-foreground p-6 text-background lg:p-10">
-          <span className="absolute -right-6 -top-6 size-24 rounded-full bg-primary/30" />
-          <span className="absolute bottom-2 left-1/2 size-14 rounded-full bg-gold/30" />
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-background/60">
-            Ofertă limitată
-          </p>
-          <h2
-            id="titlu-reduceri"
-            className="mt-2 font-display text-4xl font-semibold leading-none tracking-tight lg:text-5xl"
-          >
-            Până la <span className="text-gold">-30%</span>
-          </h2>
-          <p className="mt-2 max-w-[34ch] text-sm text-background/70">
-            Reduceri la bijuterii placate cu aur și la produsele de machiaj preferate.
-          </p>
-          <Link
-            to="/reduceri"
-            className="mt-4 inline-block rounded-full bg-background px-5 py-3 text-sm font-semibold text-foreground transition-transform active:scale-[0.97]"
-          >
-            Vezi toate reducerile
-          </Link>
-        </div>
-      </section>
 
       {/* Colecții */}
       <section className="mt-12" aria-labelledby="titlu-colectii">
