@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -34,7 +35,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -55,8 +56,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             Detalii tehnice (pentru raportare)
           </summary>
           <pre className="mt-2 max-h-48 overflow-auto rounded-xl bg-muted p-3 text-left text-[11px] whitespace-pre-wrap">
-            {error?.message}
-            {error?.stack ? `\n\n${error.stack}` : ""}
+            {(error as Error)?.message}
+            {(error as Error)?.stack ? `\n\n${(error as Error).stack}` : ""}
           </pre>
         </details>
 
