@@ -56,8 +56,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
             Detalii tehnice (pentru raportare)
           </summary>
           <pre className="mt-2 max-h-48 overflow-auto rounded-xl bg-muted p-3 text-left text-[11px] whitespace-pre-wrap">
-            {error?.message}
-            {error?.stack ? `\n\n${error.stack}` : ""}
+            {(error as Error)?.message}
+            {(error as Error)?.stack ? `\n\n${(error as Error).stack}` : ""}
           </pre>
         </details>
 
