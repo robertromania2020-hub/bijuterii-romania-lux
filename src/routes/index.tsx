@@ -92,6 +92,26 @@ function HomePage() {
           <h1 className="animate-rise mt-3 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-balance lg:text-6xl">
             Frumusețe pe care o <span className="text-primary">porți</span> în fiecare zi
           </h1>
+          <ul
+            aria-label="Beneficiile magazinului"
+            className="animate-rise mt-4 flex flex-wrap gap-2"
+          >
+            {[
+              ["🚚", "Livrare rapidă"],
+              ["💳", "Plată ramburs / card"],
+              ["↩️", "Retur 14 zile"],
+              ["✨", "Oțel inoxidabil"],
+              ["🔒", "Comandă sigură"],
+            ].map(([icon, label]) => (
+              <li
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-foreground"
+              >
+                <span aria-hidden="true" className="leading-none">{icon}</span>
+                <span className="whitespace-nowrap">{label}</span>
+              </li>
+            ))}
+          </ul>
           <p className="animate-rise mt-3 max-w-[42ch] text-sm text-muted-foreground text-pretty lg:text-base">
             Bijuterii, ceasuri, parfumuri și machiaj — toate într-o singură comandă, alese cu
             grijă pentru eleganța de zi cu zi.
